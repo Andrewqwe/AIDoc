@@ -1,4 +1,4 @@
-package com.example.radosaw.aidoc;
+package com.example.damian.aldoc;
 
 import org.junit.Test;
 
