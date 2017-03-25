@@ -1,4 +1,4 @@
-package com.example.damian.aldoc;
+package com.damian.aldoc;
 
 import org.junit.Test;
 

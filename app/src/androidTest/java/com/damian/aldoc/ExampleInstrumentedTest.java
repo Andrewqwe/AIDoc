@@ -1,4 +1,4 @@
-package com.example.damian.aldoc;
+package com.damian.aldoc;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.example.damian.aldoc", appContext.getPackageName());
+        assertEquals("com.damian.aldoc", appContext.getPackageName());
     }
 }
