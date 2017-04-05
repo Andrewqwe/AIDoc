@@ -76,23 +76,27 @@ public class MainActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(MenuItem item) { //TODO: dopisac kod dla poszczegolnych wyborow
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.user_profile) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.user_calendar) {
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.user_family) {
 
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.user_stats) {
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.user_share) {
 
-        }
+        } else if (id == R.id.user_upcoming_events) {
+
+        } else if (id == R.id.user_alerts){
+
+        } else if (id == R.id.user_settings){
+
+        }  //wszystkie ktore dodalem zaczynaja sie na user_ zeby bylo latwo odroznic
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
