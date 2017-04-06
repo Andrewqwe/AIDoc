@@ -1,5 +1,6 @@
 package com.damian.aldoc;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -81,7 +82,6 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.user_profile) {
-
         } else if (id == R.id.user_calendar) {
 
         } else if (id == R.id.user_family) {
@@ -91,6 +91,10 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.user_share) {
 
         } else if (id == R.id.user_upcoming_events) {
+            Intent intent_visits = new Intent(this, VisitsActivity.class);
+            //tu moze bedzie trzeba zrobic startActivityForResult jakby mialo cos zwrocic
+            //ale na razie wyjebane, byle tylko przechodzilo do okienka
+            startActivity(intent_visits);
 
         } else if (id == R.id.user_alerts){
 
