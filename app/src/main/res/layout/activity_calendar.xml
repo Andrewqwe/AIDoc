@@ -20,24 +20,31 @@
             android:showWeekNumber="false"
             android:layout_weight="0.5"
             android:firstDayOfWeek="2"
-            android:isScrollContainer="true" style="@android:style/Widget.Holo.Light.CalendarView"/>
-    <ScrollView
+            android:isScrollContainer="true"
+            style="@android:style/Widget.Holo.Light.CalendarView"/>
+    <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent" android:layout_weight="0.5">
-        <LinearLayout android:layout_width="match_parent"
-                      android:layout_height="match_parent"
-                      android:orientation="vertical">
-            <TextView
-                    android:text="TextView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" android:id="@+id/dateTxt"
-                    android:textColor="@android:color/white" android:textSize="24sp" android:textAllCaps="false"
-                    android:textAlignment="center" android:background="@android:color/black"/>
-            <TextView
-                    android:text="Wizyta"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" android:id="@+id/eventTxt" android:textSize="18sp"
-                    android:textColor="@android:color/black" android:layout_marginTop="5sp"/>
-        </LinearLayout>
-    </ScrollView>
+        <TextView
+                android:text="TextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/dateTxt"
+                android:textColor="@android:color/white"
+                android:textSize="24sp"
+                android:textAlignment="center"
+                android:background="@android:color/black"
+                android:layout_weight="0.8"
+                android:textAllCaps="false"/>
+        <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.1">
+            <LinearLayout android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:orientation="vertical"
+                          android:id="@+id/visits_linear_layout"/>
+        </ScrollView>
+    </LinearLayout>
 </LinearLayout>

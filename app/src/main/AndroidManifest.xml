@@ -29,7 +29,7 @@
                 android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value="com.example.damian.aldoc.LoginActivity"/>
+                    android:value="com.damian.aldoc.LoginActivity"/>
         </activity>
         <activity android:name=".VisitsActivity" android:parentActivityName=".MainActivity" android:label="Visits">
         </activity>
@@ -37,6 +37,8 @@
                   android:parentActivityName=".MainActivity">
         </activity>
         <activity android:name=".VisitActivity" android:parentActivityName=".VisitsActivity" android:label="Visit">
+        </activity>
+        <activity android:name=".CalendarActivity" android:parentActivityName=".MainActivity" android:label="Calendar">
         </activity>
     </application>
 
