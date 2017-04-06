@@ -1,5 +1,6 @@
 package com.damian.aldoc;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -22,15 +23,6 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -81,9 +73,9 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.user_profile) {
-
         } else if (id == R.id.user_calendar) {
-
+            Intent intent_calendar = new Intent(this, CalendarActivity.class);
+            startActivity(intent_calendar);
         } else if (id == R.id.user_family) {
 
         } else if (id == R.id.user_stats) {
@@ -91,6 +83,10 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.user_share) {
 
         } else if (id == R.id.user_upcoming_events) {
+            Intent intent_visits = new Intent(this, VisitsActivity.class);
+            //tu moze bedzie trzeba zrobic startActivityForResult jakby mialo cos zwrocic
+            //ale na razie wyjebane, byle tylko przechodzilo do okienka
+            startActivity(intent_visits);
 
         } else if (id == R.id.user_alerts){
 
