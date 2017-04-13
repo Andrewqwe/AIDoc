@@ -89,6 +89,8 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent_visits);
 
         } else if (id == R.id.user_alerts){
+            Intent intent_diseases = new Intent(this, DiseasesActivity.class);
+            startActivity(intent_diseases);
 
         } else if (id == R.id.user_settings){
 
