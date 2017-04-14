@@ -73,6 +73,8 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.user_profile) {
+            Intent intent_user_profile = new Intent(this, UserProfileView.class);
+            startActivity(intent_user_profile);
         } else if (id == R.id.user_calendar) {
             Intent intent_calendar = new Intent(this, CalendarActivity.class);
             startActivity(intent_calendar);
