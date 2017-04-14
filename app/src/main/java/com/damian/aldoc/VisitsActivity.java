@@ -25,7 +25,7 @@ public class VisitsActivity extends AppCompatActivity {
 
     // Firebase instance variables
     private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mMessagesDatabaseReference;
+    private DatabaseReference mVisitsDatabaseReference;
     private ChildEventListener mChildEventListener;
 
     public class VisitView extends Button{
@@ -60,19 +60,22 @@ public class VisitsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visits);
 
+        mFirebaseDatabase.getInstance().setPersistenceEnabled(true);  //ustawienie zapisywania tez lokalnie
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mVisitsDatabaseReference = mFirebaseDatabase.getReference().child("visits"); //czytanie dzieci z galezi visits
         mChildEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                                Visit visits = dataSnapshot.getValue(Visit.class);  //Tutaj wywala null pointer exception - Radosław  -- Czytanie z basy
+                                Visit visits = dataSnapshot.getValue(Visit.class);  //czytanie z bazy i tworzenie przycisku
                                 addVisit(visits);
                             }
 
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-           public void onChildRemoved(DataSnapshot dataSnapshot) {}
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
             public void onCancelled(DatabaseError databaseError) {}
         };
-                mMessagesDatabaseReference.addChildEventListener(mChildEventListener);
+        mVisitsDatabaseReference.addChildEventListener(mChildEventListener);
 
 
     }

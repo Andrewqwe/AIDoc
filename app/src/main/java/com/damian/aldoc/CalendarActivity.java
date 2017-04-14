@@ -46,7 +46,7 @@ public class CalendarActivity extends AppCompatActivity {
             }
         });
 
-        Visit visit = new Visit("adam","ada");
+        Visit visit = new Visit();
         visit.setDoctor("Kowalski");
         visit.setPlace("Wrocław");
 
