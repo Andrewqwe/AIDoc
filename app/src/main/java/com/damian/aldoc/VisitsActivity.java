@@ -9,11 +9,24 @@ import android.widget.LinearLayout;
 import android.widget.Button;
 import android.widget.Toast;
 
+
+//Firebase
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class VisitsActivity extends AppCompatActivity {
 
     public final int ACTION_ADD = 0;
     public final int REQUEST_ADD = 0;
     public final int ACTION_EDIT = 1;
+
+    // Firebase instance variables
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference mMessagesDatabaseReference;
+    private ChildEventListener mChildEventListener;
 
     public class VisitView extends Button{
 
@@ -39,12 +52,29 @@ public class VisitsActivity extends AppCompatActivity {
         }
 
         private Visit m_visit;
+
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visits);
+
+        mChildEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                                Visit visits = dataSnapshot.getValue(Visit.class);  //Tutaj wywala null pointer exception - Radosław  -- Czytanie z basy
+                                addVisit(visits);
+                            }
+
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+           public void onChildRemoved(DataSnapshot dataSnapshot) {}
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+            public void onCancelled(DatabaseError databaseError) {}
+        };
+                mMessagesDatabaseReference.addChildEventListener(mChildEventListener);
+
+
     }
 
     private void addVisit(Visit visit)
@@ -92,9 +122,9 @@ public class VisitsActivity extends AppCompatActivity {
             if(resultCode == AppCompatActivity.RESULT_OK){
                 String[] result = data.getStringArrayExtra("Visit");
 
-                Visit visit = new Visit();
-                visit.setDoctor(result[0]);
-                visit.setPlace(result[1]);
+                Visit visit = new Visit(result[0],result[1]);
+              //  visit.setDoctor(result[0]);  // Jak utworzylem konstruktor to już raczej nie musze tego nizej dawac..
+             //   visit.setPlace(result[1]);
 
                 addVisit(visit);
             }
@@ -118,4 +148,9 @@ public class VisitsActivity extends AppCompatActivity {
 
         startActivityForResult(intent, REQUEST_ADD);
     }
+
+
+
 }
+
+
