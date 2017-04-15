@@ -10,4 +10,5 @@
     <item name="user_upcoming_events" type="id" />
     <item name="user_alerts" type="id" />
     <item name="user_settings" type="id" />
+    <item name="user_data_list" type="id">user_data_list</item>  <!-- lista danych uzytkownika z profilu -->
 </resources>

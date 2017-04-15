@@ -20,4 +20,20 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+    <string name="title_activity_user_profile_view">UserProfileView</string>
+
+    <!-- Stringi do panelu uzytkownika -->
+    <string name="profile_full_name">Imie i nazwisko</string>
+
+    <string-array name="user_data_headers_array">
+        <item>Data urodzenia</item>
+        <item>Pesel</item>
+        <item>Adres zamieszkania</item>
+        <item>Numer telefonu</item>
+        <item>E-mail</item>
+    </string-array>
+    <string-array name="user_data_details_array">
+
+    </string-array>
+
 </resources>

@@ -73,6 +73,8 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.user_profile) {
+            Intent intent_user_profile = new Intent(this, UserProfileView.class);
+            startActivity(intent_user_profile);
         } else if (id == R.id.user_calendar) {
             Intent intent_calendar = new Intent(this, CalendarActivity.class);
             startActivity(intent_calendar);
@@ -89,6 +91,8 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent_visits);
 
         } else if (id == R.id.user_alerts){
+            Intent intent_diseases = new Intent(this, DiseasesActivity.class);
+            startActivity(intent_diseases);
 
         } else if (id == R.id.user_settings){
 
