@@ -56,9 +56,11 @@ public class EditVisitActivity extends AppCompatActivity {
         et = (EditText)findViewById(R.id.textTime);
         visit_data[2] = et.getText().toString();
 
-        Visit Visit = new Visit(visit_data[0],visit_data[2]); //visit_data[0]- doktor visit_data[2] - miejsce
-        mVisitsDatabaseReference.push().setValue(Visit);         //To dodałem Radosław - wysyłanie do bazy
-
+        Visit Visit = new Visit(visit_data[0], visit_data[2]); //visit_data[0]- doktor visit_data[2] - miejsce
+        //Database aaa = new Database(true);
+        //aaa.SendObjectToDatabase("Visits",Visit);
+        new Database().SendObjectToDatabase("visits",Visit);
+        mVisitsDatabaseReference.push().setValue(Visit);         // wysyłanie do bazy
         returnIntent.putExtra("Visit", visit_data);
 
         setResult(AppCompatActivity.RESULT_OK,returnIntent);

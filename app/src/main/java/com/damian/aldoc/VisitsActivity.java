@@ -80,7 +80,7 @@ public class VisitsActivity extends AppCompatActivity {
 
     }
 
-    private void addVisit(Visit visit)
+    public void addVisit(Visit visit)
     {
         VisitView vv = new VisitView(this, visit);
         vv.setOnClickListener(new View.OnClickListener() {
