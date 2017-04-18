@@ -29,8 +29,8 @@ dependencies {
     compile 'com.android.support:design:25.1.1'
 
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    testCompile 'junit:junit:4.12'
     compile 'com.roomorama:caldroid:3.0.1'
+<<<<<<< HEAD
 
     //Firebase
     compile 'com.google.firebase:firebase-auth:10.2.0'
@@ -44,4 +44,7 @@ dependencies {
 
 
     apply plugin: 'com.google.gms.google-services'
+=======
+    testCompile 'junit:junit:4.12'
+>>>>>>> 6c8c8df9972feac218383b55a1aa05307b92b9dc
 }

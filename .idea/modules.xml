@@ -3,7 +3,10 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/AIDoc.iml" filepath="$PROJECT_DIR$/AIDoc.iml" />
+<<<<<<< HEAD
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/AlDoc.iml" filepath="$PROJECT_DIR$/.idea/modules/AlDoc.iml" />
+=======
+>>>>>>> 6c8c8df9972feac218383b55a1aa05307b92b9dc
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

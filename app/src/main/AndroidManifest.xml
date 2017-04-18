@@ -26,32 +26,40 @@
         <activity
             android:name=".VisitsActivity"
             android:label="Visits"
-            android:parentActivityName=".MainActivity"></activity>
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".EditVisitActivity"
             android:label="Edit Visit"
-            android:parentActivityName=".MainActivity"></activity>
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".VisitActivity"
             android:label="Visit"
-            android:parentActivityName=".VisitsActivity"></activity>
+            android:parentActivityName=".VisitsActivity" />
         <activity
             android:name=".CalendarActivity"
             android:label="Calendar"
-            android:parentActivityName=".MainActivity"></activity>
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".Diseases1Activity"
-            android:label="Dziennik chorób"></activity>
+            android:label="Dziennik chorób" />
         <activity
             android:name=".Diseases2Activity"
-            android:label="Dziennik chorób"></activity>
+            android:label="Dziennik chorób" />
         <activity
             android:name=".DiseasesActivity"
-            android:label="Dziennik chorób"></activity>
+            android:label="Dziennik chorób" />
         <activity
             android:name=".Diseases0Activity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".UserProfileView"
+            android:label="@string/title_activity_user_profile_view"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.damian.aldoc.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
