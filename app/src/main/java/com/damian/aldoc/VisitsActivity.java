@@ -14,8 +14,7 @@ import android.widget.Toast;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+
 
 public class VisitsActivity extends AppCompatActivity {
 
@@ -24,8 +23,6 @@ public class VisitsActivity extends AppCompatActivity {
     public final int ACTION_EDIT = 1;
 
     // Firebase instance variables
-    private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mVisitsDatabaseReference;
     private ChildEventListener mChildEventListener;
 
     public class VisitView extends Button{
@@ -60,9 +57,7 @@ public class VisitsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visits);
 
-        mFirebaseDatabase.getInstance().setPersistenceEnabled(true);  //ustawienie zapisywania tez lokalnie
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mVisitsDatabaseReference = mFirebaseDatabase.getReference().child("visits"); //czytanie dzieci z galezi visits
+        Database.Initalize(true);
         mChildEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -75,10 +70,12 @@ public class VisitsActivity extends AppCompatActivity {
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
             public void onCancelled(DatabaseError databaseError) {}
         };
-        mVisitsDatabaseReference.addChildEventListener(mChildEventListener);
+        Database.SetLocation("visits").addChildEventListener(mChildEventListener);
 
 
-    }
+
+
+  }
 
     public void addVisit(Visit visit)
     {

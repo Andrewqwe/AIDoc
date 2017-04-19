@@ -32,8 +32,7 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
     //Firebase instance variables
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
-    private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mVisitsDatabaseReference;
+
 
 
 
@@ -41,11 +40,10 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        Database.Initalize(true);
         //Initialize Firebase components
         mFirebaseAuth = FirebaseAuth.getInstance();
-      //  mFirebaseDatabase = FirebaseDatabase.getInstance();   Do bazy - uzywane w Edit Visit Acitivity - Radosław
-       // mVisitsDatabaseReference = mFirebaseDatabase.getReference().child("Visits");
+
 
 
 

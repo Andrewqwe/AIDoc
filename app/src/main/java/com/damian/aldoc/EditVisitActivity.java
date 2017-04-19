@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.DatabaseReference;
 
 
 
@@ -16,20 +14,12 @@ public class EditVisitActivity extends AppCompatActivity {
     public final int ACTION_ADD = 0;
     public final int ACTION_EDIT = 1;
 
-    //Firebase declaration
-    private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mVisitsDatabaseReference;
-
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_visit);
-
-        //Firebase Initialization
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mVisitsDatabaseReference = mFirebaseDatabase.getReference().child("visits");
 
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -57,10 +47,7 @@ public class EditVisitActivity extends AppCompatActivity {
         visit_data[2] = et.getText().toString();
 
         Visit Visit = new Visit(visit_data[0], visit_data[2]); //visit_data[0]- doktor visit_data[2] - miejsce
-        //Database aaa = new Database(true);
-        //aaa.SendObjectToDatabase("Visits",Visit);
-        new Database().SendObjectToDatabase("visits",Visit);
-        mVisitsDatabaseReference.push().setValue(Visit);         // wysyłanie do bazy
+        Database.SendObjectToDatabase("visits",Visit);
         returnIntent.putExtra("Visit", visit_data);
 
         setResult(AppCompatActivity.RESULT_OK,returnIntent);
