@@ -6,10 +6,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
+
+
+
 public class EditVisitActivity extends AppCompatActivity {
 
     public final int ACTION_ADD = 0;
     public final int ACTION_EDIT = 1;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +46,8 @@ public class EditVisitActivity extends AppCompatActivity {
         et = (EditText)findViewById(R.id.textTime);
         visit_data[2] = et.getText().toString();
 
+        Visit Visit = new Visit(visit_data[0], visit_data[2]); //visit_data[0]- doktor visit_data[2] - miejsce
+        Database.SendObjectToDatabase("visits",Visit);
         returnIntent.putExtra("Visit", visit_data);
 
         setResult(AppCompatActivity.RESULT_OK,returnIntent);
