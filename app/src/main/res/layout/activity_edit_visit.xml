@@ -15,7 +15,7 @@
             android:text="Doctor name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textView3"
+            android:id="@+id/textViewDoctor"
             android:layout_alignBaseline="@+id/textDoctor" android:layout_alignBottom="@+id/textDoctor"
             android:layout_alignParentStart="true" android:textSize="@dimen/edit_visit_fontsize"/>
     <EditText
@@ -24,32 +24,16 @@
             android:inputType="textPersonName"
             android:ems="10"
             android:textSize="@dimen/edit_visit_fontsize"
-            android:id="@+id/textTime" android:layout_alignBaseline="@+id/textView2"
-            android:layout_alignBottom="@+id/textView2" android:layout_alignParentEnd="true"/>
+            android:id="@+id/textLocation" android:layout_alignBaseline="@+id/textViewLocation"
+            android:layout_alignBottom="@+id/textViewLocation" android:layout_alignParentEnd="true"/>
     <TextView
             android:text="Location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textView2"
+            android:id="@+id/textViewLocation"
             android:textSize="@dimen/edit_visit_fontsize"
             android:layout_marginTop="34dp"
             android:layout_below="@+id/textDoctor" android:layout_alignParentStart="true"/>
-    <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:ems="10"
-            android:textSize="@dimen/edit_visit_fontsize"
-            android:id="@+id/textLocation"
-            android:layout_below="@+id/textTime" android:layout_alignStart="@+id/textDoctor"
-            android:layout_marginTop="20dp"/>
-    <TextView
-            android:text="Time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView"
-            android:textSize="@dimen/edit_visit_fontsize" android:layout_alignBaseline="@+id/textLocation"
-            android:layout_alignBottom="@+id/textLocation" android:layout_alignParentStart="true"/>
     <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -63,5 +47,48 @@
             android:onClick="applyOnClick"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true" android:id="@+id/button"/>
+            android:layout_alignParentEnd="true" android:id="@+id/buttonApply"/>
+    <TextView
+            android:text="Date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewDate"
+            android:layout_marginTop="34dp" android:layout_below="@+id/textViewTime"
+            android:layout_alignParentStart="true"/>
+    <TextView
+            android:text="Time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textViewTime"
+            android:textSize="@dimen/edit_visit_fontsize"
+            android:layout_marginTop="34dp"
+            android:layout_below="@+id/textViewLocation" android:layout_alignParentStart="true"
+            />
+    <TextView
+            android:text="time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textTime" android:textSize="@dimen/edit_visit_fontsize"
+            android:layout_alignBottom="@+id/textViewTime" android:layout_alignStart="@+id/textLocation"
+            android:layout_alignParentEnd="true" android:layout_alignTop="@+id/textViewTime"/>
+    <TextView
+            android:text="date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:textSize="@dimen/edit_visit_fontsize"
+            android:id="@+id/textDate" android:layout_above="@+id/buttonSetTime"
+            android:layout_alignStart="@+id/textTime" android:layout_alignParentEnd="true"/>
+    <Button
+            android:text=" Set Time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonSetTime"
+            android:onClick="setTimeOnClick"
+            android:layout_marginTop="35dp" android:layout_below="@+id/textViewDate"
+            android:layout_alignParentStart="true"/>
+    <Button
+            android:text="Set Date"
+            android:onClick="setDateOnClick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:layout_below="@+id/buttonSetTime"
+            android:layout_alignParentStart="true" android:layout_marginTop="22dp" android:id="@+id/buttonSetDate"/>
 </RelativeLayout>
