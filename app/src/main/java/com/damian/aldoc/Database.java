@@ -15,10 +15,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.DatabaseReference;
-
-
 
 /**
  * Created by Radosław on 18-04-2017.
@@ -41,7 +37,6 @@ public class Database {
             mDatabase = FirebaseDatabase.getInstance();
             mDatabase.setPersistenceEnabled(persistence);
         }
-        return;
     }
 
     static public DatabaseReference SetLocation(String path) {
@@ -62,6 +57,9 @@ public class Database {
         mDatabaseReference.push().setValue(object);  //wysyła obiekt object do bazy jako dziecko lokacji path
     }
 
+    /**
+     * Obecnie Read From Visits nie dziala
+     */
     static public void ReadFromVisits() {
         mChildEventListener = new ChildEventListener() {
             @Override
