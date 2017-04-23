@@ -71,10 +71,6 @@ public class VisitsActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {}
         };
         Database.SetLocation("visits").addChildEventListener(mChildEventListener);
-
-
-
-
   }
 
     public void addVisit(Visit visit)
