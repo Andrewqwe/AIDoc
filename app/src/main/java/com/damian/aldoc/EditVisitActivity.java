@@ -17,6 +17,7 @@ import android.widget.TimePicker;
 import java.util.Calendar;
 
 
+
 public class EditVisitActivity extends AppCompatActivity
 {
 
@@ -119,7 +120,6 @@ public class EditVisitActivity extends AppCompatActivity
 
         Visit Visit = new Visit(visit_data[0], visit_data[2]); //visit_data[0]- doktor visit_data[2] - miejsce
         Database.SendObjectToDatabase("visits",Visit);
-
         returnIntent.putExtra("Visit", visit_data);
 
         setResult(AppCompatActivity.RESULT_OK,returnIntent);

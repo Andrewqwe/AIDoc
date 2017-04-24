@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Button;
-import android.widget.Toast;
 
 
 //Firebase
@@ -57,7 +56,7 @@ public class VisitsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visits);
 
-        Database.Initalize(true);
+        Database.Initialize(true);
         mChildEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
