@@ -17,8 +17,6 @@ import android.widget.Toast;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 
 import java.util.Arrays;
@@ -40,7 +38,7 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Database.Initalize(true);
+        Database.Initialize(true);
         //Initialize Firebase components
         mFirebaseAuth = FirebaseAuth.getInstance();
 
@@ -78,6 +76,8 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
                             AuthUI.getInstance()
                                     .createSignInIntentBuilder()
                                     .setIsSmartLockEnabled(false)
+                                    .setTheme(R.style.GreenTheme)
+                                    .setLogo(R.drawable.logo)
                                     .setProviders(providers)
                                     .build(),
                             RC_SIGN_IN);
@@ -173,5 +173,5 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
     }
 }
 
-//TODO 1.Usunąć Login activity - już niepotrzebne 2. Dodać opcję przerwania podczas rejsracji 3. Podczepic baze danych pod program 4.Dodac lokalne przechowywanie bazy danych 5.Dodac warunki dostepu do bazy danych (po user ID) 6.Dostęp do materiałów po przynależności do grupy --- http://stackoverflow.com/questions/38246751/how-to-retrieve-data-that-matches-a-firebase-userid 7. Pomysl na baze danych (Q_Q) 8.Metody przechowywania zmiennych w bazie (podpiac wizyty itd...)
+//TODO  2. Dodać opcję przerwania podczas rejsracji  6.Dostęp do materiałów po przynależności do grupy --- http://stackoverflow.com/questions/38246751/how-to-retrieve-data-that-matches-a-firebase-userid 7. Pomysl na baze danych (Q_Q) 8.Metody przechowywania zmiennych w bazie (podpiac wizyty itd...)
 //TODO v2 Podpiąć obrazek pod ekran logowania //zaimplementowac rodziny w bazie (grupy)
