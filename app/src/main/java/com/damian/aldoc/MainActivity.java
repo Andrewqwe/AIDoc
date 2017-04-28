@@ -2,6 +2,7 @@ package com.damian.aldoc;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -11,9 +12,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -55,6 +60,17 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View hView = navigationView.getHeaderView(0);
+        String[] details = Database.GetUserInfo();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null ){
+            TextView nav_mail = (TextView) hView.findViewById(R.id.emailView);
+            nav_mail.setText(details[1]);
+            TextView nav_user = (TextView) hView.findViewById(R.id.nameView);
+            nav_user.setText(details[0]);                                       // Zrobić tak żeby po rejestracji lub bezpośrednio po zalogowaniu czytalo. Nie po ponowym uruchomieniu.
+            ImageView nav_image = (ImageView)hView.findViewById(R.id.imageView);
+            Glide.with(this).load(Database.GetUserImage()).into(nav_image);
+        }
         navigationView.setNavigationItemSelectedListener(this);
 
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
@@ -69,6 +85,7 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
                     //signed out
                     List<AuthUI.IdpConfig> providers = Arrays.asList(
                             new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                           // new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build(),
                             new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()
                     );
 
@@ -81,10 +98,11 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
                                     .setProviders(providers)
                                     .build(),
                             RC_SIGN_IN);
-
                 }
             }
+
         };
+
     }
 
     @Override
@@ -171,7 +189,10 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
         super.onResume();
         mFirebaseAuth.addAuthStateListener(mAuthStateListener);
     }
+
 }
+
+
 
 //TODO  2. Dodać opcję przerwania podczas rejsracji  6.Dostęp do materiałów po przynależności do grupy --- http://stackoverflow.com/questions/38246751/how-to-retrieve-data-that-matches-a-firebase-userid 7. Pomysl na baze danych (Q_Q) 8.Metody przechowywania zmiennych w bazie (podpiac wizyty itd...)
 //TODO v2 Podpiąć obrazek pod ekran logowania //zaimplementowac rodziny w bazie (grupy)
