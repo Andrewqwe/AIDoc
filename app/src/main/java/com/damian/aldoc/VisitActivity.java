@@ -11,15 +11,18 @@ public class VisitActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visit);
 
-        String[] visit_data = getIntent().getStringArrayExtra("Visit");
+        String[] visit_data = getIntent().getStringArrayExtra("visit");
 
         TextView tv = (TextView)findViewById(R.id.textViewDoctor);
-        tv.setText("Doktor: " + visit_data[0]);
+        tv.setText("Doctor: " + visit_data[0]);
 
         tv = (TextView)findViewById(R.id.textViewLocation);
-        tv.setText("Miejsce: " + visit_data[1]);
+        tv.setText("Location: " + visit_data[1]);
 
-        tv = (TextView)findViewById(R.id.textViewTime);
-        tv.setText("Data: " + visit_data[2]);
+        tv = (TextView)findViewById(R.id.textViewDate);
+        tv.setText("Date: " + visit_data[2]);
+
+        tv = (TextView)findViewById(R.id.textViewDate);
+        tv.setText("Time: " + visit_data[3]);
     }
 }

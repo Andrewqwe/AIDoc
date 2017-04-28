@@ -14,6 +14,9 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 
 public class VisitsActivity extends AppCompatActivity {
 
@@ -39,6 +42,9 @@ public class VisitsActivity extends AppCompatActivity {
         public void setVisit(Visit v)
         {
             this.m_visit = v;
+
+            String visit_info = new SimpleDateFormat("dd-MM-yyyy hh:mm").format(v.getTime().getTime()) + m_visit.getPlace() + "\n" + m_visit.getDoctor();
+
             this.setText(m_visit.getPlace() + "\n" + m_visit.getDoctor());
         }
 
@@ -61,7 +67,7 @@ public class VisitsActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                                 Visit visits = dataSnapshot.getValue(Visit.class);  //czytanie z bazy i tworzenie przycisku
-                                addVisit(visits);
+                                addVisitView(visits);
                             }
 
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
@@ -72,7 +78,7 @@ public class VisitsActivity extends AppCompatActivity {
         Database.SetLocation("visits").addChildEventListener(mChildEventListener);
   }
 
-    public void addVisit(Visit visit)
+    public void addVisitView(Visit visit)
     {
         VisitView vv = new VisitView(this, visit);
         vv.setOnClickListener(new View.OnClickListener() {
@@ -97,7 +103,7 @@ public class VisitsActivity extends AppCompatActivity {
     private void editVisit()
     {
         Intent intent = new Intent(this, EditVisitActivity.class);
-        intent.putExtra("Action", ACTION_EDIT);
+        intent.putExtra("action", ACTION_EDIT);
 
         startActivity(intent);
     }
@@ -105,7 +111,7 @@ public class VisitsActivity extends AppCompatActivity {
     private void addVisit()
     {
         Intent intent = new Intent(this, EditVisitActivity.class);
-        intent.putExtra("Action", ACTION_ADD);
+        intent.putExtra("action", ACTION_ADD);
 
         startActivityForResult(intent, REQUEST_ADD);
     }
@@ -115,13 +121,17 @@ public class VisitsActivity extends AppCompatActivity {
 
         if (requestCode == REQUEST_ADD) {
             if(resultCode == AppCompatActivity.RESULT_OK){
-                String[] result = data.getStringArrayExtra("Visit");
+                String[] result = data.getStringArrayExtra("visit");
 
-                Visit visit = new Visit(result[0],result[1]);
-              //  visit.setDoctor(result[0]);  // Jak utworzylem konstruktor to już raczej nie musze tego nizej dawac..
-             //   visit.setPlace(result[1]);
+                String[] date = result[2].split("-");
+                String[] time = result[3].split(":");
 
-                addVisit(visit);
+                Calendar c = Calendar.getInstance();
+                c.set(Integer.parseInt(date[2]), Integer.parseInt(date[1]), Integer.parseInt(date[0]), Integer.parseInt(time[1]), Integer.parseInt(time[0]));
+
+                Visit visit = new Visit(result[0],result[1], c);
+                Database.SendObjectToDatabase("visits", visit);
+                //addVisitView(visit);
             }
         }
     }
@@ -136,10 +146,14 @@ public class VisitsActivity extends AppCompatActivity {
         VisitView vv = (VisitView)v;
         Visit visit = vv.getVisit();
 
-        String[] visit_data = {visit.getDoctor(), visit.getPlace(), "time"};
+        Calendar c = visit.getTime();
+        String date = new SimpleDateFormat("dd-MM-yyyy").format(c.getTime());
+        String time = new SimpleDateFormat("hh:mm").format(c.getTime());
+
+        String[] visit_data = {visit.getDoctor(), visit.getPlace(), date, time};
 
         Intent intent = new Intent(this, VisitActivity.class);
-        intent.putExtra("Visit", visit_data);
+        intent.putExtra("visit", visit_data);
 
         startActivityForResult(intent, REQUEST_ADD);
     }

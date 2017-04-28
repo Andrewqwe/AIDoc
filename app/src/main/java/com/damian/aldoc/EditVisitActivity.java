@@ -85,20 +85,16 @@ public class EditVisitActivity extends AppCompatActivity
     public final int ACTION_ADD = 0;
     public final int ACTION_EDIT = 1;
 
-    public static EditVisitActivity activity;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_visit);
-
-        activity = this;
     }
 
     public void applyOnClick(View v)
     {
         Intent returnIntent = new Intent();
-        int action = getIntent().getIntExtra("Action", -1);
+        int action = getIntent().getIntExtra("action", -1);
 
         if(action == -1)
         {
@@ -106,26 +102,45 @@ public class EditVisitActivity extends AppCompatActivity
             finish();
         }
 
-        String[] visit_data = new String[3];
+        String[] visit_data = new String[4];
 
-        EditText et = (EditText)findViewById(R.id.textDoctor);
+        EditText et;
         TextView tv;
+
+        et = (EditText)findViewById(R.id.textDoctor);
         visit_data[0] = et.getText().toString();
 
         et = (EditText)findViewById(R.id.textLocation);
         visit_data[1] = et.getText().toString();
 
+        tv = (TextView)findViewById(R.id.textDate);
+        visit_data[2] = tv.getText().toString();
+
         tv = (TextView)findViewById(R.id.textTime);
-        visit_data[2] = et.getText().toString();
+        visit_data[3] = tv.getText().toString();
 
-        Visit Visit = new Visit(visit_data[0], visit_data[2]); //visit_data[0]- doktor visit_data[2] - miejsce
-        Database.SendObjectToDatabase("visits",Visit);
-        returnIntent.putExtra("Visit", visit_data);
-
+        returnIntent.putExtra("visit", visit_data);
         setResult(AppCompatActivity.RESULT_OK,returnIntent);
 
         finish();
     }
+
+    public void setTimeOnClick(View v)
+    {
+        DialogFragment time_pick_fragment = new TimePickerFragment();
+        ((TimePickerFragment)time_pick_fragment).setActivity(this);
+        time_pick_fragment.show(getSupportFragmentManager(), "timePicker");
+    }
+
+    public void setDateOnClick(View v)
+    {
+        DialogFragment date_pick_fragment = new DatePickerFragment();
+        ((DatePickerFragment)date_pick_fragment).setActivity(this);
+        date_pick_fragment.show(getSupportFragmentManager(), "timePicker");
+    }
+
+    /*Dwie funkcje do ustawienia czasu i daty, wolane przez fragmenty
+    * TimePickerFragment i DatePickerFragment, w ktorych wybiera sie czas i date*/
 
     public void setTime(int hour, int minute)
     {
@@ -148,21 +163,5 @@ public class EditVisitActivity extends AppCompatActivity
         String t = d.toString() + "-" + m.toString() + "-" + y.toString();
 
         date_text_view.setText(t);
-    }
-
-    /*Dwie funkcje do ustawienia czasu i daty, wolane przez fragmenty
-    * TimePickerFragment i DatePickerFragment, w ktorych wybiera sie czas i date*/
-    public void setTimeOnClick(View v)
-    {
-        DialogFragment time_pick_fragment = new TimePickerFragment();
-        ((TimePickerFragment)time_pick_fragment).setActivity(this);
-        time_pick_fragment.show(getSupportFragmentManager(), "timePicker");
-    }
-
-    public void setDateOnClick(View v)
-    {
-        DialogFragment date_pick_fragment = new DatePickerFragment();
-        ((DatePickerFragment)date_pick_fragment).setActivity(this);
-        date_pick_fragment.show(getSupportFragmentManager(), "timePicker");
     }
 }

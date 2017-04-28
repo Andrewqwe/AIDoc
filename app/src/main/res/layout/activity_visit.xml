@@ -17,20 +17,25 @@
             android:layout_alignParentStart="true" android:id="@+id/visit_grid_layout">
 
         <TextView
-                android:text="Doktor:"
+                android:text="Doctor:"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:id="@+id/textViewDoctor"
                 android:textSize="18sp" android:layout_row="0"
                 android:layout_column="0"/>
         <TextView
-                android:text="Miejsce:"
+                android:text="Location:"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:id="@+id/textViewLocation" android:layout_row="1"
                 android:layout_column="0" android:textSize="18sp"/>
         <TextView
-                android:text="Data:"
+                android:text="Date:"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:id="@+id/textViewTime" android:layout_row="2"
+                android:layout_height="wrap_content" android:id="@+id/textViewDate" android:layout_row="2"
+                android:layout_column="0" android:textSize="18sp"/>
+        <TextView
+                android:text="Time:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/textViewDate" android:layout_row="3"
                 android:layout_column="0" android:textSize="18sp"/>
     </GridLayout>
     <TextView
