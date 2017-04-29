@@ -36,7 +36,6 @@ public class Database {
     static private FirebaseDatabase mDatabase;
     static private DatabaseReference mDatabaseReference;
     static private ChildEventListener mChildEventListener;
-    static private ChildEventListener mUserEventListener;
 
     public static void Initalize(boolean persistence) {
         if (mDatabase == null){
