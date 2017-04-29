@@ -183,7 +183,7 @@ public class Database {
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Visit visits = dataSnapshot.getValue(Visit.class);  //czytanie z bazy i tworzenie przycisku
                 VisitsActivity helper = new VisitsActivity();
-                helper.addVisit(visits);
+                //helper.addVisit(visits);
             }
 
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
