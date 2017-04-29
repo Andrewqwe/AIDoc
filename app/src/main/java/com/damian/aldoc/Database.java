@@ -10,6 +10,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -35,6 +36,7 @@ public class Database {
     static private FirebaseDatabase mDatabase;
     static private DatabaseReference mDatabaseReference;
     static private ChildEventListener mChildEventListener;
+    static private ChildEventListener mUserEventListener;
 
     public static void Initalize(boolean persistence) {
         if (mDatabase == null){
