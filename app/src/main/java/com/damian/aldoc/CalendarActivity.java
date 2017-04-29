@@ -48,7 +48,7 @@ public class CalendarActivity extends AppCompatActivity {
 
         Visit visit = new Visit();
         visit.setDoctor("Kowalski");
-        visit.setPlace("Wrocław");
+        visit.setLocation("Wrocław");
 
         addVisit(visit);
     }
@@ -68,7 +68,7 @@ public class CalendarActivity extends AppCompatActivity {
         public void setVisit(Visit v)
         {
             this.m_visit = v;
-            this.setText(m_visit.getPlace() + "\n" + m_visit.getDoctor());
+            this.setText(m_visit.getLocation() + "\n" + m_visit.getDoctor());
         }
 
         public Visit getVisit()
@@ -84,10 +84,10 @@ public class CalendarActivity extends AppCompatActivity {
         VisitView vv = (VisitView)v;
         Visit visit = vv.getVisit();
 
-        String[] visit_data = {visit.getDoctor(), visit.getPlace(), "time"};
+        String[] visit_data = {visit.getDoctor(), visit.getLocation(), visit.getDate(), visit.getTime()};
 
         Intent intent = new Intent(this, VisitActivity.class);
-        intent.putExtra("Visit", visit_data);
+        intent.putExtra("visit", visit_data);
 
         startActivityForResult(intent, REQUEST_ADD);
     }
