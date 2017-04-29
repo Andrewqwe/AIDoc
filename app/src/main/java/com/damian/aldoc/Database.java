@@ -8,6 +8,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import android.content.Intent;
@@ -19,6 +20,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.twitter.sdk.android.core.TwitterCore.TAG;
 
@@ -222,6 +227,96 @@ public class Database {
     static private void pesel(String pesel){
         ReadProfileDetails();
     };
+
+    static public void Dsasa(String uid){
+        Initialize(true);
+        Query visitQuery = SetLocation("visits").orderByChild("uid").equalTo(uid);
+        //DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        //Query visitQuery = ref.child("firebase-test").orderByChild("title").equalTo("Apple");
+
+        visitQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot appleSnapshot: dataSnapshot.getChildren()) {
+                    appleSnapshot.getRef().removeValue();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.e(TAG, "onCancelled", databaseError.toException());
+            }
+        });
+    }
+
+    /**
+     * Metoda do kasowania całego obiektu o danym kluczu.
+     * @param uid klucz do danego miejsca w wizytach np. -KivIPsb0iuUBuOns6Bv
+     */
+    static public void DeleteVisitFromDatabase(String uid){
+        Initialize(true);
+        DatabaseReference ref = SetLocation("visits");
+        ref.child(uid).removeValue();
+    }
+
+    /**
+     *Metoda która wyszukuje w bazie wizyty które na konkretnej pozycji - parametrName mają dokładną wartość - value
+     * Metoda nic nie zwraca dlatego w OnChildAdded należy dodać wywołanie własnej funkcji która będzie coś robiła z tymi obiektami
+     * DataSnapshot zawsze tworzy liste nawet 1 elementową (komputer jest głupi i nie wie czy szukana przez nas dana jest tylko w 1 miejscu)
+     * @param parametrName nazwa zmiennej którą chcemy zmienić np location
+     * @param value wartość na jaką chcemy podmienić np Breslav
+     */
+    static public void GetVisitByValueFromDatabase(String parametrName, String value){
+        Initialize(true);
+        DatabaseReference ref = SetLocation("visits");
+        Query aa= ref.orderByChild(parametrName).equalTo(value);
+        aa.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                System.out.println(dataSnapshot.getKey());  //tutaj podmienic na funkcjie która ma działać z otrzymanym kluczem.
+                //wyżej dataSnapshot.getKey() otrzymuje uid znalezionych obiektów. ten print zostanie wywołany tyle razy ile obiektów będzie zgadzało się z naszym wyszukiwaniem!!!!!!!
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+    }
+
+
+    /**
+     *Metoda do podmiany wartości w sprecyzowanym miejscu w bazie. Tą metodą można też dodać nową zmienną jeżeli podamy parametrName który nie znajduje się w bazie.
+     * @param uid klucz do danej lokacji w bazie (ten długi np.-KivIPsb0iuUBuOns6Bv)
+     * @param parametrName nazwa zmiennej którą chcemy zmienić np location
+     * @param value wartość na jaką chcemy podmienić np Breslav
+     */
+    static public void ModifyValueInDatabase(String uid,String parametrName, String value){
+
+        Initialize(true);
+        DatabaseReference ref = SetLocation("visits");
+
+        Map<String, Object> nickname = new HashMap<String, Object>();
+        nickname.put(parametrName, value);
+        ref.child(uid).updateChildren(nickname);
+    }
 }
 // TODO  Metoda odczytująca z bazy danych. Metody wysyłające dane do większej ilości funkcjionalności. Podpięcie tworzenia grup i dodawania członków rodziny do nich.
 // TODO  Zejście z metod obsługiwanych przez podanie ścieżki aby je wywołać.

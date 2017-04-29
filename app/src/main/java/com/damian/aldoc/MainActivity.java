@@ -133,6 +133,10 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
                 AuthUI.getInstance().signOut(this);
                 return true;
             case R.id.action_settings:
+                Database.ModifyValueInDatabase("-KivIPsb0iuUBuOns6Bv","location","Breslav");
+                Database.SendUserPeselToDatabase("1111");  //Miejsce testowe Radosława ( tego od bazy)
+                Database.DeleteVisitFromDatabase("-Kiv9bXMgN0W3SyqUksW");
+                Database.GetVisitByValueFromDatabase("time","time");
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
