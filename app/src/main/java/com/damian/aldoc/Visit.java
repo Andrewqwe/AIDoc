@@ -1,6 +1,5 @@
 package com.damian.aldoc;
 
-import java.util.Calendar;
 import java.util.ArrayList;
 
 
@@ -11,39 +10,61 @@ public class Visit {
     public Visit(){}
 
 
-    public Visit(String doctor, String place, Calendar time)
+    public Visit(String doctor, String location, String date, String time)
     {
-        m_doctor = m_doctor;
-        m_place = m_place;
+        m_doctor = doctor;
+        m_location = location;
+        m_date = date;
         m_time = time;
     }
 
-    public Calendar getTime() {
+    public String getTime() {
         return m_time;
     }
 
-    public void setTime(Calendar time) {
+    /*
+    * @param time - format hh::mm
+    * */
+    public void setTime(String time) {
         m_time = time;
     }
 
-    public String getPlace() {
-        return m_place;
+    public String getDate() {
+        return m_date;
     }
 
-    public void setPlace(String m_place) {
-        this.m_place = m_place;
+    /*
+    * @param date - format dd-MM-yyyy
+    * */
+    public void setDate(String date) {
+        m_date = date;
+    }
+
+    public String getLocation() {
+        return m_location;
+    }
+
+    public void setLocation(String location) {
+        m_location = location;
     }
 
     public String getDoctor() {
         return m_doctor;
     }
 
-    public void setDoctor(String m_doctor) {
-        this.m_doctor = m_doctor;
+    public void setDoctor(String doctor) {
+        m_doctor = doctor;
     }
 
-    private Calendar m_time;
-    private String m_place;
+    @Override
+    public String toString()
+    {
+        return m_date + " " + m_time + "\n" + m_location + "\n" + m_doctor;
+    }
+
+    private String m_time;
+    private String m_date;
+    private String m_location;
     private String m_doctor;
     private ArrayList<Prescription> m_prescriptions = new ArrayList<>();
 }

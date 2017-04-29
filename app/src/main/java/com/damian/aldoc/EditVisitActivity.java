@@ -139,6 +139,21 @@ public class EditVisitActivity extends AppCompatActivity
         date_pick_fragment.show(getSupportFragmentManager(), "timePicker");
     }
 
+    /*Zamienia liczby dotyczace daty/godziny na string
+    * dodaje 0 z przodu jezeli liczba jest jednocyfrowa*/
+    private String timeToString(int val)
+    {
+        Integer i = Integer.valueOf(val);
+        String res;
+
+        if(val < 10)
+            res = "0" + i.toString();
+        else
+            res = i.toString();
+
+        return res;
+    }
+
     /*Dwie funkcje do ustawienia czasu i daty, wolane przez fragmenty
     * TimePickerFragment i DatePickerFragment, w ktorych wybiera sie czas i date*/
 
@@ -146,9 +161,7 @@ public class EditVisitActivity extends AppCompatActivity
     {
         TextView time_text_view = (TextView)findViewById(R.id.textTime);
 
-        Integer h = Integer.valueOf(hour);
-        Integer m = Integer.valueOf(minute);
-        String t = h.toString() + ":" + m.toString();
+        String t = timeToString(hour) + ":" + timeToString(minute);
 
         time_text_view.setText(t);
     }
@@ -157,10 +170,7 @@ public class EditVisitActivity extends AppCompatActivity
     {
         TextView date_text_view = (TextView)findViewById(R.id.textDate);
 
-        Integer y = Integer.valueOf(year);
-        Integer m = Integer.valueOf(month + 1);
-        Integer d = Integer.valueOf(day);
-        String t = d.toString() + "-" + m.toString() + "-" + y.toString();
+        String t = timeToString(day) + "-" + timeToString(month) + "-" + timeToString(year);
 
         date_text_view.setText(t);
     }

@@ -14,9 +14,6 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-
 
 public class VisitsActivity extends AppCompatActivity {
 
@@ -43,9 +40,7 @@ public class VisitsActivity extends AppCompatActivity {
         {
             this.m_visit = v;
 
-            String visit_info = new SimpleDateFormat("dd-MM-yyyy hh:mm").format(v.getTime().getTime()) + m_visit.getPlace() + "\n" + m_visit.getDoctor();
-
-            this.setText(m_visit.getPlace() + "\n" + m_visit.getDoctor());
+            this.setText(v.toString());
         }
 
         public Visit getVisit()
@@ -78,7 +73,7 @@ public class VisitsActivity extends AppCompatActivity {
         Database.SetLocation("visits").addChildEventListener(mChildEventListener);
   }
 
-    public void addVisitView(Visit visit)
+    private void addVisitView(Visit visit)
     {
         VisitView vv = new VisitView(this, visit);
         vv.setOnClickListener(new View.OnClickListener() {
@@ -123,15 +118,8 @@ public class VisitsActivity extends AppCompatActivity {
             if(resultCode == AppCompatActivity.RESULT_OK){
                 String[] result = data.getStringArrayExtra("visit");
 
-                String[] date = result[2].split("-");
-                String[] time = result[3].split(":");
-
-                Calendar c = Calendar.getInstance();
-                c.set(Integer.parseInt(date[2]), Integer.parseInt(date[1]), Integer.parseInt(date[0]), Integer.parseInt(time[1]), Integer.parseInt(time[0]));
-
-                Visit visit = new Visit(result[0],result[1], c);
+                Visit visit = new Visit(result[0], result[1], result[2], result[3]);
                 Database.SendObjectToDatabase("visits", visit);
-                //addVisitView(visit);
             }
         }
     }
@@ -141,16 +129,12 @@ public class VisitsActivity extends AppCompatActivity {
         addVisit();
     }
 
-    public void visitViewOnClick(View v)
+    private void visitViewOnClick(View v)
     {
         VisitView vv = (VisitView)v;
         Visit visit = vv.getVisit();
 
-        Calendar c = visit.getTime();
-        String date = new SimpleDateFormat("dd-MM-yyyy").format(c.getTime());
-        String time = new SimpleDateFormat("hh:mm").format(c.getTime());
-
-        String[] visit_data = {visit.getDoctor(), visit.getPlace(), date, time};
+        String[] visit_data = {visit.getDoctor(), visit.getLocation(), visit.getDate(), visit.getTime()};
 
         Intent intent = new Intent(this, VisitActivity.class);
         intent.putExtra("visit", visit_data);
