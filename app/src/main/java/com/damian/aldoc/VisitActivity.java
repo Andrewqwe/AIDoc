@@ -1,25 +1,121 @@
 package com.damian.aldoc;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.TextView;
+import android.view.*;
+import android.widget.*;
+import com.google.firebase.database.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class VisitActivity extends AppCompatActivity {
+
+    private ListView list_view;
+    private ArrayAdapter<Prescription> adapter;
+    private List<Prescription> prescriptions = new ArrayList<>();
+    private String visit_uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visit);
 
-        String[] visit_data = getIntent().getStringArrayExtra("Visit");
+        String[] visit_data = getIntent().getStringArrayExtra("visit");
+
+        //czytamy dane wizyty i wstawiamy je do pol z tekstem z opisem wizyty
 
         TextView tv = (TextView)findViewById(R.id.textViewDoctor);
-        tv.setText("Doktor: " + visit_data[0]);
+        tv.setText("Doctor: " + visit_data[0]);
 
         tv = (TextView)findViewById(R.id.textViewLocation);
-        tv.setText("Miejsce: " + visit_data[1]);
+        tv.setText("Location: " + visit_data[1]);
+
+        tv = (TextView)findViewById(R.id.textViewDate);
+        tv.setText("Date: " + visit_data[2]);
 
         tv = (TextView)findViewById(R.id.textViewTime);
-        tv.setText("Data: " + visit_data[2]);
+        tv.setText("Time: " + visit_data[3]);
+
+        //czytamy uid wizyty zeby odczytac z bazy recepty dotyczace tej wizyty
+        visit_uid = visit_data[4];
+
+        //tworzymy listenera, ktory dodaje do listview wszystkie recepty
+        //dotyczace danej wizyty
+        Database.Initialize(true);
+        DatabaseReference ref = Database.SetLocation("prescriptions");
+        Query q = ref.orderByChild("visitUid").equalTo(visit_uid);
+        q.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s)
+            {
+                prescriptions.add(dataSnapshot.getValue(Prescription.class));
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
+
+        //tworzymy adapter i przypisujemy go do listview zeby wyswietlac recepty
+        adapter = new ArrayAdapter<Prescription>(this, android.R.layout.simple_list_item_1, prescriptions);
+
+        list_view = (ListView)findViewById(R.id.listViewPrescriptions);
+        list_view.setAdapter(adapter);
+        registerForContextMenu(list_view);
+
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
+    {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_edit_delete, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+
+        switch (item.getItemId())
+        {
+            case R.id.delete_id:
+                break;
+            case R.id.edit_id:
+                break;
+        }
+
+        return super.onContextItemSelected(item);
+    }
+
+    public void addOnClick(View v)
+    {
+        View view = (LayoutInflater.from(this)).inflate(R.layout.prescription_name, null);
+
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+        alertBuilder.setView(view);
+
+        final EditText et_prescription = (EditText)view.findViewById(R.id.textPrescriptionName);
+
+        alertBuilder.setCancelable(true).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                Prescription p = new Prescription(visit_uid, et_prescription.getText().toString());
+                Database.SendObjectPrescriptionToDatabase(p);
+            }
+        });
+
+        Dialog dialog = alertBuilder.create();
+        dialog.show();
     }
 }

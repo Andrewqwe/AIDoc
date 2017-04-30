@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Button;
-import android.widget.Toast;
 
 
 //Firebase
@@ -40,7 +39,8 @@ public class VisitsActivity extends AppCompatActivity {
         public void setVisit(Visit v)
         {
             this.m_visit = v;
-            this.setText(m_visit.getPlace() + "\n" + m_visit.getDoctor());
+
+            this.setText(v.toString());
         }
 
         public Visit getVisit()
@@ -57,12 +57,13 @@ public class VisitsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visits);
 
-        Database.Initalize(true);
+        Database.Initialize(true);
         mChildEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                                Visit visits = dataSnapshot.getValue(Visit.class);  //czytanie z bazy i tworzenie przycisku
-                                addVisit(visits);
+                                Visit visit = dataSnapshot.getValue(Visit.class);
+                                visit.setUid(dataSnapshot.getKey());
+                                addVisitView(visit);
                             }
 
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
@@ -71,13 +72,9 @@ public class VisitsActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {}
         };
         Database.SetLocation("visits").addChildEventListener(mChildEventListener);
-
-
-
-
   }
 
-    public void addVisit(Visit visit)
+    private void addVisitView(Visit visit)
     {
         VisitView vv = new VisitView(this, visit);
         vv.setOnClickListener(new View.OnClickListener() {
@@ -102,7 +99,7 @@ public class VisitsActivity extends AppCompatActivity {
     private void editVisit()
     {
         Intent intent = new Intent(this, EditVisitActivity.class);
-        intent.putExtra("Action", ACTION_EDIT);
+        intent.putExtra("action", ACTION_EDIT);
 
         startActivity(intent);
     }
@@ -110,7 +107,7 @@ public class VisitsActivity extends AppCompatActivity {
     private void addVisit()
     {
         Intent intent = new Intent(this, EditVisitActivity.class);
-        intent.putExtra("Action", ACTION_ADD);
+        intent.putExtra("action", ACTION_ADD);
 
         startActivityForResult(intent, REQUEST_ADD);
     }
@@ -120,13 +117,10 @@ public class VisitsActivity extends AppCompatActivity {
 
         if (requestCode == REQUEST_ADD) {
             if(resultCode == AppCompatActivity.RESULT_OK){
-                String[] result = data.getStringArrayExtra("Visit");
+                String[] result = data.getStringArrayExtra("visit");
 
-                Visit visit = new Visit(result[0],result[1]);
-              //  visit.setDoctor(result[0]);  // Jak utworzylem konstruktor to już raczej nie musze tego nizej dawac..
-             //   visit.setPlace(result[1]);
-
-                addVisit(visit);
+                Visit visit = new Visit(result[0], result[1], result[2], result[3]);
+                Database.SendObjectVisitToDatabase(visit);
             }
         }
     }
@@ -136,15 +130,15 @@ public class VisitsActivity extends AppCompatActivity {
         addVisit();
     }
 
-    public void visitViewOnClick(View v)
+    private void visitViewOnClick(View v)
     {
         VisitView vv = (VisitView)v;
         Visit visit = vv.getVisit();
 
-        String[] visit_data = {visit.getDoctor(), visit.getPlace(), "time"};
+        String[] visit_data = {visit.getDoctor(), visit.getLocation(), visit.getDate(), visit.getTime(), visit.getUid()};
 
         Intent intent = new Intent(this, VisitActivity.class);
-        intent.putExtra("Visit", visit_data);
+        intent.putExtra("visit", visit_data);
 
         startActivityForResult(intent, REQUEST_ADD);
     }

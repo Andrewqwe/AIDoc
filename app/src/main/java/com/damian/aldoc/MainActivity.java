@@ -2,6 +2,7 @@ package com.damian.aldoc;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -11,14 +12,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 
 import java.util.Arrays;
@@ -40,7 +43,7 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Database.Initalize(true);
+        Database.Initialize(true);
         //Initialize Firebase components
         mFirebaseAuth = FirebaseAuth.getInstance();
 
@@ -57,6 +60,17 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View hView = navigationView.getHeaderView(0);
+        String[] details = Database.GetUserInfo();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null ){
+            TextView nav_mail = (TextView) hView.findViewById(R.id.emailView);
+            nav_mail.setText(details[1]);
+            TextView nav_user = (TextView) hView.findViewById(R.id.nameView);
+            nav_user.setText(details[0]);                                       // Zrobić tak żeby po rejestracji lub bezpośrednio po zalogowaniu czytalo. Nie po ponowym uruchomieniu.
+            ImageView nav_image = (ImageView)hView.findViewById(R.id.imageView);
+            Glide.with(this).load(Database.GetUserImage()).into(nav_image);
+        }
         navigationView.setNavigationItemSelectedListener(this);
 
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
@@ -71,6 +85,7 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
                     //signed out
                     List<AuthUI.IdpConfig> providers = Arrays.asList(
                             new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                           // new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build(),
                             new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()
                     );
 
@@ -78,13 +93,16 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
                             AuthUI.getInstance()
                                     .createSignInIntentBuilder()
                                     .setIsSmartLockEnabled(false)
+                                    .setTheme(R.style.GreenTheme)
+                                    .setLogo(R.drawable.logo)
                                     .setProviders(providers)
                                     .build(),
                             RC_SIGN_IN);
-
                 }
             }
+
         };
+
     }
 
     @Override
@@ -115,6 +133,10 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
                 AuthUI.getInstance().signOut(this);
                 return true;
             case R.id.action_settings:
+                Database.ModifyValueInDatabase("-KivIPsb0iuUBuOns6Bv","location","Breslav");
+                Database.SendUserPeselToDatabase("1111");  //Miejsce testowe Radosława ( tego od bazy)
+                Database.DeleteVisitFromDatabase("-Kiv9bXMgN0W3SyqUksW");
+                Database.GetVisitByValueFromDatabase("time","time");
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -171,7 +193,10 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
         super.onResume();
         mFirebaseAuth.addAuthStateListener(mAuthStateListener);
     }
+
 }
 
-//TODO 1.Usunąć Login activity - już niepotrzebne 2. Dodać opcję przerwania podczas rejsracji 3. Podczepic baze danych pod program 4.Dodac lokalne przechowywanie bazy danych 5.Dodac warunki dostepu do bazy danych (po user ID) 6.Dostęp do materiałów po przynależności do grupy --- http://stackoverflow.com/questions/38246751/how-to-retrieve-data-that-matches-a-firebase-userid 7. Pomysl na baze danych (Q_Q) 8.Metody przechowywania zmiennych w bazie (podpiac wizyty itd...)
+
+
+//TODO  2. Dodać opcję przerwania podczas rejsracji  6.Dostęp do materiałów po przynależności do grupy --- http://stackoverflow.com/questions/38246751/how-to-retrieve-data-that-matches-a-firebase-userid 7. Pomysl na baze danych (Q_Q) 8.Metody przechowywania zmiennych w bazie (podpiac wizyty itd...)
 //TODO v2 Podpiąć obrazek pod ekran logowania //zaimplementowac rodziny w bazie (grupy)
