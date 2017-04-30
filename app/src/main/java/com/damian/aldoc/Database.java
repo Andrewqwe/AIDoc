@@ -92,6 +92,16 @@ public class Database {
     }
 
     /**
+     * Metoda publiczna wysyłająca obiekt do lokacji prescription_entries w Bazie danych
+     * @param object wysyłany obiekt klasy PrescriptionEntry
+     */
+    static public void SendObjectPrescriptionEntryToDatabase(Object object) {
+        Initialize(true);
+        SetLocation("prescription_entries");
+        mDatabaseReference.push().setValue(object);
+    }
+
+    /**
      * Metoda publiczna wysyłająca obiekt do lokacji notes w Bazie danych
      * @param object wysyłany obiekt klasy Note - której jeszcze nie ma ????
      */
@@ -335,6 +345,12 @@ public class Database {
         Initialize(true);
         SetLocation("prescriptions");
         mDatabaseReference.child(uid).setValue(prescription);
+    }
+
+    static public void UpdatePrescriptionEntryInDatabase(PrescriptionEntry prescription_entry, String uid) {
+        Initialize(true);
+        SetLocation("prescription_entries");
+        mDatabaseReference.child(uid).setValue(prescription_entry);
     }
 
     /**

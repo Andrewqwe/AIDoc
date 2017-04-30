@@ -119,11 +119,8 @@ public class VisitActivity extends AppCompatActivity {
     private void onPrescriptionClick(Prescription p)
     {
         Intent intent = new Intent(this, PrescriptionActivity.class);
-
         String[] prescription_data = {p.getName(), p.getUid()};
-
         intent.putExtra("prescription", prescription_data);
-
         startActivity(intent);
     }
 
@@ -151,10 +148,11 @@ public class VisitActivity extends AppCompatActivity {
 
                 AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
                 alertBuilder.setView(view);
+                alertBuilder.setTitle("Prescription name");
 
                 final EditText et_prescription = (EditText)view.findViewById(R.id.textPrescriptionName);
                 et_prescription.setText(p.getName());
-                et_prescription.selectAll();
+                //TODO:dodac zaznaczenie tekstu i wlaczenie pola tekstowego?
 
                 alertBuilder.setCancelable(true).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
@@ -162,6 +160,12 @@ public class VisitActivity extends AppCompatActivity {
                     {
                         p.setName(et_prescription.getText().toString());
                         Database.UpdatePrescriptionInDatabase(p, p.getUid());
+                    }
+                });
+
+                alertBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
                     }
                 });
 
@@ -179,6 +183,7 @@ public class VisitActivity extends AppCompatActivity {
 
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
         alertBuilder.setView(view);
+        alertBuilder.setTitle("Prescription name");
 
         final EditText et_prescription = (EditText)view.findViewById(R.id.textPrescriptionName);
 
@@ -188,6 +193,12 @@ public class VisitActivity extends AppCompatActivity {
             {
                 Prescription p = new Prescription(visit_uid, et_prescription.getText().toString());
                 Database.SendObjectPrescriptionToDatabase(p);
+            }
+        });
+
+        alertBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
             }
         });
 

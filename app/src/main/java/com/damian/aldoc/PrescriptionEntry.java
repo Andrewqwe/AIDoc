@@ -2,6 +2,8 @@ package com.damian.aldoc;
 
 public class PrescriptionEntry
 {
+    public PrescriptionEntry(){}
+
     public PrescriptionEntry(String prescription_uid, String medicine_name, String dose_rate)
     {
         m_prescription_uid = prescription_uid;
@@ -24,6 +26,11 @@ public class PrescriptionEntry
     public String getDoseRate() { return m_dose_rate; }
 
     public void setDoseRate(String dose_rate) { m_dose_rate = dose_rate; }
+
+    @Override
+    public String toString() {
+        return m_medicine_name + "\n" + m_dose_rate;
+    }
 
     private String m_uid;
     private String m_prescription_uid;
