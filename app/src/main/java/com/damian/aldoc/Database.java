@@ -82,6 +82,16 @@ public class Database {
     }
 
     /**
+     * Metoda publiczna wysyłająca obiekt do lokacji prescriptions w Bazie danych
+     * @param object wysyłany obiekt klasy Prescription
+     */
+    static public void SendObjectPrescriptionToDatabase(Object object) {
+        Initialize(true);
+        SetLocation("prescriptions");
+        mDatabaseReference.push().setValue(object);
+    }
+
+    /**
      * Metoda publiczna wysyłająca obiekt do lokacji notes w Bazie danych
      * @param object wysyłany obiekt klasy Note - której jeszcze nie ma ????
      */

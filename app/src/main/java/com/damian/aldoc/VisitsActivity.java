@@ -61,8 +61,9 @@ public class VisitsActivity extends AppCompatActivity {
         mChildEventListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                                Visit visits = dataSnapshot.getValue(Visit.class);  //czytanie z bazy i tworzenie przycisku
-                                addVisitView(visits);
+                                Visit visit = dataSnapshot.getValue(Visit.class);
+                                visit.setUid(dataSnapshot.getKey());
+                                addVisitView(visit);
                             }
 
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
@@ -119,7 +120,7 @@ public class VisitsActivity extends AppCompatActivity {
                 String[] result = data.getStringArrayExtra("visit");
 
                 Visit visit = new Visit(result[0], result[1], result[2], result[3]);
-                Database.SendObjectToDatabase("visits", visit);
+                Database.SendObjectVisitToDatabase(visit);
             }
         }
     }
@@ -134,7 +135,7 @@ public class VisitsActivity extends AppCompatActivity {
         VisitView vv = (VisitView)v;
         Visit visit = vv.getVisit();
 
-        String[] visit_data = {visit.getDoctor(), visit.getLocation(), visit.getDate(), visit.getTime()};
+        String[] visit_data = {visit.getDoctor(), visit.getLocation(), visit.getDate(), visit.getTime(), visit.getUid()};
 
         Intent intent = new Intent(this, VisitActivity.class);
         intent.putExtra("visit", visit_data);
