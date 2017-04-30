@@ -80,14 +80,12 @@
             android:onClick="setTimeOnClick"
             android:layout_below="@+id/buttonSetDate" android:layout_alignParentEnd="true"/>
     <TextView
-            android:text="date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:textSize="@dimen/edit_visit_fontsize"
             android:id="@+id/textDate"
             android:layout_alignBaseline="@+id/buttonSetDate" android:layout_alignBottom="@+id/buttonSetDate"
             android:layout_alignStart="@+id/textLocation" android:layout_toStartOf="@+id/buttonSetDate"/>
     <TextView
-            android:text="time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/textTime" android:textSize="@dimen/edit_visit_fontsize"
