@@ -53,6 +53,7 @@ public class Database {
     }
 
     static public DatabaseReference SetLocation(String path) {
+        Initialize(true);
         mDatabaseReference = mDatabase.getReference().child(path);
         return mDatabaseReference;
     }
@@ -251,7 +252,6 @@ public class Database {
                     appleSnapshot.getRef().removeValue();
                 }
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.e(TAG, "onCancelled", databaseError.toException());
@@ -264,10 +264,15 @@ public class Database {
      * @param uid klucz do danego miejsca w wizytach np. -KivIPsb0iuUBuOns6Bv
      */
     static public void DeleteVisitFromDatabase(String uid){
-        Initialize(true);
         DatabaseReference ref = SetLocation("visits");
         ref.child(uid).removeValue();
     }
+
+    static public void DeletePrescriptionsFromDatabase(String uid){
+        DatabaseReference ref = SetLocation("prescriptions");
+        ref.child(uid).removeValue();
+    }
+
 
     /**
      *Metoda która wyszukuje w bazie wizyty które na konkretnej pozycji - parametrName mają dokładną wartość - value
@@ -277,7 +282,6 @@ public class Database {
      * @param value wartość na jaką chcemy podmienić np Breslav
      */
     static public void GetVisitByValueFromDatabase(String parametrName, String value){
-        Initialize(true);
         DatabaseReference ref = SetLocation("visits");
         Query aa= ref.orderByChild(parametrName).equalTo(value);
         aa.addChildEventListener(new ChildEventListener() {
@@ -286,31 +290,16 @@ public class Database {
                 System.out.println(dataSnapshot.getKey());  //tutaj podmienic na funkcjie która ma działać z otrzymanym kluczem.
                 //wyżej dataSnapshot.getKey() otrzymuje uid znalezionych obiektów. ten print zostanie wywołany tyle razy ile obiektów będzie zgadzało się z naszym wyszukiwaniem!!!!!!!
             }
-
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
             @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
+            public void onCancelled(DatabaseError databaseError) {}
         });
-
-
     }
-
 
     /**
      *Metoda do podmiany wartości w sprecyzowanym miejscu w bazie. Tą metodą można też dodać nową zmienną jeżeli podamy parametrName który nie znajduje się w bazie.
@@ -318,15 +307,23 @@ public class Database {
      * @param parametrName nazwa zmiennej którą chcemy zmienić np location
      * @param value wartość na jaką chcemy podmienić np Breslav
      */
-    static public void ModifyValueInDatabase(String uid,String parametrName, String value){
+    static public void ModifyValueInVisitsInDatabase(String uid,String parametrName, String value){
 
-        Initialize(true);
         DatabaseReference ref = SetLocation("visits");
 
         Map<String, Object> nickname = new HashMap<String, Object>();
         nickname.put(parametrName, value);
         ref.child(uid).updateChildren(nickname);
     }
+    static public void ModifyValueInPrescriptionsInDatabase(String uid,String parametrName, String value){
+
+        DatabaseReference ref = SetLocation("prescriptions");
+
+        Map<String, Object> nickname = new HashMap<String, Object>();
+        nickname.put(parametrName, value);
+        ref.child(uid).updateChildren(nickname);
+    }
+
 }
 // TODO  Metoda odczytująca z bazy danych. Metody wysyłające dane do większej ilości funkcjionalności. Podpięcie tworzenia grup i dodawania członków rodziny do nich.
 // TODO  Zejście z metod obsługiwanych przez podanie ścieżki aby je wywołać.
