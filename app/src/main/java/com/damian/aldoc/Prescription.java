@@ -23,8 +23,10 @@ public class Prescription {
     public String getName() { return m_name; }
     public void setVisitUid(String visit_uid) { m_visit_uid = visit_uid; }
     public String getVisitUid() { return m_visit_uid; }
+    public void setUid(String uid) { m_uid = uid; }
+    public String getUid() { return m_uid; }
 
+    private String m_uid;
     private String m_visit_uid;
     private String m_name;
-    private ArrayList<PrescriptionEntry> m_entries = new ArrayList<>();
 }
