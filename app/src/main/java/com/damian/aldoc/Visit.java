@@ -56,12 +56,17 @@ public class Visit {
         m_doctor = doctor;
     }
 
+    public void setUid(String uid) { m_uid = uid; }
+
+    public String getUid() { return m_uid; }
+
     @Override
     public String toString()
     {
         return m_date + " " + m_time + "\n" + m_location + "\n" + m_doctor;
     }
 
+    private String m_uid;
     private String m_time;
     private String m_date;
     private String m_location;
