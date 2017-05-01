@@ -92,6 +92,16 @@ public class Database {
     }
 
     /**
+     * Metoda publiczna wysyłająca obiekt do lokacji prescription_entries w Bazie danych
+     * @param object wysyłany obiekt klasy PrescriptionEntry
+     */
+    static public void SendObjectPrescriptionEntryToDatabase(Object object) {
+        Initialize(true);
+        SetLocation("prescription_entries");
+        mDatabaseReference.push().setValue(object);
+    }
+
+    /**
      * Metoda publiczna wysyłająca obiekt do lokacji notes w Bazie danych
      * @param object wysyłany obiekt klasy Note - której jeszcze nie ma ????
      */
@@ -269,12 +279,19 @@ public class Database {
         ref.child(uid).removeValue();
     }
 
+    static public void DeletePrescriptionFromDatabase(String uid){
+        Initialize(true);
+        DatabaseReference ref = SetLocation("prescriptions");
+        ref.child(uid).removeValue();
+    }
+
     /**
      *Metoda która wyszukuje w bazie wizyty które na konkretnej pozycji - parametrName mają dokładną wartość - value
      * Metoda nic nie zwraca dlatego w OnChildAdded należy dodać wywołanie własnej funkcji która będzie coś robiła z tymi obiektami
      * DataSnapshot zawsze tworzy liste nawet 1 elementową (komputer jest głupi i nie wie czy szukana przez nas dana jest tylko w 1 miejscu)
      * @param parametrName nazwa zmiennej którą chcemy zmienić np location
      * @param value wartość na jaką chcemy podmienić np Breslav
+     * TODO: To chyba do wyjebania :p
      */
     static public void GetVisitByValueFromDatabase(String parametrName, String value){
         Initialize(true);
@@ -311,6 +328,30 @@ public class Database {
 
     }
 
+
+    static public void UpdateObjectInDatabase(String path, Object object, String uid) {
+        Initialize(true);
+        SetLocation(path);
+        mDatabaseReference.child(uid).setValue(object);
+    }
+
+    static public void UpdateVisitInDatabase(Visit visit, String uid) {
+        Initialize(true);
+        SetLocation("visits");
+        mDatabaseReference.child(uid).setValue(visit);
+    }
+
+    static public void UpdatePrescriptionInDatabase(Prescription prescription, String uid) {
+        Initialize(true);
+        SetLocation("prescriptions");
+        mDatabaseReference.child(uid).setValue(prescription);
+    }
+
+    static public void UpdatePrescriptionEntryInDatabase(PrescriptionEntry prescription_entry, String uid) {
+        Initialize(true);
+        SetLocation("prescription_entries");
+        mDatabaseReference.child(uid).setValue(prescription_entry);
+    }
 
     /**
      *Metoda do podmiany wartości w sprecyzowanym miejscu w bazie. Tą metodą można też dodać nową zmienną jeżeli podamy parametrName który nie znajduje się w bazie.

@@ -2,6 +2,8 @@ package com.damian.aldoc;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.provider.ContactsContract;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -52,14 +54,46 @@ public class VisitActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s)
             {
-                prescriptions.add(dataSnapshot.getValue(Prescription.class));
+                Prescription p = dataSnapshot.getValue(Prescription.class);
+                p.setUid(dataSnapshot.getKey());
+
+                prescriptions.add(p);
                 adapter.notifyDataSetChanged();
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+            public void onChildChanged(DataSnapshot dataSnapshot, String s)
+            {
+                Prescription prescription = dataSnapshot.getValue(Prescription.class);
+                String uid = dataSnapshot.getKey();
+                prescription.setUid(uid);
+
+                for(int p = 0; p < prescriptions.size(); p++)
+                {
+                    if(prescriptions.get(p).getUid().equals(uid))
+                    {
+                        prescriptions.set(p, prescription);
+                        adapter.notifyDataSetChanged();
+                        break;
+                    }
+                }
+            }
+
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+            public void onChildRemoved(DataSnapshot dataSnapshot)
+            {
+                String uid = dataSnapshot.getKey();
+                for(int p = 0; p < prescriptions.size(); p++)
+                {
+                    if(prescriptions.get(p).getUid().equals(uid))
+                    {
+                        prescriptions.remove(p);
+                        adapter.notifyDataSetChanged();
+                        break;
+                    }
+                }
+            }
+
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
             @Override
@@ -73,6 +107,21 @@ public class VisitActivity extends AppCompatActivity {
         list_view.setAdapter(adapter);
         registerForContextMenu(list_view);
 
+        list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
+                onPrescriptionClick(prescriptions.get(position));
+            }
+        });
+    }
+
+    private void onPrescriptionClick(Prescription p)
+    {
+        Intent intent = new Intent(this, PrescriptionActivity.class);
+        String[] prescription_data = {p.getName(), p.getUid()};
+        intent.putExtra("prescription", prescription_data);
+        startActivity(intent);
     }
 
     @Override
@@ -80,17 +129,48 @@ public class VisitActivity extends AppCompatActivity {
     {
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_edit_delete, menu);
+        inflater.inflate(R.menu.menu_prescription, menu);
     }
 
     @Override
-    public boolean onContextItemSelected(MenuItem item) {
+    public boolean onContextItemSelected(MenuItem item)
+    {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        final Prescription p = prescriptions.get(info.position);
 
         switch (item.getItemId())
         {
-            case R.id.delete_id:
+            case R.id.prescriptionMenu_delete:
+                Database.DeletePrescriptionFromDatabase(p.getUid());
                 break;
-            case R.id.edit_id:
+            case R.id.prescriptionMenu_changeName:
+                View view = (LayoutInflater.from(this)).inflate(R.layout.prescription_name, null);
+
+                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+                alertBuilder.setView(view);
+                alertBuilder.setTitle("Prescription name");
+
+                final EditText et_prescription = (EditText)view.findViewById(R.id.textPrescriptionName);
+                et_prescription.setText(p.getName());
+                //TODO:dodac zaznaczenie tekstu i wlaczenie pola tekstowego?
+
+                alertBuilder.setCancelable(true).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        p.setName(et_prescription.getText().toString());
+                        Database.UpdatePrescriptionInDatabase(p, p.getUid());
+                    }
+                });
+
+                alertBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+
+                Dialog dialog = alertBuilder.create();
+                dialog.show();
                 break;
         }
 
@@ -103,6 +183,7 @@ public class VisitActivity extends AppCompatActivity {
 
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
         alertBuilder.setView(view);
+        alertBuilder.setTitle("Prescription name");
 
         final EditText et_prescription = (EditText)view.findViewById(R.id.textPrescriptionName);
 
@@ -112,6 +193,12 @@ public class VisitActivity extends AppCompatActivity {
             {
                 Prescription p = new Prescription(visit_uid, et_prescription.getText().toString());
                 Database.SendObjectPrescriptionToDatabase(p);
+            }
+        });
+
+        alertBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
             }
         });
 
