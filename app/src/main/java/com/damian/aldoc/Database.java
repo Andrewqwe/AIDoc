@@ -53,7 +53,6 @@ public class Database {
     }
 
     static public DatabaseReference SetLocation(String path) {
-        Initialize(true);
         mDatabaseReference = mDatabase.getReference().child(path);
         return mDatabaseReference;
     }
@@ -89,6 +88,16 @@ public class Database {
     static public void SendObjectPrescriptionToDatabase(Object object) {
         Initialize(true);
         SetLocation("prescriptions");
+        mDatabaseReference.push().setValue(object);
+    }
+
+    /**
+     * Metoda publiczna wysyłająca obiekt do lokacji prescription_entries w Bazie danych
+     * @param object wysyłany obiekt klasy PrescriptionEntry
+     */
+    static public void SendObjectPrescriptionEntryToDatabase(Object object) {
+        Initialize(true);
+        SetLocation("prescription_entries");
         mDatabaseReference.push().setValue(object);
     }
 
@@ -252,6 +261,7 @@ public class Database {
                     appleSnapshot.getRef().removeValue();
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.e(TAG, "onCancelled", databaseError.toException());
@@ -264,15 +274,16 @@ public class Database {
      * @param uid klucz do danego miejsca w wizytach np. -KivIPsb0iuUBuOns6Bv
      */
     static public void DeleteVisitFromDatabase(String uid){
+        Initialize(true);
         DatabaseReference ref = SetLocation("visits");
         ref.child(uid).removeValue();
     }
 
-    static public void DeletePrescriptionsFromDatabase(String uid){
+    static public void DeletePrescriptionFromDatabase(String uid){
+        Initialize(true);
         DatabaseReference ref = SetLocation("prescriptions");
         ref.child(uid).removeValue();
     }
-
 
     /**
      *Metoda która wyszukuje w bazie wizyty które na konkretnej pozycji - parametrName mają dokładną wartość - value
@@ -280,8 +291,10 @@ public class Database {
      * DataSnapshot zawsze tworzy liste nawet 1 elementową (komputer jest głupi i nie wie czy szukana przez nas dana jest tylko w 1 miejscu)
      * @param parametrName nazwa zmiennej którą chcemy zmienić np location
      * @param value wartość na jaką chcemy podmienić np Breslav
+     * TODO: To chyba do wyjebania :p
      */
     static public void GetVisitByValueFromDatabase(String parametrName, String value){
+        Initialize(true);
         DatabaseReference ref = SetLocation("visits");
         Query aa= ref.orderByChild(parametrName).equalTo(value);
         aa.addChildEventListener(new ChildEventListener() {
@@ -290,15 +303,54 @@ public class Database {
                 System.out.println(dataSnapshot.getKey());  //tutaj podmienic na funkcjie która ma działać z otrzymanym kluczem.
                 //wyżej dataSnapshot.getKey() otrzymuje uid znalezionych obiektów. ten print zostanie wywołany tyle razy ile obiektów będzie zgadzało się z naszym wyszukiwaniem!!!!!!!
             }
+
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
             @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
             @Override
-            public void onCancelled(DatabaseError databaseError) {}
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
         });
+
+
+    }
+
+
+    static public void UpdateObjectInDatabase(String path, Object object, String uid) {
+        Initialize(true);
+        SetLocation(path);
+        mDatabaseReference.child(uid).setValue(object);
+    }
+
+    static public void UpdateVisitInDatabase(Visit visit, String uid) {
+        Initialize(true);
+        SetLocation("visits");
+        mDatabaseReference.child(uid).setValue(visit);
+    }
+
+    static public void UpdatePrescriptionInDatabase(Prescription prescription, String uid) {
+        Initialize(true);
+        SetLocation("prescriptions");
+        mDatabaseReference.child(uid).setValue(prescription);
+    }
+
+    static public void UpdatePrescriptionEntryInDatabase(PrescriptionEntry prescription_entry, String uid) {
+        Initialize(true);
+        SetLocation("prescription_entries");
+        mDatabaseReference.child(uid).setValue(prescription_entry);
     }
 
     /**
@@ -307,23 +359,15 @@ public class Database {
      * @param parametrName nazwa zmiennej którą chcemy zmienić np location
      * @param value wartość na jaką chcemy podmienić np Breslav
      */
-    static public void ModifyValueInVisitsInDatabase(String uid,String parametrName, String value){
+    static public void ModifyValueInDatabase(String uid,String parametrName, String value){
 
+        Initialize(true);
         DatabaseReference ref = SetLocation("visits");
 
         Map<String, Object> nickname = new HashMap<String, Object>();
         nickname.put(parametrName, value);
         ref.child(uid).updateChildren(nickname);
     }
-    static public void ModifyValueInPrescriptionsInDatabase(String uid,String parametrName, String value){
-
-        DatabaseReference ref = SetLocation("prescriptions");
-
-        Map<String, Object> nickname = new HashMap<String, Object>();
-        nickname.put(parametrName, value);
-        ref.child(uid).updateChildren(nickname);
-    }
-
 }
 // TODO  Metoda odczytująca z bazy danych. Metody wysyłające dane do większej ilości funkcjionalności. Podpięcie tworzenia grup i dodawania członków rodziny do nich.
 // TODO  Zejście z metod obsługiwanych przez podanie ścieżki aby je wywołać.

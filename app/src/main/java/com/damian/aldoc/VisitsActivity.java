@@ -1,12 +1,13 @@
 package com.damian.aldoc;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.Button;
+import android.widget.*;
 
 
 //Firebase
@@ -14,94 +15,129 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class VisitsActivity extends AppCompatActivity {
 
-    public final int ACTION_ADD = 0;
-    public final int REQUEST_ADD = 0;
-    public final int ACTION_EDIT = 1;
+    private ListView list_view;
+    private ArrayAdapter<Visit> adapter;
+    private List<Visit> visits = new ArrayList<>();
+
+    private final int ACTION_ADD = 0;
+    private final int REQUEST_ADD = 0;
+    private final int ACTION_EDIT = 1;
+    private final int REQUEST_EDIT = 1;
 
     // Firebase instance variables
     private ChildEventListener mChildEventListener;
 
-    public class VisitView extends Button{
-
-        public VisitView(Context context, Visit visit) {
-            this(context);
-            this.setVisit(visit);
-        }
-
-        public VisitView(Context context) {
-            super(context);
-            this.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_START);
-        }
-
-        public void setVisit(Visit v)
-        {
-            this.m_visit = v;
-
-            this.setText(v.toString());
-        }
-
-        public Visit getVisit()
-        {
-            return this.m_visit;
-        }
-
-        private Visit m_visit;
-
-    }
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visits);
 
         Database.Initialize(true);
         mChildEventListener = new ChildEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                                Visit visit = dataSnapshot.getValue(Visit.class);
-                                visit.setUid(dataSnapshot.getKey());
-                                addVisitView(visit);
-                            }
+            public void onChildAdded(DataSnapshot dataSnapshot, String s)
+            {
+                Visit visit = dataSnapshot.getValue(Visit.class);
+                visit.setUid(dataSnapshot.getKey());
 
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+                visits.add(visit);
+                adapter.notifyDataSetChanged();
+            }
+
+            public void onChildChanged(DataSnapshot dataSnapshot, String s)
+            {
+                Visit visit = dataSnapshot.getValue(Visit.class);
+                String uid = dataSnapshot.getKey();
+                visit.setUid(uid);
+
+                for(int v = 0; v < visits.size(); v++)
+                {
+                    if(visits.get(v).getUid().equals(uid))
+                    {
+                        visits.set(v, visit);
+                        adapter.notifyDataSetChanged();
+                        break;
+                    }
+                }
+            }
+            public void onChildRemoved(DataSnapshot dataSnapshot)
+            {
+                String uid = dataSnapshot.getKey();
+                for(int v = 0; v < visits.size(); v++)
+                {
+                    if(visits.get(v).getUid().equals(uid))
+                    {
+                        visits.remove(v);
+                        adapter.notifyDataSetChanged();
+                        break;
+                    }
+                }
+            }
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
             public void onCancelled(DatabaseError databaseError) {}
         };
         Database.SetLocation("visits").addChildEventListener(mChildEventListener);
+
+        //tworzymy adapter i przypisujemy go do listview zeby wyswietlac wizyty
+        adapter = new ArrayAdapter<Visit>(this, android.R.layout.simple_list_item_1, visits);
+
+        list_view = (ListView)findViewById(R.id.visits_listView);
+        list_view.setAdapter(adapter);
+        registerForContextMenu(list_view);
+
+        list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
+                visitOnClick(visits.get(position));
+            }
+        });
   }
 
-    private void addVisitView(Visit visit)
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
     {
-        VisitView vv = new VisitView(this, visit);
-        vv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                visitViewOnClick(v);
-            }
-        });
-
-        vv.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-
-                return false;
-            }
-        });
-
-        LinearLayout rl = (LinearLayout)findViewById(R.id.visits_linear_layout);
-        rl.addView(vv);
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_visit, menu);
     }
 
-    private void editVisit()
+    @Override
+    public boolean onContextItemSelected(MenuItem item)
+    {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        Visit visit = visits.get(info.position);
+
+        switch (item.getItemId())
+        {
+            case R.id.visitMenu_delete:
+                Database.DeleteVisitFromDatabase(visit.getUid());
+                break;
+            case R.id.visitMenu_edit:
+                editVisit(visit);
+                break;
+        }
+
+        return super.onContextItemSelected(item);
+    }
+
+    private void editVisit(Visit visit)
     {
         Intent intent = new Intent(this, EditVisitActivity.class);
         intent.putExtra("action", ACTION_EDIT);
 
-        startActivity(intent);
+        String[] visit_data = {visit.getDoctor(), visit.getLocation(), visit.getDate(), visit.getTime(), visit.getUid()};
+
+        intent.putExtra("visit", visit_data);
+
+        startActivityForResult(intent, REQUEST_EDIT);
     }
 
     private void addVisit()
@@ -115,12 +151,21 @@ public class VisitsActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (requestCode == REQUEST_ADD) {
-            if(resultCode == AppCompatActivity.RESULT_OK){
+        if(resultCode == AppCompatActivity.RESULT_OK)
+        {
+            if (requestCode == REQUEST_ADD)
+            {
                 String[] result = data.getStringArrayExtra("visit");
 
                 Visit visit = new Visit(result[0], result[1], result[2], result[3]);
                 Database.SendObjectVisitToDatabase(visit);
+            }
+            else if (requestCode == REQUEST_EDIT)
+            {
+                String[] result = data.getStringArrayExtra("visit");
+
+                Visit visit = new Visit(result[0], result[1], result[2], result[3]);
+                Database.UpdateVisitInDatabase(visit, result[4]);
             }
         }
     }
@@ -130,17 +175,15 @@ public class VisitsActivity extends AppCompatActivity {
         addVisit();
     }
 
-    private void visitViewOnClick(View v)
+    private void visitOnClick(Visit visit)
     {
-        VisitView vv = (VisitView)v;
-        Visit visit = vv.getVisit();
+        Intent intent = new Intent(this, VisitActivity.class);
 
         String[] visit_data = {visit.getDoctor(), visit.getLocation(), visit.getDate(), visit.getTime(), visit.getUid()};
 
-        Intent intent = new Intent(this, VisitActivity.class);
         intent.putExtra("visit", visit_data);
 
-        startActivityForResult(intent, REQUEST_ADD);
+        startActivity(intent);
     }
 
 

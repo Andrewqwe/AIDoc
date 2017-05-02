@@ -13,7 +13,9 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import org.w3c.dom.Text;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 
@@ -86,23 +88,71 @@ public class EditVisitActivity extends AppCompatActivity
     public final int ACTION_EDIT = 1;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_visit);
+
+        /*jezeli edytujemy to wpisujemy w pola dotychczasowe dane
+        * w przeciwnym wypadku pobieramy obecna dane i godzine i wpisujemy je
+        * do pol z data i godzina, pozostale pola zostawiamy puste*/
+
+        int action = getIntent().getIntExtra("action", -1);
+
+        if(action == ACTION_EDIT)
+        {
+            String[] visit_data = getIntent().getStringArrayExtra("visit");
+
+            EditText et;
+            TextView tv;
+
+            et = (EditText)findViewById(R.id.textDoctor);
+            et.setText(visit_data[0]);
+
+            et = (EditText)findViewById(R.id.textLocation);
+            et.setText(visit_data[1]);
+
+            tv = (TextView)findViewById(R.id.textDate);
+            tv.setText(visit_data[2]);
+
+            tv = (TextView)findViewById(R.id.textTime);
+            tv.setText(visit_data[3]);
+
+        }
+        else if (action == ACTION_ADD)
+        {
+            //pobieramy obecna date i godzine
+            Calendar c = Calendar.getInstance();
+
+            String date = new SimpleDateFormat("dd-MM-yyyy").format(c.getTime());
+            String time = new SimpleDateFormat("hh:mm").format(c.getTime());
+
+            TextView tv;
+
+            tv = (TextView)findViewById(R.id.textDate);
+            tv.setText(date);
+
+            tv = (TextView)findViewById(R.id.textTime);
+            tv.setText(time);
+        }
     }
 
     public void applyOnClick(View v)
     {
+        //Sprawdzamy jaka akacja miala byc wykonana (edycja/dodanie)
         Intent returnIntent = new Intent();
         int action = getIntent().getIntExtra("action", -1);
 
+        //W przypadku nieznanej akcji, wychodzimy z activity z kodem RESULT_CANCELED
         if(action == -1)
         {
             setResult(AppCompatActivity.RESULT_CANCELED, returnIntent);
             finish();
         }
 
-        String[] visit_data = new String[4];
+        //Przygotowujemy dane wizyty do zwrocenia do visits activity
+        //Dane, podane przez uzytkownika, odczytujemy z gui
+        String[] visit_data = new String[5];
 
         EditText et;
         TextView tv;
@@ -118,6 +168,12 @@ public class EditVisitActivity extends AppCompatActivity
 
         tv = (TextView)findViewById(R.id.textTime);
         visit_data[3] = tv.getText().toString();
+
+        //PRZY EDYCJI
+        //uid wizyty odczytujemy z danych przekazanych przez visits activity,
+        //nie zmieniamy go tylko zwracamy takie samo
+        if(action == ACTION_EDIT)
+            visit_data[4] = getIntent().getStringArrayExtra("visit")[4];
 
         returnIntent.putExtra("visit", visit_data);
         setResult(AppCompatActivity.RESULT_OK,returnIntent);
