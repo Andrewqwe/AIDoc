@@ -1,56 +1,76 @@
 package com.damian.aldoc;
 
+        import android.app.Dialog;
+        import android.content.DialogInterface;
         import android.content.Intent;
+        import android.support.v7.app.AlertDialog;
         import android.support.v7.app.AppCompatActivity;
         import android.os.Bundle;
         import android.view.View;
         import android.widget.TextView;
 
+        import org.w3c.dom.Text;
+
 public class Diseases2Activity extends AppCompatActivity {
 
-    private TextView date;
-    private TextView mood;
-    private TextView symptoms;
-    private TextView medicines;
-    private TextView reaction;
+    private TextView var;
+    private String[] note_table;
+    static final private int ALERT_DIALOG_BUTTONS = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_diseases2);
 
-        Bundle bundle = getIntent().getExtras();
-        String uidString = bundle.getString("uid");
-        String dateString = bundle.getString("date");
-        String moodString = bundle.getString("mood");
-        String symptomsString = bundle.getString("symptoms");
-        String medicinesString = bundle.getString("medicines");
-        String reactionString = bundle.getString("reaction");
+        note_table = getIntent().getStringArrayExtra("note");
 
-        date = (TextView)findViewById(R.id.textView11);
-        mood = (TextView)findViewById(R.id.textView12);
-        symptoms = (TextView)findViewById(R.id.textView13);
-        medicines = (TextView)findViewById(R.id.textView14);
-        reaction = (TextView)findViewById(R.id.textView15);
+        var = (TextView)findViewById(R.id.textView11);
+        var.setText(note_table[1]+" "+note_table[2]);
 
-        date.setText(dateString);
-        mood.setText(moodString);
-        symptoms.setText(symptomsString);
-        medicines.setText(medicinesString);
-        reaction.setText(reactionString);
+        var = (TextView)findViewById(R.id.textView12);
+        var.setText(note_table[3]);
+
+        var = (TextView)findViewById(R.id.textView13);
+        var.setText(note_table[4]);
+
+        var = (TextView)findViewById(R.id.textView14);
+        var.setText(note_table[5]);
+
+        var = (TextView)findViewById(R.id.textView15);
+        var.setText(note_table[6]);
     }
 
     public void editOnClick(View v) {
-        //Intent intent = new Intent(getApplicationContext(), Diseases1Activity.class);
+        Intent intent = new Intent(getApplicationContext(), Diseases1Activity.class);
 
+        intent.putExtra("action", 1);
+        intent.putExtra("note", note_table);
 
-        //startActivity(intent);
+        startActivity(intent);
     }
 
-    public void removeOnClick(View v) {
-        //Intent intent = new Intent(getApplicationContext(), Diseases1Activity.class);
+    public void removeOnClick(View v){
+        showDialog(0);
+    }
 
-
-        //startActivity(intent);
+    protected Dialog onCreateDialog(int id) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        //dialogBuilder.setTitle("Usuwanie notatki");
+        dialogBuilder.setMessage("Czy chcesz usunąć notatkę?");
+        //dialogBuilder.setCancelable(false);
+        dialogBuilder.setPositiveButton("Tak", new Dialog.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int whichButton) {
+                Intent intent = new Intent(getApplicationContext(), Diseases0Activity.class);
+                Database.DeleteNoteFromDatabase(note_table[0]);
+                startActivity(intent);
+            }
+        });
+        dialogBuilder.setNegativeButton("Nie", new Dialog.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int whichButton) {
+            }
+        });
+        return dialogBuilder.create();
     }
 }

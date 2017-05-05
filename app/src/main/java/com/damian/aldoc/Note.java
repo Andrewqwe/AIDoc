@@ -7,6 +7,7 @@ package com.damian.aldoc;
 public class Note {
     private String uid;
     private String date;
+    private String time;
     private String mood;
     private String symptoms;
     private String medicines;
@@ -14,8 +15,9 @@ public class Note {
 
     public Note(){}
 
-    public Note(String m_date, String m_mood, String m_symptoms, String m_medicines, String m_reaction) {
+    public Note(String m_date, String m_time, String m_mood, String m_symptoms, String m_medicines, String m_reaction) {
         date = m_date;
+        time = m_time;
         mood = m_mood;
         symptoms = m_symptoms;
         medicines = m_medicines;
@@ -28,6 +30,11 @@ public class Note {
     public String getDate() {
         return date;
     }
+
+    public void setTime(String m_time) {
+        time = m_time;
+    }
+    public String getTime() { return time; }
 
     public void setMood(String m_mood) {
         mood = m_mood;
@@ -58,6 +65,5 @@ public class Note {
     }
 
     public void setUid(String m_uid) { uid = m_uid; }
-
     public String getUid() { return uid; }
 }

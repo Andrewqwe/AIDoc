@@ -8,11 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
-
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,8 +25,6 @@ public class Diseases0Tab1 extends Fragment {
     private List<Note> notes = new ArrayList<>();
     private ChildEventListener mChildEventListener;
 
-    String disease1String;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -41,6 +37,7 @@ public class Diseases0Tab1 extends Fragment {
             public void onClick(View v)
             {
                 Intent intent = new Intent(getActivity().getApplicationContext(), Diseases1Activity.class);
+                intent.putExtra("action", 0);
                 startActivity(intent);
             }
         });
@@ -50,7 +47,6 @@ public class Diseases0Tab1 extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
         Database.Initialize(true);
         mChildEventListener = new ChildEventListener() {
             @Override
@@ -113,12 +109,10 @@ public class Diseases0Tab1 extends Fragment {
     {
         Intent intent = new Intent(getActivity().getApplicationContext(), Diseases2Activity.class);
 
-        intent.putExtra("uid", note.getUid());
-        intent.putExtra("date", note.getDate());
-        intent.putExtra("mood", note.getMood());
-        intent.putExtra("symptoms", note.getSymptoms());
-        intent.putExtra("medicines", note.getMedicines());
-        intent.putExtra("reaction", note.getReaction());
+        String[] note_table = {note.getUid(), note.getDate(), note.getTime(), note.getMood(), note.getSymptoms(), note.getMedicines(), note.getReaction()};
+
+        intent.putExtra("note", note_table);
+
         startActivity(intent);
     }
 }
