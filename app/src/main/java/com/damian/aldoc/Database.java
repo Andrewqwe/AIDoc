@@ -285,6 +285,12 @@ public class Database {
         ref.child(uid).removeValue();
     }
 
+    static public void DeleteNoteFromDatabase(String uid){
+        Initialize(true);
+        DatabaseReference ref = SetLocation("notes");
+        ref.child(uid).removeValue();
+    }
+
     /**
      *Metoda która wyszukuje w bazie wizyty które na konkretnej pozycji - parametrName mają dokładną wartość - value
      * Metoda nic nie zwraca dlatego w OnChildAdded należy dodać wywołanie własnej funkcji która będzie coś robiła z tymi obiektami
@@ -353,6 +359,11 @@ public class Database {
         mDatabaseReference.child(uid).setValue(prescription_entry);
     }
 
+    static public void UpdateNoteInDatabase(Note note, String uid) {
+        Initialize(true);
+        SetLocation("notes");
+        mDatabaseReference.child(uid).setValue(note);
+    }
     /**
      *Metoda do podmiany wartości w sprecyzowanym miejscu w bazie. Tą metodą można też dodać nową zmienną jeżeli podamy parametrName który nie znajduje się w bazie.
      * @param uid klucz do danej lokacji w bazie (ten długi np.-KivIPsb0iuUBuOns6Bv)

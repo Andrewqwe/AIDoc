@@ -13,57 +13,97 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
-
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class Diseases1Activity extends AppCompatActivity {
 
-    Button days;
-    Button time;
-    EditText mood;
-    EditText symptoms;
-    EditText medicines;
-    EditText reaction;
-    Button button;
-
     public static Diseases1Activity activity;
+    private Button button;
+    private EditText var;
+    private int action;
+    private String uid;
+    private final int ADD = 0;
+    private final int EDIT = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_diseases1);
 
-        days = (Button)findViewById(R.id.button2);
-        time = (Button)findViewById(R.id.button3);
-        mood = (EditText)findViewById(R.id.editText3);
-        symptoms = (EditText)findViewById(R.id.editText4);
-        medicines = (EditText)findViewById(R.id.editText5);
-        reaction = (EditText)findViewById(R.id.editText2);
-        button = (Button)findViewById(R.id.button);
+        action = getIntent().getIntExtra("action", -1);
+        if (action == ADD)
+        {
+            Calendar c = Calendar.getInstance();
 
+            String date = new SimpleDateFormat("dd-MM-yyyy").format(c.getTime());
+            String time = new SimpleDateFormat("hh:mm").format(c.getTime());
+
+            button = (Button)findViewById(R.id.button2);
+            button.setText(date);
+
+            button = (Button)findViewById(R.id.button3);
+            button.setText(time);
+        }
+        else if(action == EDIT) {
+            String[] note_table = getIntent().getStringArrayExtra("note");
+
+            uid = note_table[0];
+
+            button = (Button) findViewById(R.id.button2);
+            button.setText(note_table[1]);
+
+            button = (Button) findViewById(R.id.button3);
+            button.setText(note_table[2]);
+
+            var = (EditText) findViewById(R.id.editText3);
+            var.setText(note_table[3]);
+
+            var = (EditText) findViewById(R.id.editText4);
+            var.setText(note_table[4]);
+
+            var = (EditText) findViewById(R.id.editText5);
+            var.setText(note_table[5]);
+
+            var = (EditText) findViewById(R.id.editText2);
+            var.setText(note_table[6]);
+        }
         activity = this;
     }
 
     public void onClick(View v) {
-        Intent intent = new Intent(getApplicationContext(), Diseases2Activity.class);
+        Intent intent = new Intent(getApplicationContext(), Diseases0Activity.class);
+        String[] note_table = new String[7];
+        if(action == -1)
+        {
+            setResult(AppCompatActivity.RESULT_CANCELED, intent);
+            finish();
+        }
 
-        String daysString = days.getText().toString();
-        String timeString = time.getText().toString();
-        String dateString = daysString+" "+timeString;
-        String moodString = mood.getText().toString();
-        String symptomsString = symptoms.getText().toString();
-        String medicinesString = medicines.getText().toString();
-        String reactionString = reaction.getText().toString();
+        note_table[0] = uid;
 
-        Note note = new Note(dateString, moodString, symptomsString, medicinesString, reactionString);
-        Database.SendObjectNotesToDatabase(note);
+        button = (Button)findViewById(R.id.button2);
+        note_table[1] = button.getText().toString();
 
-        intent.putExtra("uid", note.getUid());
-        intent.putExtra("date", dateString);
-        intent.putExtra("mood", moodString);
-        intent.putExtra("symptoms", symptomsString);
-        intent.putExtra("medicines", medicinesString);
-        intent.putExtra("reaction", reactionString);
+        button = (Button)findViewById(R.id.button3);
+        note_table[2] = button.getText().toString();
+
+        var = (EditText)findViewById(R.id.editText3);
+        note_table[3] = var.getText().toString();
+
+        var = (EditText)findViewById(R.id.editText4);
+        note_table[4] = var.getText().toString();
+
+        var = (EditText)findViewById(R.id.editText5);
+        note_table[5] = var.getText().toString();
+
+        var = (EditText)findViewById(R.id.editText2);
+        note_table[6] = var.getText().toString();
+
+        Note note = new Note(note_table[1], note_table[2], note_table[3], note_table[4], note_table[5], note_table[6]);
+
+        if(action == 0) Database.SendObjectNotesToDatabase(note);
+        else if(action == 1) Database.UpdateNoteInDatabase(note, note_table[0]);
 
         startActivity(intent);
     }
@@ -124,25 +164,37 @@ public class Diseases1Activity extends AppCompatActivity {
         }
     }
 
+    private String toString(int val)
+    {
+        Integer i = Integer.valueOf(val);
+
+        if(val < 10)
+            return "0" + i.toString();
+        else
+            return i.toString();
+    }
+
     public void setTime(int hour, int minute)
     {
-
+        button = (Button)findViewById(R.id.button3);
         Integer h = Integer.valueOf(hour);
         Integer m = Integer.valueOf(minute);
-        String t = h.toString() + ":" + m.toString();
 
-        time.setText(t);
+        String t = toString(h) + ":" + toString(m);
+
+        button.setText(t);
     }
 
     public void setDate(int year, int month, int day)
     {
-
+        button = (Button)findViewById(R.id.button2);
         Integer y = Integer.valueOf(year);
         Integer m = Integer.valueOf(month + 1);
         Integer d = Integer.valueOf(day);
-        String t = d.toString() + "-" + m.toString() + "-" + y.toString();
 
-        days.setText(t);
+        String t = toString(y) + "-" + toString(m) + "-" + toString(d);
+
+        button.setText(t);
     }
 
     /*Dwie funkcje do ustawienia czasu i daty, wolane przez fragmenty
