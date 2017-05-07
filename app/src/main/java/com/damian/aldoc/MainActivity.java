@@ -133,10 +133,12 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
                 AuthUI.getInstance().signOut(this);
                 return true;
             case R.id.action_settings:
-                Database.ModifyValueInDatabase("-KivIPsb0iuUBuOns6Bv","location","Breslav");
-                Database.SendUserPeselToDatabase("1111");  //Miejsce testowe Radosława ( tego od bazy)
-                Database.DeleteVisitFromDatabase("-Kiv9bXMgN0W3SyqUksW");
-                Database.GetVisitByValueFromDatabase("time","time");
+                //Database.ModifyValueInDatabase("-KivIPsb0iuUBuOns6Bv","location","Breslav");
+                //Database.SendUserPeselToDatabase("1111");  //Miejsce testowe Radosława ( tego od bazy)
+                //Database.DeleteVisitFromDatabase("-Kiv9bXMgN0W3SyqUksW");
+               // Database.GetVisitByValueFromDatabase("time","time");
+                //   Database.UploadImageToDatabaseStorage("/storage/emulated/0/DCIM/Camera/IMG_20170501_203008_1.jpg");
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

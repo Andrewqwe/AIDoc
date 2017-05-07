@@ -1,6 +1,8 @@
 package com.damian.aldoc;
 
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -10,10 +12,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,6 +31,7 @@ import android.widget.Toast;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.twitter.sdk.android.core.TwitterCore.TAG;
 
 
@@ -210,19 +217,11 @@ public class Database {
                 VisitsActivity helper = new VisitsActivity();
                 //helper.addVisit(visits);
             }
-
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-            }
-
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-            }
-
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-            }
-
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
             public void onCancelled(DatabaseError databaseError) {
                 Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-
             }
         };
         SetLocation("visits").addChildEventListener(mChildEventListener);
@@ -247,27 +246,6 @@ public class Database {
     static private void pesel(String pesel){
         ReadProfileDetails();
     };
-
-    static public void Dsasa(String uid){
-        Initialize(true);
-        Query visitQuery = SetLocation("visits").orderByChild("uid").equalTo(uid);
-        //DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
-        //Query visitQuery = ref.child("firebase-test").orderByChild("title").equalTo("Apple");
-
-        visitQuery.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot appleSnapshot: dataSnapshot.getChildren()) {
-                    appleSnapshot.getRef().removeValue();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.e(TAG, "onCancelled", databaseError.toException());
-            }
-        });
-    }
 
     /**
      * Metoda do kasowania całego obiektu o danym kluczu.
@@ -309,26 +287,14 @@ public class Database {
                 System.out.println(dataSnapshot.getKey());  //tutaj podmienic na funkcjie która ma działać z otrzymanym kluczem.
                 //wyżej dataSnapshot.getKey() otrzymuje uid znalezionych obiektów. ten print zostanie wywołany tyle razy ile obiektów będzie zgadzało się z naszym wyszukiwaniem!!!!!!!
             }
-
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
             @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
+            public void onCancelled(DatabaseError databaseError) {}
         });
 
 
@@ -379,7 +345,46 @@ public class Database {
         nickname.put(parametrName, value);
         ref.child(uid).updateChildren(nickname);
     }
+
+    static public StorageReference StorageInitialize(){
+        String path = "images";
+        FirebaseStorage storage = FirebaseStorage.getInstance("gs://aidoc-14c21.appspot.com/");
+        StorageReference storageRef = storage.getReference();
+        return storageRef;
+    }
+
+    @SuppressWarnings("VisibleForTests")
+
+    static public void UploadImageToDatabaseStorage(Uri path){
+        StorageReference ref = StorageInitialize();
+        StorageReference riversRef = ref.child("images/"+path.getLastPathSegment());
+        UploadTask uploadTask = riversRef.putFile(path);
+        // Register observers to listen for when the download is done or if it fails
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+                Toast.makeText(getApplicationContext(), "Your file was not sent.", Toast.LENGTH_SHORT).show();
+
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+                taskSnapshot.getMetadata();//contains file metadata such as size, content-type, and download URL.
+                Uri downloadUrl = taskSnapshot.getDownloadUrl(); //i gdzie wrzucic tego downloadUrl?
+                Toast.makeText(getApplicationContext(), "Your file was sent successfully.", Toast.LENGTH_SHORT).show();
+            }
+
+        });
+
+    }
+
+
+
 }
+
+
 // TODO  Metoda odczytująca z bazy danych. Metody wysyłające dane do większej ilości funkcjionalności. Podpięcie tworzenia grup i dodawania członków rodziny do nich.
 // TODO  Zejście z metod obsługiwanych przez podanie ścieżki aby je wywołać.
 // TODO obsługa wysyłania i odczytywania zdjęć z bazy danych
