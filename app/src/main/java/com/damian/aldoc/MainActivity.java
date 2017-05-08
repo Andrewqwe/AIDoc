@@ -1,6 +1,7 @@
 package com.damian.aldoc;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
@@ -26,6 +27,8 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class MainActivity extends AppCompatActivity //34.AuthStateListener
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -132,13 +135,14 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
             case R.id.action_sign_out:
                 AuthUI.getInstance().signOut(this);
                 return true;
-            case R.id.action_settings:
+            case R.id.action_settings:  //Miejsce testowe Radosława ( tego od bazy)  //Nie klikać Settings - Jak klikasz to delikatnie i na własną odpowiedzialność
                 //Database.ModifyValueInDatabase("-KivIPsb0iuUBuOns6Bv","location","Breslav");
-                //Database.SendUserPeselToDatabase("1111");  //Miejsce testowe Radosława ( tego od bazy)
+                //Database.SendUserPeselToDatabase("1111");
                 //Database.DeleteVisitFromDatabase("-Kiv9bXMgN0W3SyqUksW");
                // Database.GetVisitByValueFromDatabase("time","time");
-                //   Database.UploadImageToDatabaseStorage("/storage/emulated/0/DCIM/Camera/IMG_20170501_203008_1.jpg");
-
+                Database.UploadImageToDatabaseStorageUsingPath("/storage/emulated/0/DCIM/Camera/IMG_20170412_140913.jpg");
+                System.out.println(String.valueOf(Database.aaa));
+                Toast.makeText(getApplicationContext(), String.valueOf(Database.aaa), Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
