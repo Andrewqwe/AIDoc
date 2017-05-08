@@ -7,14 +7,22 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 
 //TODO: Zaladowanie i ustawianie zdjecia uzytkownika
 public class UserProfileView extends AppCompatActivity {
 
     private ListView lista;
     private ArrayList<HashMap<String,String>> rekordy;
+    private UserProfileListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,24 +43,51 @@ public class UserProfileView extends AppCompatActivity {
         // TODO: Zapytac tutaj baze o imie i nazwisko danego uzytkownika
         this.setUserName("Jan Kowalski"); // ustawianie imienia i nazwiska
 
-        String[] arr = getResources().getStringArray(R.array.user_data_key_array);
+        final ArrayList<String> arr = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.user_data_key_array)));
         // Linijka wyzej odwoluje sie do slownika zdefiniowanego w res->values->strings.xml
-        for (String str : arr) {
-            // kazdy rekord w slowniku ma konstrukcje klucz//tlumaczenie
-            // korzystajac z danego separatora trzeba podzielic te dwa parametry
-            String temp[] = str.split("//");
-            // temp[0] to klucz o jaki zostanie zapytana baza
-            // temp[1] to tekst jaki odpowiada temu kluczowi w slowniku
-            String value = "Tu powinna byc wartosc z bazy";
-            //TODO: tutaj powinnismy zapytac baze o parametr temp[0] ktory jest kolejnymi kluczami ze slownika
 
-            addValue(temp[1], value); //dodanie tlumaczenie i jego wartosci do listy
+        String[] a = Database.GetUserInfo();    //a[0]- name // a[1]- mail // a[2]- UID
+        if (a != null) {
+            this.setUserName(a[0]);
         }
 
         lista.requestLayout();
         //utworzenie obiektu adaptera napisanego na potrzeby tego ekranu
-        UserProfileListAdapter adapter = new UserProfileListAdapter(rekordy, this);
+        adapter = new UserProfileListAdapter(rekordy, this);
         lista.setAdapter(adapter);
+        //TODO: Kod dziala jednak jest do refaktoryzacji przed stworzeniem opcji edytowania
+        //TODO: Przyda sie zapamietywanie ID pol ktore zostaly zaladowane na ekran
+        Database.Initialize(true);
+        DatabaseReference ref;
+        if (a != null) {
+            //nie kazdy profil jest jakos sensownie uzupelniony dlatego zostawiam
+            //w komentarzu kod w ktorym jest "sztywno" wpisane uid uzupelnionego profilu
+            ref = Database.SetLocation("users/" + "ElpvMLt7XsS4cJOCHHJnQAnlSH82");
+            //ref = Database.SetLocation("users/" + a[2]);
+            ValueEventListener postListener = new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Map<String, Object> objectMap = (HashMap<String, Object>) dataSnapshot.getValue();
+                    if(objectMap!=null) {
+                        for (String str : arr) {
+                            String temp[] = str.split("//");
+                            String value = String.valueOf(objectMap.get(temp[0]));
+                            if (value != null) {
+                                if (!value.equals("null")) {
+                                    addValue(temp[1], value);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            };
+            ref.addListenerForSingleValueEvent(postListener);
+        }
     }
 
     public void setUserName(String userName)
@@ -67,5 +102,6 @@ public class UserProfileView extends AppCompatActivity {
         temp.put("name",name);
         temp.put("value",value);
         rekordy.add(temp);
+        adapter.notifyDataSetChanged();
     }
 }
