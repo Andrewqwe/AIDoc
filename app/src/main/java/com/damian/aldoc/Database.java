@@ -277,6 +277,11 @@ public class Database {
         ref.child(uid).removeValue();
     }
 
+    static public void DeleteDiseaseFromDatabase(String uid){
+        Initialize(true);
+        DatabaseReference ref = SetLocation("diseases");
+        ref.child(uid).removeValue();
+    }
     /**
      *Metoda która wyszukuje w bazie wizyty które na konkretnej pozycji - parametrName mają dokładną wartość - value
      * Metoda nic nie zwraca dlatego w OnChildAdded należy dodać wywołanie własnej funkcji która będzie coś robiła z tymi obiektami
