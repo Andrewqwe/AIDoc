@@ -7,63 +7,67 @@ package com.damian.aldoc;
 public class Note {
     private String uid;
     private String date;
-    private String time;
     private String mood;
     private String symptoms;
     private String medicines;
     private String reaction;
+    private String disease;
 
     public Note(){}
 
-    public Note(String m_date, String m_time, String m_mood, String m_symptoms, String m_medicines, String m_reaction) {
-        date = m_date;
-        time = m_time;
-        mood = m_mood;
-        symptoms = m_symptoms;
-        medicines = m_medicines;
-        reaction = m_reaction;
+    public Note(String n_date, String n_mood, String n_symptoms, String n_medicines, String n_reaction, String n_disease) {
+        date = n_date;
+        mood = n_mood;
+        symptoms = n_symptoms;
+        medicines = n_medicines;
+        reaction = n_reaction;
+        disease = n_disease;
     }
 
-    public void setDate(String m_date) {
-        date = m_date;
+    @Override
+    public String toString()
+    {
+        return date + "\n" + symptoms;
+    }
+
+    public void setDate(String n_date) {
+        date = n_date;
     }
     public String getDate() {
         return date;
     }
 
-    public void setTime(String m_time) {
-        time = m_time;
-    }
-    public String getTime() { return time; }
-
-    public void setMood(String m_mood) {
-        mood = m_mood;
+    public void setMood(String n_mood) {
+        mood = n_mood;
     }
     public String getMood() {
         return mood;
     }
 
-    public void setSymptoms(String m_symptoms) {
-        symptoms = m_symptoms;
+    public void setSymptoms(String n_symptoms) {
+        symptoms = n_symptoms;
     }
     public String getSymptoms() {
         return symptoms;
     }
 
-    public void setMedicines(String m_medicines) {
-        medicines = m_medicines;
+    public void setMedicines(String n_medicines) {
+        medicines = n_medicines;
     }
     public String getMedicines() {
         return medicines;
     }
 
-    public void setReaction(String m_reaction) {
-        reaction = m_reaction;
+    public void setReaction(String n_reaction) {
+        reaction = n_reaction;
     }
     public String getReaction() {
         return reaction;
     }
 
-    public void setUid(String m_uid) { uid = m_uid; }
+    public void setDisease(String n_disease) { disease = n_disease; }
+    public String getDisease() { return disease; }
+
+    public void setUid(String n_uid) { uid = n_uid; }
     public String getUid() { return uid; }
 }

@@ -113,7 +113,7 @@ public class Diseases0Activity extends AppCompatActivity {
                 case 0:
                     return "Notatki";
                 case 1:
-                    return "Wizyty";
+                    return "Choroby";
             }
             return null;
         }

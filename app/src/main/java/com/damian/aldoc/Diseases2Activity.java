@@ -24,19 +24,22 @@ public class Diseases2Activity extends AppCompatActivity {
 
         note_table = getIntent().getStringArrayExtra("note");
 
-        var = (TextView)findViewById(R.id.textView11);
-        var.setText(note_table[1]+" "+note_table[2]);
+        var = (TextView)findViewById(R.id.textViewDateV);
+        var.setText(note_table[1]);
 
-        var = (TextView)findViewById(R.id.textView12);
+        var = (TextView)findViewById(R.id.textViewMoodV);
+        var.setText(note_table[2]);
+
+        var = (TextView)findViewById(R.id.textViewSymptomsV);
         var.setText(note_table[3]);
 
-        var = (TextView)findViewById(R.id.textView13);
+        var = (TextView)findViewById(R.id.textViewMedicinesV);
         var.setText(note_table[4]);
 
-        var = (TextView)findViewById(R.id.textView14);
+        var = (TextView)findViewById(R.id.textViewReactionV);
         var.setText(note_table[5]);
 
-        var = (TextView)findViewById(R.id.textView15);
+        var = (TextView)findViewById(R.id.textViewDiseaseV);
         var.setText(note_table[6]);
     }
 

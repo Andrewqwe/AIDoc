@@ -51,9 +51,6 @@
                 android:name=".Diseases2Activity"
                 android:label="Dziennik chorób"/>
         <activity
-                android:name=".DiseasesActivity"
-                android:label="Dziennik chorób"/>
-        <activity
                 android:name=".Diseases0Activity"
                 android:theme="@style/AppTheme.NoActionBar"/>
         <activity
