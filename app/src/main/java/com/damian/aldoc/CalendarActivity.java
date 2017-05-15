@@ -1,13 +1,17 @@
 package com.damian.aldoc;
 
 import android.annotation.SuppressLint;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import com.roomorama.caldroid.CaldroidFragment;
 
 import java.util.Calendar;
+import java.util.Date;
 
 @SuppressLint("SimpleDateFormat")
 public class CalendarActivity extends AppCompatActivity {
@@ -43,6 +47,16 @@ public class CalendarActivity extends AppCompatActivity {
         FragmentTransaction t = getSupportFragmentManager().beginTransaction();
         t.replace(R.id.calendar1, caldroidFragment);
         t.commit();
+
+        Calendar cal = Calendar.getInstance();
+
+        cal.add(Calendar.DATE, -7);
+        Date date = cal.getTime();
+
+        //dodawanie wydarzenia
+        caldroidFragment.setBackgroundDrawableForDate(ResourcesCompat.getDrawable(getResources(), R.drawable.cell_bg_dark, null), date);
+        caldroidFragment.setTextColorForDate(R.color.white, date);
+        caldroidFragment.refreshView();
     }
 
     /**
