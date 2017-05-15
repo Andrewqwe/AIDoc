@@ -9,64 +9,122 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.TimePicker;
+
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
 
 public class Diseases1Activity extends AppCompatActivity {
 
     public static Diseases1Activity activity;
     private Button button;
-    private EditText var;
+    private TextView tv;
+    private EditText et;
+    private Spinner sp;
     private int action;
     private String uid;
-    private final int ADD = 0;
     private final int EDIT = 1;
+    private ArrayAdapter<Disease> adapter;
+    private List<Disease> diseases = new ArrayList<>();
+    private ChildEventListener dChildEventListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_diseases1);
 
+        Disease disease = new Disease("Inne");
+        diseases.add(disease);
+        dChildEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s)
+            {
+                Disease disease = dataSnapshot.getValue(Disease.class);
+                disease.setUid(dataSnapshot.getKey());
+                diseases.add(disease);
+                adapter.notifyDataSetChanged();
+            }
+
+            public void onChildChanged(DataSnapshot dataSnapshot, String s)
+            {
+                Disease disease = dataSnapshot.getValue(Disease.class);
+                disease.setUid(dataSnapshot.getKey());
+
+                for(int i = 0; i < diseases.size(); i++)
+                {
+                    if(diseases.get(i).getUid().equals(dataSnapshot.getKey()))
+                    {
+                        diseases.set(i, disease);
+                        adapter.notifyDataSetChanged();
+                        break;
+                    }
+                }
+            }
+            public void onChildRemoved(DataSnapshot dataSnapshot)
+            {
+                String uid = dataSnapshot.getKey();
+                for(int i = 0; i < diseases.size(); i++)
+                {
+                    if(diseases.get(i).getUid().equals(uid))
+                    {
+                        diseases.remove(i);
+                        adapter.notifyDataSetChanged();
+                        break;
+                    }
+                }
+            }
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+            public void onCancelled(DatabaseError databaseError) {}
+        };
+
+        Database.SetLocation("diseases").addChildEventListener(dChildEventListener);
+        //tworzymy adapter i przypisujemy go do listview zeby wyswietlac wizyty
+        adapter = new ArrayAdapter<Disease>(this, android.R.layout.simple_spinner_item, diseases);
+        sp = (Spinner) findViewById(R.id.spinnerDisease);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sp.setAdapter(adapter);
+
         action = getIntent().getIntExtra("action", -1);
-        if (action == ADD)
-        {
-            Calendar c = Calendar.getInstance();
 
-            String date = new SimpleDateFormat("dd-MM-yyyy").format(c.getTime());
-            String time = new SimpleDateFormat("hh:mm").format(c.getTime());
+        Calendar c = Calendar.getInstance();
 
-            button = (Button)findViewById(R.id.button2);
-            button.setText(date);
+        String date = new SimpleDateFormat("dd-MM-yyyy").format(c.getTime());
+        String time = new SimpleDateFormat("hh:mm").format(c.getTime());
 
-            button = (Button)findViewById(R.id.button3);
-            button.setText(time);
-        }
-        else if(action == EDIT) {
+        tv = (TextView)findViewById(R.id.textViewDateTime);
+        tv.setText(date+" "+time);
+
+        if(action == EDIT) {
             String[] note_table = getIntent().getStringArrayExtra("note");
 
             uid = note_table[0];
 
-            button = (Button) findViewById(R.id.button2);
-            button.setText(note_table[1]);
+            et = (EditText) findViewById(R.id.editTextMood);
+            et.setText(note_table[2]);
 
-            button = (Button) findViewById(R.id.button3);
-            button.setText(note_table[2]);
+            et = (EditText) findViewById(R.id.editTextSymptoms);
+            et.setText(note_table[3]);
 
-            var = (EditText) findViewById(R.id.editText3);
-            var.setText(note_table[3]);
+            et = (EditText) findViewById(R.id.editTextMedicines);
+            et.setText(note_table[4]);
 
-            var = (EditText) findViewById(R.id.editText4);
-            var.setText(note_table[4]);
+            et = (EditText) findViewById(R.id.editTextReaction);
+            et.setText(note_table[5]);
 
-            var = (EditText) findViewById(R.id.editText5);
-            var.setText(note_table[5]);
-
-            var = (EditText) findViewById(R.id.editText2);
-            var.setText(note_table[6]);
+            sp.setSelection(findSpinner(note_table[6]));
         }
         activity = this;
     }
@@ -82,23 +140,23 @@ public class Diseases1Activity extends AppCompatActivity {
 
         note_table[0] = uid;
 
-        button = (Button)findViewById(R.id.button2);
-        note_table[1] = button.getText().toString();
+        tv = (TextView)findViewById(R.id.textViewDateTime);
+        note_table[1] = tv.getText().toString();
 
-        button = (Button)findViewById(R.id.button3);
-        note_table[2] = button.getText().toString();
+        et = (EditText)findViewById(R.id.editTextMood);
+        note_table[2] = et.getText().toString();
 
-        var = (EditText)findViewById(R.id.editText3);
-        note_table[3] = var.getText().toString();
+        et = (EditText)findViewById(R.id.editTextSymptoms);
+        note_table[3] = et.getText().toString();
 
-        var = (EditText)findViewById(R.id.editText4);
-        note_table[4] = var.getText().toString();
+        et = (EditText)findViewById(R.id.editTextMedicines);
+        note_table[4] = et.getText().toString();
 
-        var = (EditText)findViewById(R.id.editText5);
-        note_table[5] = var.getText().toString();
+        et = (EditText)findViewById(R.id.editTextReaction);
+        note_table[5] = et.getText().toString();
 
-        var = (EditText)findViewById(R.id.editText2);
-        note_table[6] = var.getText().toString();
+        sp = (Spinner) findViewById(R.id.spinnerDisease);
+        note_table[6] = sp.getSelectedItem().toString();
 
         Note note = new Note(note_table[1], note_table[2], note_table[3], note_table[4], note_table[5], note_table[6]);
 
@@ -108,109 +166,17 @@ public class Diseases1Activity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public static class TimePickerFragment extends DialogFragment
-            implements TimePickerDialog.OnTimeSetListener {
-
-        private Diseases1Activity diseases1_activity;
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Use the current time as the default values for the picker
-            final Calendar c = Calendar.getInstance();
-            int hour = c.get(Calendar.HOUR_OF_DAY);
-            int minute = c.get(Calendar.MINUTE);
-
-            // Create a new instance of TimePickerDialog and return it
-            return new TimePickerDialog(getActivity(), this, hour, minute,
-                    DateFormat.is24HourFormat(getActivity()));
-        }
-
-        public void setActivity(Diseases1Activity activity)
+    private int findSpinner(String s){
+        /*int index = -1;
+        for (Disease d : diseases)
         {
-            diseases1_activity = activity;
+            if (d.getName() == s)
+            {
+                index = diseases.indexOf(d);
+            }
         }
-
-        public void onTimeSet(TimePicker view, int hourOfDay, int minute)
-        {
-            diseases1_activity.setTime(hourOfDay, minute);
-        }
-    }
-
-    public static class DatePickerFragment extends DialogFragment
-            implements DatePickerDialog.OnDateSetListener {
-
-        private Diseases1Activity diseases1_activity;
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Use the current date as the default date in the picker
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
-
-            // Create a new instance of DatePickerDialog and return it
-            return new DatePickerDialog(getActivity(), this, year, month, day);
-        }
-
-        public void setActivity(Diseases1Activity activity)
-        {
-            diseases1_activity = activity;
-        }
-
-        public void onDateSet(DatePicker view, int year, int month, int day)
-        {
-            diseases1_activity.setDate(year, month, day);
-        }
-    }
-
-    private String toString(int val)
-    {
-        Integer i = Integer.valueOf(val);
-
-        if(val < 10)
-            return "0" + i.toString();
-        else
-            return i.toString();
-    }
-
-    public void setTime(int hour, int minute)
-    {
-        button = (Button)findViewById(R.id.button3);
-        Integer h = Integer.valueOf(hour);
-        Integer m = Integer.valueOf(minute);
-
-        String t = toString(h) + ":" + toString(m);
-
-        button.setText(t);
-    }
-
-    public void setDate(int year, int month, int day)
-    {
-        button = (Button)findViewById(R.id.button2);
-        Integer y = Integer.valueOf(year);
-        Integer m = Integer.valueOf(month + 1);
-        Integer d = Integer.valueOf(day);
-
-        String t = toString(y) + "-" + toString(m) + "-" + toString(d);
-
-        button.setText(t);
-    }
-
-    /*Dwie funkcje do ustawienia czasu i daty, wolane przez fragmenty
-    * TimePickerFragment i DatePickerFragment, w ktorych wybiera sie czas i date*/
-    public void setTimeOnClick(View v)
-    {
-        DialogFragment time_pick_fragment = new TimePickerFragment();
-        ((TimePickerFragment)time_pick_fragment).setActivity(this);
-        time_pick_fragment.show(getSupportFragmentManager(), "timePicker");
-    }
-
-    public void setDateOnClick(View v)
-    {
-        DialogFragment date_pick_fragment = new DatePickerFragment();
-        ((DatePickerFragment)date_pick_fragment).setActivity(this);
-        date_pick_fragment.show(getSupportFragmentManager(), "timePicker");
+        if(index != -1) return index;
+        else*/ return 0;
     }
 
 }

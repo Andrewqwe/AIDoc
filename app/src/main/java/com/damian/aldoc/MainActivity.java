@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
             startActivity(intent_visits);
 
         } else if (id == R.id.user_alerts){
-            Intent intent_diseases = new Intent(this, DiseasesActivity.class);
+            Intent intent_diseases = new Intent(this, Diseases0Activity.class);
             startActivity(intent_diseases);
 
         } else if (id == R.id.user_settings){

@@ -292,6 +292,46 @@ public class Database {
         ref.child(uid).removeValue();
     }
 
+<<<<<<< HEAD
+=======
+    static public void DeleteDiseaseFromDatabase(String uid){
+        Initialize(true);
+        DatabaseReference ref = SetLocation("diseases");
+        ref.child(uid).removeValue();
+    }
+    /**
+     *Metoda która wyszukuje w bazie wizyty które na konkretnej pozycji - parametrName mają dokładną wartość - value
+     * Metoda nic nie zwraca dlatego w OnChildAdded należy dodać wywołanie własnej funkcji która będzie coś robiła z tymi obiektami
+     * DataSnapshot zawsze tworzy liste nawet 1 elementową (komputer jest głupi i nie wie czy szukana przez nas dana jest tylko w 1 miejscu)
+     * @param parametrName nazwa zmiennej którą chcemy zmienić np location
+     * @param value wartość na jaką chcemy podmienić np Breslav
+     * TODO: To chyba do wyjebania :p
+     */
+    static public void GetVisitByValueFromDatabase(String parametrName, String value){
+        Initialize(true);
+        DatabaseReference ref = SetLocation("visits");
+        Query aa= ref.orderByChild(parametrName).equalTo(value);
+        aa.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                System.out.println(dataSnapshot.getKey());  //tutaj podmienic na funkcjie która ma działać z otrzymanym kluczem.
+                //wyżej dataSnapshot.getKey() otrzymuje uid znalezionych obiektów. ten print zostanie wywołany tyle razy ile obiektów będzie zgadzało się z naszym wyszukiwaniem!!!!!!!
+            }
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
+
+
+    }
+
+
+>>>>>>> origin/master
     static public void UpdateObjectInDatabase(String path, Object object, String uid) {
         Initialize(true);
         SetLocation(path);
