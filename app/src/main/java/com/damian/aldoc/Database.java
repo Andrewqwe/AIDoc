@@ -133,15 +133,9 @@ public class Database {
     static public String[]  GetUserInfo(){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-
-            // Name, email address, and profile photo Url
+            // Name, email address
             String name = user.getDisplayName();
             String email = user.getEmail();
-            Uri photoUrl = user.getPhotoUrl();
-
-            // Check if user's email is verified
-            boolean emailVerified = user.isEmailVerified();
-
             // The user's ID, unique to the Firebase project. Do NOT use this value to
             // authenticate with your backend server, if you have one. Use
             // FirebaseUser.getToken() instead.
@@ -152,6 +146,20 @@ public class Database {
             return null;
     }
 
+    /**
+     * Metoda sprawdzająca czy Email użytkownika jest zweryfikowany
+     * @return Zwraca wartość true jeżeli jest e-mail zweryfikowany lub false w przeciwnym razie oraz null jeżeli użytkownik nie jest w ogóle zalogowany.
+     */
+    static public Boolean UserEmailVerified(){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) return user.isEmailVerified();
+        return null;
+    }
+
+    /**
+     * Metoda pobierająca avatar(zdjęcie użytkownika) z ustawionego z pola logowania (np avatar google)
+     * @return Zwraca Url do zdjęcia jeżeli użytkownik jest zalogowany
+     */
     static public Uri  GetUserImage(){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
@@ -160,7 +168,6 @@ public class Database {
         }
         return null;
     }
-
 
     /**
      * Metoda publiczna pobierająca z bazy UID użytkownika
@@ -214,7 +221,7 @@ public class Database {
         mDatabaseReference.child(GetUserUID()).child("phone").setValue(phone);
     }
     /**
-     * Obecnie Read From Visits nie dziala
+     * Obecnie Read From Visits nie dziala i działac nie będzie, kod jako przykład zastosowania budowy w klasie
      */
 
     static private void ReadFromVisits() {
@@ -265,49 +272,25 @@ public class Database {
         ref.child(uid).removeValue();
     }
 
+    /**
+     * Metoda do kasowania całego obiektu o danym kluczu.
+     * @param uid klucz do danego miejsca w prescriptions np. -KivIPsb0iuUBuOns6Bv
+     */
     static public void DeletePrescriptionFromDatabase(String uid){
         Initialize(true);
         DatabaseReference ref = SetLocation("prescriptions");
         ref.child(uid).removeValue();
     }
 
+    /**
+     * Metoda do kasowania całego obiektu o danym kluczu.
+     * @param uid klucz do danego miejsca w notes np. -KivIPsb0iuUBuOns6Bv
+     */
     static public void DeleteNoteFromDatabase(String uid){
         Initialize(true);
         DatabaseReference ref = SetLocation("notes");
         ref.child(uid).removeValue();
     }
-
-    /**
-     *Metoda która wyszukuje w bazie wizyty które na konkretnej pozycji - parametrName mają dokładną wartość - value
-     * Metoda nic nie zwraca dlatego w OnChildAdded należy dodać wywołanie własnej funkcji która będzie coś robiła z tymi obiektami
-     * DataSnapshot zawsze tworzy liste nawet 1 elementową (komputer jest głupi i nie wie czy szukana przez nas dana jest tylko w 1 miejscu)
-     * @param parametrName nazwa zmiennej którą chcemy zmienić np location
-     * @param value wartość na jaką chcemy podmienić np Breslav
-     * TODO: To chyba do wyjebania :p
-     */
-    static public void GetVisitByValueFromDatabase(String parametrName, String value){
-        Initialize(true);
-        DatabaseReference ref = SetLocation("visits");
-        Query aa= ref.orderByChild(parametrName).equalTo(value);
-        aa.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                System.out.println(dataSnapshot.getKey());  //tutaj podmienic na funkcjie która ma działać z otrzymanym kluczem.
-                //wyżej dataSnapshot.getKey() otrzymuje uid znalezionych obiektów. ten print zostanie wywołany tyle razy ile obiektów będzie zgadzało się z naszym wyszukiwaniem!!!!!!!
-            }
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {}
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-            @Override
-            public void onCancelled(DatabaseError databaseError) {}
-        });
-
-
-    }
-
 
     static public void UpdateObjectInDatabase(String path, Object object, String uid) {
         Initialize(true);
@@ -345,10 +328,8 @@ public class Database {
      * @param value wartość na jaką chcemy podmienić np Breslav
      */
     static public void ModifyValueInDatabase(String uid,String parametrName, String value){
-
         Initialize(true);
         DatabaseReference ref = SetLocation("visits");
-
         Map<String, Object> nickname = new HashMap<String, Object>();
         nickname.put(parametrName, value);
         ref.child(uid).updateChildren(nickname);
@@ -360,18 +341,12 @@ public class Database {
         return storageRef;
     }
 
-    static public StorageReference StoragePhotoTestReference(){
-        FirebaseStorage storage = FirebaseStorage.getInstance("gs://aidoc-14c21.appspot.com/");
-        StorageReference storageRef = storage.getReferenceFromUrl("https://firebasestorage.googleapis.com/v0/b/aidoc-14c21.appspot.com/o/images%2F11236435_1587659054850309_8261278677980167661_n.jpg?alt=media&token=c5fae2b3-138a-49c9-92ff-6f8349fb2352");
-        return storageRef;
-    }
-
     /**
      * Funkcja zmieniajaca uri na referencje do storage(używać jako paratetr wejścia do metody StorageDownloadAndDisplayInContextImage jako StorageReference)
      * @param uri Uri na którą chcemy utworzyc referencje w storage
      * @return Zwraca referencje na zdjecie wskazywane przez uri
      */
-    static public StorageReference  ReturnStorageReferenceToPassedUri(Uri uri){
+    static private StorageReference ReturnStorageReferenceToPassedUri(Uri uri){
         FirebaseStorage storage = FirebaseStorage.getInstance("gs://aidoc-14c21.appspot.com/");
         return storage.getReferenceFromUrl(String.valueOf(uri));
     }
@@ -379,13 +354,13 @@ public class Database {
     /**
      * Funkcja wyświetlająca zdjęcie wskazywane przez StorageReference w polu imageView w zadanym context.
      * @param context Przekazanie contextu aktywności (najlepiej używać this.getApplicationContext())
-     * @param reference Przekazywanie referencji na zdjęcie (przekazywać Uri do metody StorageDownloadAndDisplayInContextImage() która zwraca referencje) przykład wprowadzenia --- Database.ReturnStorageReferenceToPassedUri(naszeUri)
+     * @param uri Przekazywanie uri zdjęcia znajdującego się w bazie danych
      * @param imageView Przekazanie imageView(miejsce gdzie zostanie wyświetlone zdjęcie)
      */
-    static public void StorageDownloadAndDisplayInContextImage(Context context,StorageReference reference, ImageView imageView){
+    static public void StorageDownloadAndDisplayInContextImage(Context context,Uri uri, ImageView imageView){
         Glide.with(context)
                 .using(new FirebaseImageLoader())
-                .load(reference)
+                .load(ReturnStorageReferenceToPassedUri(uri))
                 .into(imageView);
     }
 
@@ -475,17 +450,15 @@ public class Database {
                 //Uri downloadUrl = taskSnapshot.getMetadata().getDownloadUrl();
                 //URLTEST(ReturnStorageReferenceToPassedUri); Tą metodą można utworzyć referencje na konkretne zdjęcie
                 Toast.makeText(getApplicationContext(), "Your file was sent successfully.", Toast.LENGTH_SHORT).show();
-                aaa = taskSnapshot.getMetadata().getDownloadUrl();
+                aaa = taskSnapshot.getMetadata().getDownloadUrl();   // wrzucic ten url do notatki - czekac na dokladne instrukcjie od mateusza
                // Toast.makeText(getApplicationContext(), String.valueOf(aaa), Toast.LENGTH_SHORT).show();
             }
         });
-        return aaa;
+        return aaa;  //do przebudowy - tak byc nie będzie
     }
 
 static Uri aaa;
 
-
 }
 // TODO  Metoda odczytująca z bazy danych. Metody wysyłające dane do większej ilości funkcjionalności. Podpięcie tworzenia grup i dodawania członków rodziny do nich.
-// TODO  Zejście z metod obsługiwanych przez podanie ścieżki aby je wywołać.
-// TODO obsługa wysyłania i odczytywania zdjęć z bazy danych
+
