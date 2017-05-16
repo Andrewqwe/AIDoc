@@ -12,9 +12,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
+import com.google.firebase.storage.*;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -263,6 +261,12 @@ public class Database {
         ref.child(uid).removeValue();
     }
 
+    static public void DeletePrescriptionEntryFromDatabase(String uid){
+        Initialize(true);
+        DatabaseReference ref = SetLocation("prescription_entries");
+        ref.child(uid).removeValue();
+    }
+
     static public void DeleteNoteFromDatabase(String uid){
         Initialize(true);
         DatabaseReference ref = SetLocation("notes");
@@ -381,6 +385,62 @@ public class Database {
     }
 
 
+    static public void AddUriInPrescriptionInDatabase(String uid, Uri value){
+        Initialize(true);
+        DatabaseReference ref = SetLocation("prescriptions");
+        Map<String, Object> nickname = new HashMap<String, Object>();
+        nickname.put("photo", value);
+        ref.child(uid).updateChildren(nickname);
+    }
+
+
+
+
+    /**
+     * Metoda wrzucająca zdjęcie do storage(bazy)  coś jest nie tak z return, przy wylowaniu dostaniemy null badź uri ostatnio wysyłanego pliku (odpala wysyłanie które jest w tle i zanim wysle plik i otrzyma uri zwraca wartość uri w return)
+     * @param path uri do pliku jaki chcemy wrzucić
+     * @return Zwraca Uri zdjęcia przez nas wrzuconego (można to uri dopisać do notatki aby przypisac dane zdjęcie)
+     */
+    @SuppressWarnings("VisibleForTests")
+    static public void UploadImageToDatabaseStorageUsingUriAndUpdatePrescription(Uri path,String uid){
+        StorageReference ref = StorageInitialize();
+        final String vvvv = uid;
+        StorageReference riversRef = ref.child("images/"+path.getLastPathSegment());
+        UploadTask uploadTask = riversRef.putFile(path);
+        // Register observers to listen for when the download is done or if it fails
+        // Listen for state changes, errors, and completion of the upload.
+        uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                Toast.makeText(getApplicationContext(), "Upload is " + progress + "% done", Toast.LENGTH_SHORT).show();
+                System.out.println("Upload is " + progress + "% done");
+            }
+        }).addOnPausedListener(new OnPausedListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onPaused(UploadTask.TaskSnapshot taskSnapshot) {
+                System.out.println("Upload is paused");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // Handle successful uploads on complete
+                //Uri downloadUrl = taskSnapshot.getMetadata().getDownloadUrl();
+                //URLTEST(ReturnStorageReferenceToPassedUri); Tą metodą można utworzyć referencje na konkretne zdjęcie
+                Toast.makeText(getApplicationContext(), "Your file was sent successfully.", Toast.LENGTH_SHORT).show();
+                //aaa = taskSnapshot.getMetadata().getDownloadUrl();
+                Uri downloadUri = taskSnapshot.getMetadata().getDownloadUrl();
+                AddUriInPrescriptionInDatabase(vvvv,downloadUri);
+                taskSnapshot.getMetadata().getDownloadUrl();
+                // Toast.makeText(getApplicationContext(), String.valueOf(aaa), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
 }
 

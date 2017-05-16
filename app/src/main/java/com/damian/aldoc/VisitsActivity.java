@@ -1,6 +1,9 @@
 package com.damian.aldoc;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -113,12 +116,30 @@ public class VisitsActivity extends AppCompatActivity {
     public boolean onContextItemSelected(MenuItem item)
     {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        Visit visit = visits.get(info.position);
+        final Visit visit = visits.get(info.position);
 
         switch (item.getItemId())
         {
             case R.id.visitMenu_delete:
-                Database.DeleteVisitFromDatabase(visit.getUid());
+                AlertDialog.Builder alert_delete = new AlertDialog.Builder(this);
+                alert_delete.setTitle("Czy na pewno chcesz usunąć wizytę?");
+
+                alert_delete.setCancelable(true).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        Database.DeleteVisitFromDatabase(visit.getUid());
+                    }
+                });
+
+                alert_delete.setNegativeButton("Anuluj", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+
+                Dialog delete_dialog = alert_delete.create();
+                delete_dialog.show();
                 break;
             case R.id.visitMenu_edit:
                 editVisit(visit);
