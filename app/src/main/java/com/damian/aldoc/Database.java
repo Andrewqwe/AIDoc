@@ -282,6 +282,7 @@ public class Database {
         ref.child(uid).removeValue();
     }
 
+<<<<<<< HEAD
     static public void DeletePrescriptionEntryFromDatabase(String uid){
         Initialize(true);
         DatabaseReference ref = SetLocation("prescription_entries");
@@ -292,6 +293,8 @@ public class Database {
      * Metoda do kasowania całego obiektu o danym kluczu.
      * @param uid klucz do danego miejsca w notes np. -KivIPsb0iuUBuOns6Bv
      */
+=======
+>>>>>>> origin/master
     static public void DeleteNoteFromDatabase(String uid){
         Initialize(true);
         DatabaseReference ref = SetLocation("notes");
@@ -474,6 +477,7 @@ public class Database {
         StorageMetadata metadata = new StorageMetadata.Builder()
                 .setContentType("image/jpeg")
                 .build();
+<<<<<<< HEAD
 
         UploadTask uploadTask = riversRef.putFile(file,metadata);
         // Register observers to listen for when the download is done or if it fails
@@ -508,6 +512,8 @@ public class Database {
         });
         return aaa;  //do przebudowy - tak byc nie będzie
     }
+=======
+>>>>>>> origin/master
 
 static Uri aaa;
 

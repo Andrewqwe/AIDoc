@@ -148,7 +148,8 @@ public class PrescriptionActivity extends AppCompatActivity
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
-                        Database.DeletePrescriptionEntryFromDatabase(pe.getUid());
+                        //TODO:dodac to
+                        //Database.DeletePrescriptionEntryFromDatabase(pe.getUid());
                     }
                 });
 
@@ -345,7 +346,8 @@ public class PrescriptionActivity extends AppCompatActivity
             if(prescription_bitmap != null)
             {
                 image_view.setImageBitmap(prescription_bitmap);
-                Database.UploadImageToDatabaseStorageUsingUriAndUpdatePrescription(picture_uri, prescription_uid);
+                //TODO:Dodac to
+                //Database.UploadImageToDatabaseStorageUsingUriAndUpdatePrescription(picture_uri, prescription_uid);
             }
             else
                 Toast.makeText(this, "Wystąpił błąd. Spróbuj ponownie.", Toast.LENGTH_LONG).show();

@@ -6,7 +6,7 @@ package com.damian.aldoc;
 
 public class Disease {
     String name;
-    String uid;
+    String did;
 
     Disease(){
     }
@@ -21,13 +21,13 @@ public class Disease {
         return name;
     }
 
+    public void setDid(String d) { did = d; }
+    public String getDid() {
+        return did;
+    }
+
     public void setName(String n) { name = n; }
     public String getName() {
         return name;
-    }
-
-    public void setUid(String u) { uid = u; }
-    public String getUid() {
-        return uid;
     }
 }

@@ -1,116 +1,68 @@
 package com.damian.aldoc;
 
-import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.MultiAutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.TimePicker;
-
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
 
 public class Diseases1Activity extends AppCompatActivity {
 
     public static Diseases1Activity activity;
-    private Button button;
+    //Zmienne pomocnicze do inicjowania pól z XML'a
     private TextView tv;
     private EditText et;
     private Spinner sp;
+    private MultiAutoCompleteTextView mactv;
+    //Zmienne pomocnicze do wykrywania czy tworzymy nową notatkę czy edytujemy już istniejącą
     private int action;
-    private String uid;
     private final int EDIT = 1;
-    private ArrayAdapter<Disease> adapter;
-    private List<Disease> diseases = new ArrayList<>();
+    //Adaptery, lista i listener do posługiwania się chorobami i lekami
+    private ArrayAdapter<Disease> adapter1;
+    private ArrayAdapter<String> adapter2;
+    private List<Disease> diseasesList = new ArrayList<>();
     private ChildEventListener dChildEventListener;
+    //Zmienne pomocnicze
+    private String nid;
+    private String dcategory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_diseases1);
 
-        Disease disease = new Disease("Inne");
-        diseases.add(disease);
-        dChildEventListener = new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s)
-            {
-                Disease disease = dataSnapshot.getValue(Disease.class);
-                disease.setUid(dataSnapshot.getKey());
-                diseases.add(disease);
-                adapter.notifyDataSetChanged();
-            }
-
-            public void onChildChanged(DataSnapshot dataSnapshot, String s)
-            {
-                Disease disease = dataSnapshot.getValue(Disease.class);
-                disease.setUid(dataSnapshot.getKey());
-
-                for(int i = 0; i < diseases.size(); i++)
-                {
-                    if(diseases.get(i).getUid().equals(dataSnapshot.getKey()))
-                    {
-                        diseases.set(i, disease);
-                        adapter.notifyDataSetChanged();
-                        break;
-                    }
-                }
-            }
-            public void onChildRemoved(DataSnapshot dataSnapshot)
-            {
-                String uid = dataSnapshot.getKey();
-                for(int i = 0; i < diseases.size(); i++)
-                {
-                    if(diseases.get(i).getUid().equals(uid))
-                    {
-                        diseases.remove(i);
-                        adapter.notifyDataSetChanged();
-                        break;
-                    }
-                }
-            }
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-            public void onCancelled(DatabaseError databaseError) {}
-        };
-
-        Database.SetLocation("diseases").addChildEventListener(dChildEventListener);
-        //tworzymy adapter i przypisujemy go do listview zeby wyswietlac wizyty
-        adapter = new ArrayAdapter<Disease>(this, android.R.layout.simple_spinner_item, diseases);
-        sp = (Spinner) findViewById(R.id.spinnerDisease);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        sp.setAdapter(adapter);
-
-        action = getIntent().getIntExtra("action", -1);
-
+        //Ustawiamy obecną datę i godzinę
         Calendar c = Calendar.getInstance();
-
         String date = new SimpleDateFormat("dd-MM-yyyy").format(c.getTime());
         String time = new SimpleDateFormat("hh:mm").format(c.getTime());
 
         tv = (TextView)findViewById(R.id.textViewDateTime);
         tv.setText(date+" "+time);
 
+        //Pobieramy zmienną wskazującą czy dodajemy czy edytujemy notatkę
+        action = getIntent().getIntExtra("action", -1);
+        //Inicjumemy zmienną pomocniczą nieznaczącą wartością
+        dcategory = "Brak";
+
+        //Jeśli edytujemy pobieramy dane z poprzedniej aktywności i inicjujemy nimi pola obecnej aktywności
         if(action == EDIT) {
             String[] note_table = getIntent().getStringArrayExtra("note");
 
-            uid = note_table[0];
+            nid = note_table[0];
 
             et = (EditText) findViewById(R.id.editTextMood);
             et.setText(note_table[2]);
@@ -118,27 +70,79 @@ public class Diseases1Activity extends AppCompatActivity {
             et = (EditText) findViewById(R.id.editTextSymptoms);
             et.setText(note_table[3]);
 
-            et = (EditText) findViewById(R.id.editTextMedicines);
-            et.setText(note_table[4]);
+            mactv = (MultiAutoCompleteTextView) findViewById(R.id.mactvMedicines);
+            mactv.setText(note_table[4]);
 
             et = (EditText) findViewById(R.id.editTextReaction);
             et.setText(note_table[5]);
 
-            sp.setSelection(findSpinner(note_table[6]));
+            //Dodajemy na początek listy chorobę, której dotyczy notatka aby ją wyświetlać na starcie
+            dcategory = note_table[6];
+            Disease disease = new Disease(dcategory);
+            diseasesList.add(disease);
         }
+        else {
+            //Jeśli dodajemy inicjujemy pierwsze element listy wartością braku wyboru
+            Disease disease = new Disease("--wybierz--");
+            diseasesList.add(disease);
+        }
+        /*Jeśli dodana na wstępie choroba jest różna od "Inne", dodajemy takiego stringa do listy,
+          ponieważ nie przechowujemy tego go w bazie*/
+        if(!dcategory.equals("Inne")) {
+            Disease disease = new Disease("Inne");
+            diseasesList.add(disease);
+        }
+
+        //Inicjujemy bazę danych i tworzymy listenera dodającego choroby do listy
+        Database.Initialize(true);
+        dChildEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s)
+            {
+                Disease disease = dataSnapshot.getValue(Disease.class);
+                disease.setDid(dataSnapshot.getKey());
+                //Jeśli różna od dodanej na wstępie choroby
+                if(!dcategory.equals(disease.name))diseasesList.add(disease);
+                adapter1.notifyDataSetChanged();
+            }
+
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+            public void onCancelled(DatabaseError databaseError) {}
+        };
+        //Przechodzimy do chorób w bazie i ustawiamy utworzonego wcześniej listenera
+        Database.SetLocation("diseases").addChildEventListener(dChildEventListener);
+        //Wypełniamy adapter i przypisujemy go do spinnera żeby wyswietlac choroby
+        adapter1 = new ArrayAdapter<Disease>(this, android.R.layout.simple_spinner_item, diseasesList);
+        sp = (Spinner) findViewById(R.id.spinnerDisease);
+        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sp.setAdapter(adapter1);
+
+        //Tworzymy tablicę stringów i przypisujemy jej listę leków z pliku drugs.xml
+        String[] medicinesList = getResources().getStringArray(R.array.drugs_array);
+        //Wypełniamy adapter i przypisujemy go do pola do wpisywania przyjętych leków aby domyślał się o jakie leki nam chodzi
+        adapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, medicinesList);
+        mactv = (MultiAutoCompleteTextView) findViewById(R.id.mactvMedicines);
+        mactv.setAdapter(adapter2);
+        //Separujemy leki przecinkiem i spacją
+        mactv.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
         activity = this;
     }
 
+    //Funkcja dodająca/modyfikująca notatkę po kliknięciu na przycisk "Dodaj"
     public void onClick(View v) {
         Intent intent = new Intent(getApplicationContext(), Diseases0Activity.class);
+        //Tworzymy tablicę, do której pobierzemy wartości z pól aktywności
         String[] note_table = new String[7];
+
+        //Jeśli dobrze się nie przesłała zmienna wyłączam aktywność
         if(action == -1)
         {
             setResult(AppCompatActivity.RESULT_CANCELED, intent);
             finish();
         }
-
-        note_table[0] = uid;
+        note_table[0] = nid;
 
         tv = (TextView)findViewById(R.id.textViewDateTime);
         note_table[1] = tv.getText().toString();
@@ -149,8 +153,8 @@ public class Diseases1Activity extends AppCompatActivity {
         et = (EditText)findViewById(R.id.editTextSymptoms);
         note_table[3] = et.getText().toString();
 
-        et = (EditText)findViewById(R.id.editTextMedicines);
-        note_table[4] = et.getText().toString();
+        mactv = (MultiAutoCompleteTextView)findViewById(R.id.mactvMedicines);
+        note_table[4] = mactv.getText().toString();
 
         et = (EditText)findViewById(R.id.editTextReaction);
         note_table[5] = et.getText().toString();
@@ -158,25 +162,33 @@ public class Diseases1Activity extends AppCompatActivity {
         sp = (Spinner) findViewById(R.id.spinnerDisease);
         note_table[6] = sp.getSelectedItem().toString();
 
-        Note note = new Note(note_table[1], note_table[2], note_table[3], note_table[4], note_table[5], note_table[6]);
+        //Jeśli choroba jakiej dotyczy notatka nie została wybrana wyświetlamy odpowiednie okno dialogowe i nic nie wykonujemy
+        if(note_table[6].equals("--wybierz--")){
+            showDialog(0);
+        }
+        //W przeciwnym razie tworzymy uwtworzoną notatkę i wysyłamy ją do bazy
+        else {
+            Note note = new Note(note_table[1], note_table[2], note_table[3], note_table[4], note_table[5], note_table[6], -System.currentTimeMillis()/1000);
 
-        if(action == 0) Database.SendObjectNotesToDatabase(note);
-        else if(action == 1) Database.UpdateNoteInDatabase(note, note_table[0]);
+            if (action == 0) Database.SendObjectNotesToDatabase(note);
+            else if (action == 1) Database.UpdateNoteInDatabase(note, note_table[0]);
 
-        startActivity(intent);
+            startActivity(intent);
+        }
     }
 
-    private int findSpinner(String s){
-        /*int index = -1;
-        for (Disease d : diseases)
-        {
-            if (d.getName() == s)
-            {
-                index = diseases.indexOf(d);
+    //Okno dialogowe informujące i potrzebie wybrania choroby jakiej dotyczy notatka
+    protected Dialog onCreateDialog(int id) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        //dialogBuilder.setTitle("Usuwanie notatki");
+        dialogBuilder.setMessage("Wybierz chorobę jakiej dotyczy notatka!");
+        //dialogBuilder.setCancelable(false);
+        dialogBuilder.setNegativeButton("Rozumiem", new Dialog.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int whichButton) {
             }
-        }
-        if(index != -1) return index;
-        else*/ return 0;
+        });
+        return dialogBuilder.create();
     }
 
 }
