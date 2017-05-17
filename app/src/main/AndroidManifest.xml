@@ -60,11 +60,10 @@
                 android:name=".Diseases2Activity"
                 android:label="Dziennik chorób"/>
         <activity
-                android:name=".DiseasesActivity"
-                android:label="Dziennik chorób"/>
-        <activity
                 android:name=".Diseases0Activity"
-                android:theme="@style/AppTheme.NoActionBar"/>
+                android:windowSoftInputMode="stateHidden|adjustPan"
+                android:theme="@style/AppTheme.NoActionBar"
+                android:label="Dziennik chorób"/>
         <activity
                 android:name=".UserProfileView"
                 android:label="@string/title_activity_user_profile_view"

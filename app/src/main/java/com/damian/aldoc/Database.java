@@ -1,6 +1,8 @@
 package com.damian.aldoc;
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.auth.AuthUI;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -12,8 +14,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.*;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnPausedListener;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageMetadata;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.ContactsContract;
@@ -24,8 +32,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -261,18 +271,17 @@ public class Database {
         ref.child(uid).removeValue();
     }
 
-    static public void DeletePrescriptionEntryFromDatabase(String uid){
-        Initialize(true);
-        DatabaseReference ref = SetLocation("prescription_entries");
-        ref.child(uid).removeValue();
-    }
-
     static public void DeleteNoteFromDatabase(String uid){
         Initialize(true);
         DatabaseReference ref = SetLocation("notes");
         ref.child(uid).removeValue();
     }
 
+    static public void DeleteDiseaseFromDatabase(String uid){
+        Initialize(true);
+        DatabaseReference ref = SetLocation("diseases");
+        ref.child(uid).removeValue();
+    }
     /**
      *Metoda która wyszukuje w bazie wizyty które na konkretnej pozycji - parametrName mają dokładną wartość - value
      * Metoda nic nie zwraca dlatego w OnChildAdded należy dodać wywołanie własnej funkcji która będzie coś robiła z tymi obiektami
@@ -351,50 +360,39 @@ public class Database {
     }
 
     static public StorageReference StorageInitialize(){
-        String path = "images";
         FirebaseStorage storage = FirebaseStorage.getInstance("gs://aidoc-14c21.appspot.com/");
         StorageReference storageRef = storage.getReference();
         return storageRef;
     }
 
-    @SuppressWarnings("VisibleForTests")
-
-    static public void UploadImageToDatabaseStorage(Uri path){
-        StorageReference ref = StorageInitialize();
-        StorageReference riversRef = ref.child("images/"+path.getLastPathSegment());
-        UploadTask uploadTask = riversRef.putFile(path);
-        // Register observers to listen for when the download is done or if it fails
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle unsuccessful uploads
-                Toast.makeText(getApplicationContext(), "Your file was not sent.", Toast.LENGTH_SHORT).show();
-
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-                taskSnapshot.getMetadata();//contains file metadata such as size, content-type, and download URL.
-                Uri downloadUrl = taskSnapshot.getDownloadUrl(); //i gdzie wrzucic tego downloadUrl?
-                Toast.makeText(getApplicationContext(), "Your file was sent successfully.", Toast.LENGTH_SHORT).show();
-            }
-
-        });
-
+    static public StorageReference StoragePhotoTestReference(){
+        FirebaseStorage storage = FirebaseStorage.getInstance("gs://aidoc-14c21.appspot.com/");
+        StorageReference storageRef = storage.getReferenceFromUrl("https://firebasestorage.googleapis.com/v0/b/aidoc-14c21.appspot.com/o/images%2F11236435_1587659054850309_8261278677980167661_n.jpg?alt=media&token=c5fae2b3-138a-49c9-92ff-6f8349fb2352");
+        return storageRef;
     }
 
-
-    static public void AddUriInPrescriptionInDatabase(String uid, Uri value){
-        Initialize(true);
-        DatabaseReference ref = SetLocation("prescriptions");
-        Map<String, Object> nickname = new HashMap<String, Object>();
-        nickname.put("photo", value);
-        ref.child(uid).updateChildren(nickname);
+    /**
+     * Funkcja zmieniajaca uri na referencje do storage(używać jako paratetr wejścia do metody StorageDownloadAndDisplayInContextImage jako StorageReference)
+     * @param uri Uri na którą chcemy utworzyc referencje w storage
+     * @return Zwraca referencje na zdjecie wskazywane przez uri
+     */
+    static public StorageReference  ReturnStorageReferenceToPassedUri(Uri uri){
+        FirebaseStorage storage = FirebaseStorage.getInstance("gs://aidoc-14c21.appspot.com/");
+        return storage.getReferenceFromUrl(String.valueOf(uri));
     }
 
-
-
+    /**
+     * Funkcja wyświetlająca zdjęcie wskazywane przez StorageReference w polu imageView w zadanym context.
+     * @param context Przekazanie contextu aktywności (najlepiej używać this.getApplicationContext())
+     * @param reference Przekazywanie referencji na zdjęcie (przekazywać Uri do metody StorageDownloadAndDisplayInContextImage() która zwraca referencje) przykład wprowadzenia --- Database.ReturnStorageReferenceToPassedUri(naszeUri)
+     * @param imageView Przekazanie imageView(miejsce gdzie zostanie wyświetlone zdjęcie)
+     */
+    static public void StorageDownloadAndDisplayInContextImage(Context context,StorageReference reference, ImageView imageView){
+        Glide.with(context)
+                .using(new FirebaseImageLoader())
+                .load(reference)
+                .into(imageView);
+    }
 
     /**
      * Metoda wrzucająca zdjęcie do storage(bazy)  coś jest nie tak z return, przy wylowaniu dostaniemy null badź uri ostatnio wysyłanego pliku (odpala wysyłanie które jest w tle i zanim wysle plik i otrzyma uri zwraca wartość uri w return)
@@ -402,9 +400,8 @@ public class Database {
      * @return Zwraca Uri zdjęcia przez nas wrzuconego (można to uri dopisać do notatki aby przypisac dane zdjęcie)
      */
     @SuppressWarnings("VisibleForTests")
-    static public void UploadImageToDatabaseStorageUsingUriAndUpdatePrescription(Uri path,String uid){
+    static public Uri UploadImageToDatabaseStorageUsingUri(Uri path){
         StorageReference ref = StorageInitialize();
-        final String vvvv = uid;
         StorageReference riversRef = ref.child("images/"+path.getLastPathSegment());
         UploadTask uploadTask = riversRef.putFile(path);
         // Register observers to listen for when the download is done or if it fails
@@ -433,18 +430,67 @@ public class Database {
                 //Uri downloadUrl = taskSnapshot.getMetadata().getDownloadUrl();
                 //URLTEST(ReturnStorageReferenceToPassedUri); Tą metodą można utworzyć referencje na konkretne zdjęcie
                 Toast.makeText(getApplicationContext(), "Your file was sent successfully.", Toast.LENGTH_SHORT).show();
-                //aaa = taskSnapshot.getMetadata().getDownloadUrl();
-                Uri downloadUri = taskSnapshot.getMetadata().getDownloadUrl();
-                AddUriInPrescriptionInDatabase(vvvv,downloadUri);
-                taskSnapshot.getMetadata().getDownloadUrl();
+                aaa = taskSnapshot.getMetadata().getDownloadUrl();
                 // Toast.makeText(getApplicationContext(), String.valueOf(aaa), Toast.LENGTH_SHORT).show();
             }
         });
+        return aaa;
     }
 
+    /**
+     *coś jest nie tak z return, przy wylowaniu dostaniemy null badź uri ostatnio wysyłanego pliku (odpala wysyłanie które jest w tle i zanim wysle plik i otrzyma uri zwraca wartość uri w return)
+     * @param path Pobiera ścieżkę do pliku znajdującego się na telefonie w String
+     * @return Zwraca Uri zdjęcia przez nas wrzuconego (można to uri dopisać do notatki aby przypisac dane zdjęcie)
+     */
+    @SuppressWarnings("VisibleForTests")
+    static public Uri UploadImageToDatabaseStorageUsingPath(String path){
+        StorageReference ref = StorageInitialize();
+        Uri file = Uri.fromFile(new File(path));
+        StorageReference riversRef = ref.child("images/"+file.getLastPathSegment());
+
+        // Create the file metadata
+        StorageMetadata metadata = new StorageMetadata.Builder()
+                .setContentType("image/jpeg")
+                .build();
+
+        UploadTask uploadTask = riversRef.putFile(file,metadata);
+        // Register observers to listen for when the download is done or if it fails
+        // Listen for state changes, errors, and completion of the upload.
+        uploadTask.addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                Toast.makeText(getApplicationContext(), "Upload is " + progress + "% done", Toast.LENGTH_SHORT).show();
+                System.out.println("Upload is " + progress + "% done");
+            }
+        }).addOnPausedListener(new OnPausedListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onPaused(UploadTask.TaskSnapshot taskSnapshot) {
+                System.out.println("Upload is paused");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle unsuccessful uploads
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // Handle successful uploads on complete
+                //Uri downloadUrl = taskSnapshot.getMetadata().getDownloadUrl();
+                //URLTEST(ReturnStorageReferenceToPassedUri); Tą metodą można utworzyć referencje na konkretne zdjęcie
+                Toast.makeText(getApplicationContext(), "Your file was sent successfully.", Toast.LENGTH_SHORT).show();
+                aaa = taskSnapshot.getMetadata().getDownloadUrl();
+               // Toast.makeText(getApplicationContext(), String.valueOf(aaa), Toast.LENGTH_SHORT).show();
+            }
+        });
+        return aaa;
+    }
+
+static Uri aaa;
+
+
 }
-
-
 // TODO  Metoda odczytująca z bazy danych. Metody wysyłające dane do większej ilości funkcjionalności. Podpięcie tworzenia grup i dodawania członków rodziny do nich.
 // TODO  Zejście z metod obsługiwanych przez podanie ścieżki aby je wywołać.
 // TODO obsługa wysyłania i odczytywania zdjęć z bazy danych

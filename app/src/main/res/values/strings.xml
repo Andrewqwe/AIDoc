@@ -36,7 +36,7 @@
         <item>pesel//Pesel</item>
         <item>city//Miasto</item>
         <item>address//Adres</item>
-        <item>phone//Numer telefonu</item>
+        <item>phonenumber//Numer telefonu</item>
         <item>email//E-mail</item>
         <item>bloodGroup//Grupa Krwi</item>
     </string-array>

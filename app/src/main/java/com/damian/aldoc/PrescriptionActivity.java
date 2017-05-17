@@ -16,6 +16,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.*;
 import android.widget.*;
+
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.database.*;
 
 import java.io.File;
@@ -55,7 +58,7 @@ public class PrescriptionActivity extends AppCompatActivity
         tv.setText(prescription_data[0]);
 
         image_view = (ImageView)findViewById(R.id.prescription_imageView);
-
+        Database.StorageDownloadAndDisplayInContextImage(this.getApplicationContext(),Database.StoragePhotoTestReference(),image_view);// - Radek - przykładowe zastosowanie metody do wyświetlana zdjęcia (psyduck)
         //tworzymy listenera, ktory dodaje do listview wszystkie wpisy z recepty
         Database.Initialize(true);
         DatabaseReference ref = Database.SetLocation("prescription_entries");

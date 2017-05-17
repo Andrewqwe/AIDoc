@@ -113,3 +113,4 @@ fabric.properties
  .idea/misc.xml
 # *.ipr
 .idea/runConfigurations.xml
+!/app/src/main/res/values/drugs.xml
