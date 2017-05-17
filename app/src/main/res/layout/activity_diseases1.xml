@@ -77,20 +77,19 @@
             android:text="Przyjęte leki"
             android:textSize="18sp"
             android:layout_alignStart="@+id/textViewDate"
-            android:layout_alignBaseline="@+id/editTextMedicines"
+            android:layout_alignBaseline="@+id/mactvMedicines"
         />
 
-        <EditText
-            android:id="@+id/editTextMedicines"
+        <MultiAutoCompleteTextView
+            android:id="@+id/mactvMedicines"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPersonName"
-            android:layout_alignStart="@+id/textViewDateTime"
+            android:layout_alignStart="@+id/editTextSymptoms"
             android:layout_below="@+id/editTextSymptoms"
             android:layout_alignEnd="@id/textViewDateTime"
-            android:layout_marginTop="10dp"
-        />
+            android:layout_marginTop="10dp"/>
 
 
         <TextView
@@ -110,7 +109,7 @@
             android:ems="10"
             android:inputType="textPersonName"
             android:layout_alignStart="@+id/textViewDateTime"
-            android:layout_below="@+id/editTextMedicines"
+            android:layout_below="@+id/mactvMedicines"
             android:layout_alignEnd="@id/textViewDateTime"
             android:layout_marginTop="10dp"
         />

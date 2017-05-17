@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.MultiAutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import com.google.firebase.database.ChildEventListener;
@@ -26,11 +27,13 @@ public class Diseases1Activity extends AppCompatActivity {
     private TextView tv;
     private EditText et;
     private Spinner sp;
+    private MultiAutoCompleteTextView mactv;
     //Zmienne pomocnicze do wykrywania czy tworzymy nową notatkę czy edytujemy już istniejącą
     private int action;
     private final int EDIT = 1;
-    //Adapter, lista i listener do posługiwania się chorobami
-    private ArrayAdapter<Disease> adapter;
+    //Adaptery, lista i listener do posługiwania się chorobami i lekami
+    private ArrayAdapter<Disease> adapter1;
+    private ArrayAdapter<String> adapter2;
     private List<Disease> diseasesList = new ArrayList<>();
     private ChildEventListener dChildEventListener;
     //Zmienne pomocnicze
@@ -67,8 +70,8 @@ public class Diseases1Activity extends AppCompatActivity {
             et = (EditText) findViewById(R.id.editTextSymptoms);
             et.setText(note_table[3]);
 
-            et = (EditText) findViewById(R.id.editTextMedicines);
-            et.setText(note_table[4]);
+            mactv = (MultiAutoCompleteTextView) findViewById(R.id.mactvMedicines);
+            mactv.setText(note_table[4]);
 
             et = (EditText) findViewById(R.id.editTextReaction);
             et.setText(note_table[5]);
@@ -100,7 +103,7 @@ public class Diseases1Activity extends AppCompatActivity {
                 disease.setDid(dataSnapshot.getKey());
                 //Jeśli różna od dodanej na wstępie choroby
                 if(!dcategory.equals(disease.name))diseasesList.add(disease);
-                adapter.notifyDataSetChanged();
+                adapter1.notifyDataSetChanged();
             }
 
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
@@ -110,12 +113,20 @@ public class Diseases1Activity extends AppCompatActivity {
         };
         //Przechodzimy do chorób w bazie i ustawiamy utworzonego wcześniej listenera
         Database.SetLocation("diseases").addChildEventListener(dChildEventListener);
-        //Tworzymy adapter i przypisujemy go do spinnera żeby wyswietlac choroby
-        adapter = new ArrayAdapter<Disease>(this, android.R.layout.simple_spinner_item, diseasesList);
+        //Wypełniamy adapter i przypisujemy go do spinnera żeby wyswietlac choroby
+        adapter1 = new ArrayAdapter<Disease>(this, android.R.layout.simple_spinner_item, diseasesList);
         sp = (Spinner) findViewById(R.id.spinnerDisease);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        sp.setAdapter(adapter);
+        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sp.setAdapter(adapter1);
 
+        //Tworzymy tablicę stringów i przypisujemy jej listę leków z pliku drugs.xml
+        String[] medicinesList = getResources().getStringArray(R.array.drugs_array);
+        //Wypełniamy adapter i przypisujemy go do pola do wpisywania przyjętych leków aby domyślał się o jakie leki nam chodzi
+        adapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, medicinesList);
+        mactv = (MultiAutoCompleteTextView) findViewById(R.id.mactvMedicines);
+        mactv.setAdapter(adapter2);
+        //Separujemy leki przecinkiem i spacją
+        mactv.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
         activity = this;
     }
 
@@ -142,8 +153,8 @@ public class Diseases1Activity extends AppCompatActivity {
         et = (EditText)findViewById(R.id.editTextSymptoms);
         note_table[3] = et.getText().toString();
 
-        et = (EditText)findViewById(R.id.editTextMedicines);
-        note_table[4] = et.getText().toString();
+        mactv = (MultiAutoCompleteTextView)findViewById(R.id.mactvMedicines);
+        note_table[4] = mactv.getText().toString();
 
         et = (EditText)findViewById(R.id.editTextReaction);
         note_table[5] = et.getText().toString();
