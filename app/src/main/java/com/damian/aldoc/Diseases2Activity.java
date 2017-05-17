@@ -9,19 +9,19 @@ package com.damian.aldoc;
         import android.view.View;
         import android.widget.TextView;
 
-        import org.w3c.dom.Text;
-
 public class Diseases2Activity extends AppCompatActivity {
 
+    //Zmienna pomocnicza do inicjowania pól z XML'a
     private TextView var;
+    //Tabela pomocnicza
     private String[] note_table;
-    static final private int ALERT_DIALOG_BUTTONS = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_diseases2);
 
+        //Pobieramy dane odebrane z poprzedniej aktywności i wypełniamy nimi pola obecnej
         note_table = getIntent().getStringArrayExtra("note");
 
         var = (TextView)findViewById(R.id.textViewDateV);
@@ -43,35 +43,36 @@ public class Diseases2Activity extends AppCompatActivity {
         var.setText(note_table[6]);
     }
 
+    //Po kliknięciu przycisku "Edytuj notatkę" pobieramy dane o przeglądanej notatce i przechodzimy do nowej aktywności
     public void editOnClick(View v) {
         Intent intent = new Intent(getApplicationContext(), Diseases1Activity.class);
-
+        //Aby zakomunikować, że edytujemy istniejącą notatkę(a nie dodajemy nową) wysyłamy 1
         intent.putExtra("action", 1);
         intent.putExtra("note", note_table);
 
         startActivity(intent);
     }
 
+    //Po kliknięciu przycisku "Usuń notatkę" wyświetlamy odpowiednie okno dialogowe
     public void removeOnClick(View v){
         showDialog(0);
     }
 
+    //Funkcja tworzy okno dialogowe sprawdzające czy użytkownik chce usunąć notatkę. Jeśli tak - usuwa ją i opuszcza aktywność
     protected Dialog onCreateDialog(int id) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        //dialogBuilder.setTitle("Usuwanie notatki");
-        dialogBuilder.setMessage("Czy chcesz usunąć notatkę?");
-        //dialogBuilder.setCancelable(false);
-        dialogBuilder.setPositiveButton("Tak", new Dialog.OnClickListener() {
+        dialogBuilder.setMessage("Czy na pewno chcesz usunąć notatkę?");
+        dialogBuilder.setPositiveButton("Anuluj", new Dialog.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int whichButton) {
+            }
+        });
+        dialogBuilder.setNegativeButton("Usuń", new Dialog.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int whichButton) {
                 Intent intent = new Intent(getApplicationContext(), Diseases0Activity.class);
                 Database.DeleteNoteFromDatabase(note_table[0]);
                 startActivity(intent);
-            }
-        });
-        dialogBuilder.setNegativeButton("Nie", new Dialog.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int whichButton) {
             }
         });
         return dialogBuilder.create();

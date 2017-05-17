@@ -5,23 +5,25 @@ package com.damian.aldoc;
  */
 
 public class Note {
-    private String uid;
+    private String nid;
     private String date;
     private String mood;
     private String symptoms;
     private String medicines;
     private String reaction;
     private String disease;
+    private Long timestamp;
 
     public Note(){}
 
-    public Note(String n_date, String n_mood, String n_symptoms, String n_medicines, String n_reaction, String n_disease) {
+    public Note(String n_date, String n_mood, String n_symptoms, String n_medicines, String n_reaction, String n_disease, Long n_timestamp) {
         date = n_date;
         mood = n_mood;
         symptoms = n_symptoms;
         medicines = n_medicines;
         reaction = n_reaction;
         disease = n_disease;
+        timestamp = n_timestamp;
     }
 
     @Override
@@ -29,6 +31,9 @@ public class Note {
     {
         return date + "\n" + symptoms;
     }
+
+    public void setNid(String n_nid) { nid = n_nid; }
+    public String getNid() { return nid; }
 
     public void setDate(String n_date) {
         date = n_date;
@@ -68,6 +73,6 @@ public class Note {
     public void setDisease(String n_disease) { disease = n_disease; }
     public String getDisease() { return disease; }
 
-    public void setUid(String n_uid) { uid = n_uid; }
-    public String getUid() { return uid; }
+    public void setTimestamp(Long n_timestamp) { timestamp = n_timestamp; }
+    public Long getTimestamp() { return timestamp; }
 }
