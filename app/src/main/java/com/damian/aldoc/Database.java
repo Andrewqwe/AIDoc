@@ -282,6 +282,12 @@ public class Database {
         ref.child(uid).removeValue();
     }
 
+    static public void DeletePrescriptionEntryFromDatabase(String uid){
+        Initialize(true);
+        DatabaseReference ref = SetLocation("prescription_entries");
+        ref.child(uid).removeValue();
+    }
+
     /**
      * Metoda do kasowania całego obiektu o danym kluczu.
      * @param uid klucz do danego miejsca w notes np. -KivIPsb0iuUBuOns6Bv
@@ -407,7 +413,7 @@ public class Database {
                 .load(ReturnStorageReferenceToPassedUri(uri))
                 .into(imageView);
     }
-
+/*
     static public void StorageDownloadAndDisplayInContextImageFromPrescription(Context context,String uid, ImageView imageView){
         Uri uri;
         Glide.with(context)
@@ -415,7 +421,7 @@ public class Database {
                 .load(ReturnStorageReferenceToPassedUri(uri))
                 .into(imageView);
     }
-
+*/
     /**
      * Metoda wrzucająca zdjęcie do storage(bazy)  coś jest nie tak z return, przy wylowaniu dostaniemy null badź uri ostatnio wysyłanego pliku (odpala wysyłanie które jest w tle i zanim wysle plik i otrzyma uri zwraca wartość uri w return)
      * @param path uri do pliku jaki chcemy wrzucić

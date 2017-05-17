@@ -31,16 +31,16 @@ public class VisitActivity extends AppCompatActivity {
         //czytamy dane wizyty i wstawiamy je do pol z tekstem z opisem wizyty
 
         TextView tv = (TextView)findViewById(R.id.textViewDoctor);
-        tv.setText("Doctor: " + visit_data[0]);
+        tv.setText("Lekarz: " + visit_data[0]);
 
         tv = (TextView)findViewById(R.id.textViewLocation);
-        tv.setText("Location: " + visit_data[1]);
+        tv.setText("Miejsce wizyty: " + visit_data[1]);
 
         tv = (TextView)findViewById(R.id.textViewDate);
-        tv.setText("Date: " + visit_data[2]);
+        tv.setText("Data: " + visit_data[2]);
 
         tv = (TextView)findViewById(R.id.textViewTime);
-        tv.setText("Time: " + visit_data[3]);
+        tv.setText("Godzina: " + visit_data[3]);
 
         //czytamy uid wizyty zeby odczytac z bazy recepty dotyczace tej wizyty
         visit_uid = visit_data[4];
@@ -141,14 +141,32 @@ public class VisitActivity extends AppCompatActivity {
         switch (item.getItemId())
         {
             case R.id.prescriptionMenu_delete:
-                Database.DeletePrescriptionFromDatabase(p.getUid());
+                AlertDialog.Builder alert_delete = new AlertDialog.Builder(this);
+                alert_delete.setTitle("Czy na pewno chcesz usunąć receptę?");
+
+                alert_delete.setCancelable(true).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        Database.DeletePrescriptionFromDatabase(p.getUid());
+                    }
+                });
+
+                alert_delete.setNegativeButton("Anuluj", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+
+                Dialog delete_dialog = alert_delete.create();
+                delete_dialog.show();
                 break;
             case R.id.prescriptionMenu_changeName:
                 View view = (LayoutInflater.from(this)).inflate(R.layout.prescription_name, null);
 
                 AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
                 alertBuilder.setView(view);
-                alertBuilder.setTitle("Prescription name");
+                alertBuilder.setTitle("Nazwa recepty");
 
                 final EditText et_prescription = (EditText)view.findViewById(R.id.textPrescriptionName);
                 et_prescription.setText(p.getName());
@@ -163,7 +181,7 @@ public class VisitActivity extends AppCompatActivity {
                     }
                 });
 
-                alertBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                alertBuilder.setNegativeButton("Anuluj", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                     }
@@ -183,7 +201,7 @@ public class VisitActivity extends AppCompatActivity {
 
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
         alertBuilder.setView(view);
-        alertBuilder.setTitle("Prescription name");
+        alertBuilder.setTitle("Nazwa recepty");
 
         final EditText et_prescription = (EditText)view.findViewById(R.id.textPrescriptionName);
 
@@ -196,7 +214,7 @@ public class VisitActivity extends AppCompatActivity {
             }
         });
 
-        alertBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        alertBuilder.setNegativeButton("Anuluj", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
             }
