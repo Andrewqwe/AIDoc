@@ -377,12 +377,14 @@ public class Database {
         ref.child(uid).updateChildren(nickname);
     }
 
-    static public void AddUriInPrescriptionInDatabase(String uid, Uri value){
+    static public void AddUriInPrescriptionInDatabase(String uid, Uri value) {
+    System.out.println("--------------------------------------------------");
+        System.out.println(uid);
+        System.out.println(value);
+        System.out.println("--------------------------------------------------");
         Initialize(true);
-        DatabaseReference ref = SetLocation("prescriptions");
-        Map<String, Object> nickname = new HashMap<String, Object>();
-        nickname.put("photo", value);
-        ref.child(uid).updateChildren(nickname);
+        SetLocation("prescriptions");
+        mDatabaseReference.child(uid).child("photo").setValue(value.toString());
     }
 
     static public StorageReference StorageInitialize(){
@@ -413,15 +415,7 @@ public class Database {
                 .load(ReturnStorageReferenceToPassedUri(uri))
                 .into(imageView);
     }
-/*
-    static public void StorageDownloadAndDisplayInContextImageFromPrescription(Context context,String uid, ImageView imageView){
-        Uri uri;
-        Glide.with(context)
-                .using(new FirebaseImageLoader())
-                .load(ReturnStorageReferenceToPassedUri(uri))
-                .into(imageView);
-    }
-*/
+
     /**
      * Metoda wrzucająca zdjęcie do storage(bazy)  coś jest nie tak z return, przy wylowaniu dostaniemy null badź uri ostatnio wysyłanego pliku (odpala wysyłanie które jest w tle i zanim wysle plik i otrzyma uri zwraca wartość uri w return)
      * @param path uri do pliku jaki chcemy wrzucić
@@ -524,9 +518,8 @@ static Uri aaa;
      * @return Zwraca Uri zdjęcia przez nas wrzuconego (można to uri dopisać do notatki aby przypisac dane zdjęcie)
      */
     @SuppressWarnings("VisibleForTests")
-    static public void UploadImageToDatabaseStorageUsingUriAndUpdatePrescription(Uri path,String uid){
+    static public void UploadImageToDatabaseStorageUsingUriAndUpdatePrescription(Uri path,final String uid){
         StorageReference ref = StorageInitialize();
-        final String vvvv = uid;
         StorageReference riversRef = ref.child("images/"+path.getLastPathSegment());
         UploadTask uploadTask = riversRef.putFile(path);
         // Register observers to listen for when the download is done or if it fails
@@ -551,19 +544,12 @@ static Uri aaa;
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // Handle successful uploads on complete
-                //Uri downloadUrl = taskSnapshot.getMetadata().getDownloadUrl();
-                //URLTEST(ReturnStorageReferenceToPassedUri); Tą metodą można utworzyć referencje na konkretne zdjęcie
                 Toast.makeText(getApplicationContext(), "Your file was sent successfully.", Toast.LENGTH_SHORT).show();
-                aaa = taskSnapshot.getMetadata().getDownloadUrl();
                 Uri downloadUri = taskSnapshot.getMetadata().getDownloadUrl();
-                AddUriInPrescriptionInDatabase(vvvv,downloadUri);
-                taskSnapshot.getMetadata().getDownloadUrl();
-                // Toast.makeText(getApplicationContext(), String.valueOf(aaa), Toast.LENGTH_SHORT).show();
+                AddUriInPrescriptionInDatabase(uid,downloadUri);
             }
         });
     }
-
 }
 // TODO  Metoda odczytująca z bazy danych. Metody wysyłające dane do większej ilości funkcjionalności. Podpięcie tworzenia grup i dodawania członków rodziny do nich.
 

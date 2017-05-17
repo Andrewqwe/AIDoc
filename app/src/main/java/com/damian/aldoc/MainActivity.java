@@ -140,7 +140,8 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
                 //Database.SendUserPeselToDatabase("1111");
                 //Database.DeleteVisitFromDatabase("-Kiv9bXMgN0W3SyqUksW");
                // Database.GetVisitByValueFromDatabase("time","time");
-                Database.UploadImageToDatabaseStorageUsingPath("/storage/emulated/0/DCIM/Camera/IMG_20170412_140913.jpg");
+               // Database.UploadImageToDatabaseStorageUsingPath("/storage/emulated/0/DCIM/Camera/IMG_20170412_140913.jpg");
+                Database.UploadImageToDatabaseStorageUsingUriAndUpdatePrescription(Uri.parse("file:///storage/emulated/0/DCIM/Camera/IMG_20170510_135615.jpg"),"-KkMu0rK7Wpngd2Z0H51");
                 System.out.println(String.valueOf(Database.aaa));
                 Toast.makeText(getApplicationContext(), String.valueOf(Database.aaa), Toast.LENGTH_SHORT).show();
                 return true;
