@@ -47,7 +47,7 @@ public class UserProfileEditActivity extends AppCompatActivity {
         if(a!=null)
         {
             Database.Initialize(true);
-            DatabaseReference ref = Database.SetLocation("users/" + "fyxHAvhfwxcI04FQoazepQbyeKp2");
+            DatabaseReference ref = Database.SetLocation("users/" + a[2]);
             ValueEventListener postListener = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -58,7 +58,6 @@ public class UserProfileEditActivity extends AppCompatActivity {
                             String value = String.valueOf(objectMap.get(temp[0]));
                             addValue(temp[1],value,temp[0],temp[2]); // tlumaczenie, wartosc, pytany klucz
                         }
-
                     }
                 }
 
