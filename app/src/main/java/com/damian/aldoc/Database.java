@@ -186,12 +186,14 @@ public class Database {
      * Metoda publiczna tworząca profil użytkownika bazujący na UID. Funkcja pobiera imie(nazwe uzytkownika) i adres e-mail z danych podanych przy rejestracji(logowaniu)
      * Funkcja nadpisuje profil użytkownika tz nie wypełnienie wszystkich danych będzie skutkować wyczyszczeniem niewypełnionych pól.
      * Funkcja tworzy obiekt klasy User w trakcie wykonania (dobrze żeby tak pozostało)
+     * @param pesel - nr pesel użytkownika
+     * @param phonenumber - nr telefonu użytkownika
      */
-    static public void SendUserInfoToDatabase() {
+    static public void SendUserInfoToDatabase(String pesel,String phonenumber) {
         Initialize(true);
         SetLocation("users");
         String[] details = GetUserInfo();
-        User user = new User(details[0],details[1]);
+        User user = new User(details[0],details[1],pesel,phonenumber);
         mDatabaseReference.child(GetUserUID()).setValue(user);
        // mDatabaseReference.child(GetUserUID()).child("pesel").setValue(pesel); - podmienianie tylko gałęzi pesel (można warunek if zrobić i sprawdzać czy pesel != null i dopiero wtedy podmieniać) to już zależy od metody zrobienia panelu do wprowadzania danych
     }
