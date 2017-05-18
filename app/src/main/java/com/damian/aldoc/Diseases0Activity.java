@@ -3,22 +3,18 @@ package com.damian.aldoc;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-
-import android.widget.TextView;
+import android.widget.ArrayAdapter;
 
 public class Diseases0Activity extends AppCompatActivity {
 
+    private ArrayAdapter<Disease> adapter2;
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -87,6 +83,7 @@ public class Diseases0Activity extends AppCompatActivity {
             super(fm);
         }
 
+        //Przypisujemy aktywności do zakładek
         @Override
         public Fragment getItem(int position) {
             switch (position){
@@ -103,17 +100,18 @@ public class Diseases0Activity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            // Show 2 total pages.
+            //Liczba zakładek
             return 2;
         }
 
+        //Ustawiamy tytuły zakładek
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
                     return "Notatki";
                 case 1:
-                    return "Wizyty";
+                    return "Choroby";
             }
             return null;
         }

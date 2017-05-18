@@ -18,11 +18,11 @@
         <item
             android:id="@id/user_upcoming_events"
             android:icon="@drawable/ic_menu_upcoming_events"
-            android:title="Nadchodzące" />
+            android:title="Wizyty" />
         <item
             android:id="@id/user_alerts"
             android:icon="@drawable/ic_menu_alerts"
-            android:title="Przypomnienia" />
+            android:title="Dziennik chorób" />
     </group>
 
     <item android:title="Inne">
