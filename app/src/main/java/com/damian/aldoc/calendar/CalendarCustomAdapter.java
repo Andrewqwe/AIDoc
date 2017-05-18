@@ -1,4 +1,4 @@
-package com.damian.aldoc;
+package com.damian.aldoc.calendar;
 
 /**
  * Created by Damian on 14.05.2017.
@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.damian.aldoc.R;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidGridAdapter;
 
@@ -102,7 +103,8 @@ public class CalendarCustomAdapter extends CaldroidGridAdapter {
         }
 
         tv1.setText("" + dateTime.getDay());
-        tv2.setText("Hi");
+
+        tv2.setBackgroundColor(R.color.green);
 
         // Somehow after setBackgroundResource, the padding collapse.
         // This is to recover the padding
