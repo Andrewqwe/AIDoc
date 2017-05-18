@@ -7,10 +7,11 @@ public class Prescription {
 
     public Prescription() {}
 
-    public Prescription(String visit_uid, String name)
+    public Prescription(String visit_uid, String name, String photo)
     {
         m_visit_uid = visit_uid;
         m_name = name;
+        m_photo_uri = photo;
     }
 
     @Override
@@ -25,8 +26,11 @@ public class Prescription {
     public String getVisitUid() { return m_visit_uid; }
     public void setUid(String uid) { m_uid = uid; }
     public String getUid() { return m_uid; }
+    public void setPhoto(String photo) { m_photo_uri = photo; }
+    public String getPhoto() { return m_photo_uri; }
 
     private String m_uid;
+    private String m_photo_uri;
     private String m_visit_uid;
     private String m_name;
 }
