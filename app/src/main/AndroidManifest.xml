@@ -65,6 +65,15 @@
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="com.damian.aldoc.MainActivity"/>
         </activity>
+        <activity
+                    android:name=".UserProfileEditActivity"
+                    android:label="@string/title_activity_user_profile_edit"
+                    android:parentActivityName=".UserProfileView"
+                    android:theme="@style/AppTheme.NoActionBar">
+                    <meta-data
+                        android:name="android.support.PARENT_ACTIVITY"
+                        android:value="com.damian.aldoc.UserProfileView" />
+    </activity>
         <activity android:name=".PrescriptionActivity" android:label="Prescription" android:parentActivityName=".VisitActivity">
         </activity>
     </application>
