@@ -50,7 +50,7 @@
                 android:label="Visit"
                 android:parentActivityName=".VisitsActivity"/>
         <activity
-                android:name=".CalendarActivity"
+                android:name=".calendar.CalendarActivity"
                 android:label="Calendar"
                 android:parentActivityName=".MainActivity"/>
         <activity
