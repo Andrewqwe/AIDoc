@@ -186,14 +186,13 @@ public class Database {
      * Metoda publiczna tworząca profil użytkownika bazujący na UID. Funkcja pobiera imie(nazwe uzytkownika) i adres e-mail z danych podanych przy rejestracji(logowaniu)
      * Funkcja nadpisuje profil użytkownika tz nie wypełnienie wszystkich danych będzie skutkować wyczyszczeniem niewypełnionych pól.
      * Funkcja tworzy obiekt klasy User w trakcie wykonania (dobrze żeby tak pozostało)
-     * @param pesel - nr pesel użytkownika
-     * @param phonenumber - nr telefonu użytkownika
+
      */
-    static public void SendUserInfoToDatabase(String pesel,String phonenumber) {
+    static public void SendUserInfoToDatabase() {
         Initialize(true);
         SetLocation("users");
         String[] details = GetUserInfo();
-        User user = new User(details[0],details[1],pesel,phonenumber);
+        User user = new User(details[0],details[1]);
         mDatabaseReference.child(GetUserUID()).setValue(user);
        // mDatabaseReference.child(GetUserUID()).child("pesel").setValue(pesel); - podmienianie tylko gałęzi pesel (można warunek if zrobić i sprawdzać czy pesel != null i dopiero wtedy podmieniać) to już zależy od metody zrobienia panelu do wprowadzania danych
     }
@@ -281,6 +280,7 @@ public class Database {
         DatabaseReference ref = SetLocation("prescriptions");
         ref.child(uid).removeValue();
     }
+
 
     static public void DeletePrescriptionEntryFromDatabase(String uid){
         Initialize(true);
@@ -476,6 +476,7 @@ public class Database {
                 .setContentType("image/jpeg")
                 .build();
 
+
         UploadTask uploadTask = riversRef.putFile(file,metadata);
         // Register observers to listen for when the download is done or if it fails
         // Listen for state changes, errors, and completion of the upload.
@@ -529,13 +530,13 @@ static Uri aaa;
             @Override
             public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                 double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                Toast.makeText(getApplicationContext(), "Upload is " + progress + "% done", Toast.LENGTH_SHORT).show();
-                System.out.println("Upload is " + progress + "% done");
+                Toast.makeText(getApplicationContext(), "Postęp przesyłania: " + progress + "%", Toast.LENGTH_SHORT).show();
+                System.out.println("Postęp przesyłania:" + progress + "% ");
             }
         }).addOnPausedListener(new OnPausedListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onPaused(UploadTask.TaskSnapshot taskSnapshot) {
-                System.out.println("Upload is paused");
+                System.out.println("Wysyłanie zostało zatrzymane");
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -545,7 +546,7 @@ static Uri aaa;
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Toast.makeText(getApplicationContext(), "Your file was sent successfully.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Zdjęcie zostało pomyślnie wysłane.", Toast.LENGTH_SHORT).show();
                 Uri downloadUri = taskSnapshot.getMetadata().getDownloadUrl();
                 AddUriInPrescriptionInDatabase(uid,downloadUri);
             }
