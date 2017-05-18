@@ -32,13 +32,14 @@
         <!-- id_z_bazy_danych//podpis ktory ma pokazac sie na ekranie
          w przyszlosci moze zastapie to jakas mapą w xml ale w tym pliku nie da się tego zrobić
         NIE WSTAWIAC SPACJI PO LEWO OD "//" ! -->
-        <item>born//Data urodzenia//Date</item>
+        <item>height//Wzrost//String</item>
+        <item>weight//Waga//String</item>
+        <item>bloodGroup//Grupa Krwi//String</item>
         <item>pesel//Pesel//String</item>
+        <item>phonenumber//Numer telefonu//String</item>>
+        <item>born//Data urodzenia//Date</item>
         <item>city//Miasto//String</item>
         <item>address//Adres//String</item>
-        <item>phonenumber//Numer telefonu//String</item>
-        <item>email//E-mail//String</item>
-        <item>bloodGroup//Grupa Krwi//String</item>
     </string-array>
     <string name="title_activity_user_profile_edit">UserProfileEditActivity</string>
 

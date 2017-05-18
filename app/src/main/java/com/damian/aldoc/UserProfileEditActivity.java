@@ -1,17 +1,24 @@
 package com.damian.aldoc;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +27,7 @@ import java.util.Map;
 
 public class UserProfileEditActivity extends AppCompatActivity {
     private ListView listView;
+    private ImageView image_view;
     private ArrayList<UserProfileEditListItem> items;
     private static UserProfileEditListAdapter adapter;
 
@@ -34,6 +42,7 @@ public class UserProfileEditActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.user_data_list);
         listView.setSelector(android.R.color.transparent);
         listView.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        image_view = (ImageView) findViewById(R.id.edit_profile_imageView);
         //======= Inicjalizacja
         items = new ArrayList<>();
         adapter = new UserProfileEditListAdapter(items,this);
@@ -48,6 +57,7 @@ public class UserProfileEditActivity extends AppCompatActivity {
         {
             Database.Initialize(true);
             DatabaseReference ref = Database.SetLocation("users/" + a[2]);
+            setName(a[0]);
             ValueEventListener postListener = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -67,6 +77,14 @@ public class UserProfileEditActivity extends AppCompatActivity {
                 }
             };
             ref.addListenerForSingleValueEvent(postListener);
+
+            final StorageReference mStorage = FirebaseStorage.getInstance().getReference();
+            mStorage.child("images/testImage.jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Picasso.with(getApplicationContext()).load(uri).centerCrop().resize(image_view.getMeasuredWidth(), image_view.getMeasuredHeight()).into(image_view);
+                }
+            });
         }
     }
 
@@ -87,5 +105,11 @@ public class UserProfileEditActivity extends AppCompatActivity {
         if (adapter != null) {
             adapter.notifyDataSetChanged();
         }
+    }
+
+    private void setName(String name)
+    {
+        TextView textView = (TextView) findViewById(R.id.edit_profile_full_name);
+        textView.setText(name);
     }
 }
