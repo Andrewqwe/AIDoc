@@ -140,7 +140,9 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
                 //Database.SendUserPeselToDatabase("1111");
                 //Database.DeleteVisitFromDatabase("-Kiv9bXMgN0W3SyqUksW");
                // Database.GetVisitByValueFromDatabase("time","time");
-                Database.UploadImageToDatabaseStorageUsingPath("/storage/emulated/0/DCIM/Camera/IMG_20170412_140913.jpg");
+               // Database.UploadImageToDatabaseStorageUsingPath("/storage/emulated/0/DCIM/Camera/IMG_20170412_140913.jpg");
+             //   Database.UploadImageToDatabaseStorageUsingUriAndUpdatePrescription(Uri.parse("file:///storage/emulated/0/DCIM/Camera/IMG_20170510_135615.jpg"),"-KkMu0rK7Wpngd2Z0H51");
+                System.out.println(Database.GetUserUID());
                 System.out.println(String.valueOf(Database.aaa));
                 Toast.makeText(getApplicationContext(), String.valueOf(Database.aaa), Toast.LENGTH_SHORT).show();
                 return true;
@@ -156,6 +158,8 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
         int id = item.getItemId();
 
         if (id == R.id.user_profile) {
+            Database.SendUserInfoToDatabase();
+            //todo zawsze wrzuca imie i maila podanego przy rejestracji jakiś warunek sprawdzający czy juz zostal utworzony profil
             Intent intent_user_profile = new Intent(this, UserProfileView.class);
             startActivity(intent_user_profile);
         } else if (id == R.id.user_calendar) {
@@ -174,7 +178,7 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
             startActivity(intent_visits);
 
         } else if (id == R.id.user_alerts){
-            Intent intent_diseases = new Intent(this, DiseasesActivity.class);
+            Intent intent_diseases = new Intent(this, Diseases0Activity.class);
             startActivity(intent_diseases);
 
         } else if (id == R.id.user_settings){
@@ -204,5 +208,5 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
 
 
 
-//TODO  2. Dodać opcję przerwania podczas rejsracji  6.Dostęp do materiałów po przynależności do grupy --- http://stackoverflow.com/questions/38246751/how-to-retrieve-data-that-matches-a-firebase-userid 7. Pomysl na baze danych (Q_Q) 8.Metody przechowywania zmiennych w bazie (podpiac wizyty itd...)
-//TODO v2 Podpiąć obrazek pod ekran logowania //zaimplementowac rodziny w bazie (grupy)
+//TODO  2. Dodać opcję przerwania podczas rejsracji  6.Dostęp do materiałów po przynależności do grupy --- http://stackoverflow.com/questions/38246751/how-to-retrieve-data-that-matches-a-firebase-userid 7. Pomysl na baze danych (Q_Q)
+//TODO v2  //zaimplementowac rodziny w bazie (grupy)
