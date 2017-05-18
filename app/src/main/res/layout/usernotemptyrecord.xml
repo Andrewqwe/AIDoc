@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:weightSum="10">
+
+    <TextView
+        android:id="@+id/notEmptyRowTextView"
+        android:layout_width="0dp"
+        android:layout_weight="3"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:padding="8dp"
+        android:textSize="16sp" >
+    </TextView>
+    <TextView
+        android:id="@+id/notEmptyRowTextView2"
+        android:layout_width="0dp"
+        android:layout_weight="5"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:padding="8dp"
+        android:textSize="16sp" >
+    </TextView>
+    <ImageButton
+        android:id="@+id/notEmptyRowDeleteButton"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:padding="8dp"
+        android:textSize="16sp"
+        android:src="@drawable/remove_row_icon"
+        />
+    <ImageButton
+        android:id="@+id/notEmptyRowEditButton"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:padding="8dp"
+        android:textSize="16sp"
+        android:src="@drawable/edit_row_icon"
+        />
+
+</LinearLayout>
