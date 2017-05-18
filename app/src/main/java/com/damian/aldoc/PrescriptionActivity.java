@@ -355,18 +355,10 @@ public class PrescriptionActivity extends AppCompatActivity
 
     public void imageOnClick(View v)
     {
-        Uri image_uri = null;
-
-        if(m_photo_file_absolute_path != null)
-        {
-            image_uri = Uri.fromFile(new File(m_photo_file_absolute_path));
-            Toast.makeText(this, "photo_file", Toast.LENGTH_LONG).show();
-        }
-
-        if(image_uri != null)
+        if(photo_database_uri != null)
         {
             Intent fullScreenImageIntent = new Intent(this, FullScreenImageActivity.class);
-            fullScreenImageIntent.setData(image_uri);
+            fullScreenImageIntent.putExtra("uri", photo_database_uri);
             startActivity(fullScreenImageIntent);
         }
     }
