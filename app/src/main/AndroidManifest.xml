@@ -51,11 +51,10 @@
                 android:name=".Diseases2Activity"
                 android:label="Dziennik chorób"/>
         <activity
-                android:name=".DiseasesActivity"
-                android:label="Dziennik chorób"/>
-        <activity
                 android:name=".Diseases0Activity"
-                android:theme="@style/AppTheme.NoActionBar"/>
+                android:windowSoftInputMode="stateHidden|adjustPan"
+                android:theme="@style/AppTheme.NoActionBar"
+                android:label="Dziennik chorób"/>
         <activity
                 android:name=".UserProfileView"
                 android:label="@string/title_activity_user_profile_view"
@@ -65,17 +64,19 @@
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="com.damian.aldoc.MainActivity"/>
         </activity>
-        <activity
-                    android:name=".UserProfileEditActivity"
-                    android:label="@string/title_activity_user_profile_edit"
-                    android:parentActivityName=".UserProfileView"
-                    android:theme="@style/AppTheme.NoActionBar">
-                    <meta-data
-                        android:name="android.support.PARENT_ACTIVITY"
-                        android:value="com.damian.aldoc.UserProfileView" />
-    </activity>
-        <activity android:name=".PrescriptionActivity" android:label="Prescription" android:parentActivityName=".VisitActivity">
+        <activity android:name=".PrescriptionActivity" android:label="Prescription">
         </activity>
+
+        <activity
+            android:name=".UserProfileEditActivity"
+            android:label="@string/title_activity_user_profile_edit"
+            android:parentActivityName=".UserProfileView"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.damian.aldoc.UserProfileView" />
+        </activity>
+
     </application>
 
 </manifest>
