@@ -1,5 +1,6 @@
 package com.damian.aldoc;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,7 +13,7 @@ import android.widget.Toast;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-public class FullScreenImageActivity extends AppCompatActivity {
+public class FullScreenImageActivity extends Activity {
 
     ImageView image_view;
 
@@ -24,24 +25,8 @@ public class FullScreenImageActivity extends AppCompatActivity {
         image_view = (ImageView)findViewById(R.id.fullScreenImage_imageView);
 
         Intent intent = getIntent();
-        Uri image_uri = (Uri)intent.getData();
+        String image_database_uri = intent.getStringExtra("uri");
 
-        if(image_view != null && image_uri != null)
-        {
-            InputStream image_stream;
-            Bitmap image_bitmap;
-
-            try{
-                image_stream = getContentResolver().openInputStream(image_uri);
-                image_bitmap = BitmapFactory.decodeStream(image_stream);
-                image_view.setImageBitmap(image_bitmap);
-            }catch (FileNotFoundException e)
-            {
-                Toast.makeText(this, "Nie udało się załadować obrazu. Spróbuj ponownie.", Toast.LENGTH_LONG).show();
-                finish();
-            }
-        }
-        else
-            finish();
+        Database.StorageDownloadAndDisplayInContextImage(this, Uri.parse(image_database_uri),image_view);
     }
 }
