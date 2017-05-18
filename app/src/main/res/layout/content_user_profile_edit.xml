@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.damian.aldoc.UserProfileView"
-    tools:showIn="@layout/activity_user_profile_view">
+    tools:context="com.damian.aldoc.UserProfileEditActivity"
+    tools:showIn="@layout/activity_user_profile_edit">
 
     <ImageView
         android:id="@+id/imageView"
@@ -56,6 +56,4 @@
         app:layout_constraintLeft_toLeftOf="parent"
         >
     </ListView>
-
-
 </android.support.constraint.ConstraintLayout>

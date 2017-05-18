@@ -1,6 +1,8 @@
 package com.damian.aldoc;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -23,9 +25,11 @@ public class UserProfileView extends AppCompatActivity {
     private ListView lista;
     private ArrayList<HashMap<String,String>> rekordy;
     private UserProfileListAdapter adapter;
+    private FloatingActionButton myFab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         rekordy = new ArrayList<HashMap<String, String>>();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile_view);
@@ -34,14 +38,9 @@ public class UserProfileView extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         lista = (ListView) findViewById(R.id.user_data_list);
         lista.setSelector(android.R.color.transparent); //pozbywa sie animacji po kliknieciu w element listy
-
-        //===== TODO: Przemyslec zmiane tego ustawienia przy przebudowie wygladu aplikacji
         lista.setOverScrollMode(View.OVER_SCROLL_NEVER);//wylaczenie efektu ktory pozwala
         // na przeciagniecie listy dalej niz sa w niej dane, pojawia sie na koncu wkurzajacy niebieski cien
         //ktorego nie wymyslilem jak wylaczyc
-
-        // TODO: Zapytac tutaj baze o imie i nazwisko danego uzytkownika
-        this.setUserName("Jan Kowalski"); // ustawianie imienia i nazwiska
 
         final ArrayList<String> arr = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.user_data_key_array)));
         // Linijka wyzej odwoluje sie do slownika zdefiniowanego w res->values->strings.xml
@@ -55,15 +54,14 @@ public class UserProfileView extends AppCompatActivity {
         //utworzenie obiektu adaptera napisanego na potrzeby tego ekranu
         adapter = new UserProfileListAdapter(rekordy, this);
         lista.setAdapter(adapter);
-        //TODO: Kod dziala jednak jest do refaktoryzacji przed stworzeniem opcji edytowania
-        //TODO: Przyda sie zapamietywanie ID pol ktore zostaly zaladowane na ekran
+        //Kod dziala jednak jest do refaktoryzacji przed stworzeniem opcji edytowania
+        //Przyda sie zapamietywanie ID pol ktore zostaly zaladowane na ekran
         Database.Initialize(true);
         DatabaseReference ref;
         if (a != null) {
             //nie kazdy profil jest jakos sensownie uzupelniony dlatego zostawiam
             //w komentarzu kod w ktorym jest "sztywno" wpisane uid uzupelnionego profilu
-            ref = Database.SetLocation("users/" + "ElpvMLt7XsS4cJOCHHJnQAnlSH82");
-            //ref = Database.SetLocation("users/" + a[2]);
+            ref = Database.SetLocation("users/" + "fyxHAvhfwxcI04FQoazepQbyeKp2");
             ValueEventListener postListener = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -88,6 +86,16 @@ public class UserProfileView extends AppCompatActivity {
             };
             ref.addListenerForSingleValueEvent(postListener);
         }
+
+        this.myFab = (FloatingActionButton) findViewById(R.id.myFloatingActionButton);
+        myFab.setOnClickListener(new View.OnClickListener() {   // guzik do edytowania profilu
+                                     @Override
+                                     public void onClick(View v) {
+                                         Intent intent_user_profile = new Intent(getApplicationContext(), UserProfileEditActivity.class);
+                                         startActivity(intent_user_profile);
+                                     }
+                                 }
+        );
     }
 
     public void setUserName(String userName)
