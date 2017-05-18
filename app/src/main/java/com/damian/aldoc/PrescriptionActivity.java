@@ -40,6 +40,7 @@ public class PrescriptionActivity extends AppCompatActivity
     private ArrayAdapter<PrescriptionEntry> adapter;
     private List<PrescriptionEntry> prescription_entries = new ArrayList<>();
     private String prescription_uid;
+    private String photo_database_uri;
     private String[] med_list;
 
     private final int REQUEST_GALLERY = 0;
@@ -53,13 +54,13 @@ public class PrescriptionActivity extends AppCompatActivity
         String[] prescription_data = getIntent().getStringArrayExtra("prescription");
 
         prescription_uid = prescription_data[1];
+        photo_database_uri = prescription_data[2];
 
         TextView tv = (TextView)findViewById(R.id.prescription_Name);
         tv.setText(prescription_data[0]);
 
         image_view = (ImageView)findViewById(R.id.prescription_imageView);
-        //Database.StorageDownloadAndDisplayInContextImage(this.getApplicationContext(),Database.StoragePhotoTestReference(),image_view);// - Radek - przykładowe zastosowanie metody do wyświetlana zdjęcia (psyduck)
-        //tworzymy listenera, ktory dodaje do listview wszystkie wpisy z recepty
+
         Database.Initialize(true);
         DatabaseReference ref = Database.SetLocation("prescription_entries");
         Query q = ref.orderByChild("prescriptionUid").equalTo(prescription_uid);
@@ -122,6 +123,10 @@ public class PrescriptionActivity extends AppCompatActivity
 
         //czytamy liste lekow z xml
         med_list = getResources().getStringArray(R.array.drugs_array);
+
+        //pobieramy zdjęcie z bazy i wyswietlamy
+        if(photo_database_uri != null)
+            Database.StorageDownloadAndDisplayInContextImage(this.getApplicationContext(), Uri.parse(photo_database_uri),image_view);
     }
 
     @Override
@@ -148,8 +153,7 @@ public class PrescriptionActivity extends AppCompatActivity
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
-                        //TODO:dodac to
-                        //Database.DeletePrescriptionEntryFromDatabase(pe.getUid());
+                        Database.DeletePrescriptionEntryFromDatabase(pe.getUid());
                     }
                 });
 
@@ -338,7 +342,7 @@ public class PrescriptionActivity extends AppCompatActivity
 
                 prescription_bitmap = BitmapFactory.decodeFile(m_photo_file_absolute_path, bmOptions);
 
-                picture_uri = Uri.parse(m_photo_file_absolute_path);
+                picture_uri = Uri.fromFile(new File(m_photo_file_absolute_path));
             }
 
             /*Jezeli bitmapa zawiera obraz to wstawiamy go do image view
@@ -346,8 +350,7 @@ public class PrescriptionActivity extends AppCompatActivity
             if(prescription_bitmap != null)
             {
                 image_view.setImageBitmap(prescription_bitmap);
-                //TODO:Dodac to
-                //Database.UploadImageToDatabaseStorageUsingUriAndUpdatePrescription(picture_uri, prescription_uid);
+                Database.UploadImageToDatabaseStorageUsingUriAndUpdatePrescription(picture_uri, prescription_uid);
             }
             else
                 Toast.makeText(this, "Wystąpił błąd. Spróbuj ponownie.", Toast.LENGTH_LONG).show();

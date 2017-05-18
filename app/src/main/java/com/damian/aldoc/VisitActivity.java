@@ -119,7 +119,7 @@ public class VisitActivity extends AppCompatActivity {
     private void onPrescriptionClick(Prescription p)
     {
         Intent intent = new Intent(this, PrescriptionActivity.class);
-        String[] prescription_data = {p.getName(), p.getUid()};
+        String[] prescription_data = {p.getName(), p.getUid(), p.getPhoto()};
         intent.putExtra("prescription", prescription_data);
         startActivity(intent);
     }
@@ -209,7 +209,7 @@ public class VisitActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
-                Prescription p = new Prescription(visit_uid, et_prescription.getText().toString());
+                Prescription p = new Prescription(visit_uid, et_prescription.getText().toString(), null);
                 Database.SendObjectPrescriptionToDatabase(p);
             }
         });
