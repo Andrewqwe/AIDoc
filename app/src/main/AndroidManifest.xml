@@ -64,9 +64,9 @@
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="com.damian.aldoc.MainActivity"/>
         </activity>
-        <activity android:name=".PrescriptionActivity" android:label="Prescription">
-        </activity>
+        <activity android:name=".PrescriptionActivity" android:label="Prescription"></activity>
 
+        <!-- konflikty to fajna sprawa...-->
         <activity
             android:name=".UserProfileEditActivity"
             android:label="@string/title_activity_user_profile_edit"
@@ -76,6 +76,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.damian.aldoc.UserProfileView" />
         </activity>
+        <!-- konflikty to fajna sprawa...-->
 
     </application>
 
