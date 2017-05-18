@@ -3,11 +3,11 @@
 
     <item
             android:id="@+id/prescriptionEntryMenu_edit"
-            android:title="Edytuj"
+            android:title="Edit"
     />
     <item
             android:id="@+id/prescriptionEntryMenu_delete"
-            android:title="Usuń"
+            android:title="Delete"
     />
 
 </menu>

@@ -5,13 +5,13 @@
               android:layout_height="match_parent">
     
     <TextView
-            android:text="Nazwa leku:"
+            android:text="Medicine name:"
             android:layout_width="match_parent" android:layout_height="wrap_content"/>
-    <AutoCompleteTextView
+    <EditText
             android:id="@+id/prescriptionEntryEdit_medicineName"
             android:layout_width="match_parent" android:layout_height="wrap_content"/>
     <TextView
-            android:text="Dawkowanie:"
+            android:text="Dose rate:"
             android:layout_width="match_parent" android:layout_height="wrap_content"/>
     <EditText
             android:id="@+id/prescriptionEntryEdit_doseRate"

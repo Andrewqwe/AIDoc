@@ -12,7 +12,7 @@
         tools:context="com.damian.aldoc.EditVisitActivity">
 
     <TextView
-            android:text="Lekarz"
+            android:text="Doctor name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/textViewDoctor"
@@ -27,7 +27,7 @@
             android:id="@+id/textLocation" android:layout_alignBaseline="@+id/textViewLocation"
             android:layout_alignBottom="@+id/textViewLocation" android:layout_alignParentEnd="true"/>
     <TextView
-            android:text="Miejsce"
+            android:text="Location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/textViewLocation"
@@ -43,13 +43,13 @@
             android:textSize="@dimen/edit_visit_fontsize"
             android:layout_alignParentTop="true" android:layout_alignParentEnd="true"/>
     <Button
-            android:text="Zatwierdź"
+            android:text="Apply"
             android:onClick="applyOnClick"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true" android:id="@+id/buttonApply"/>
     <TextView
-            android:text="Godzina"
+            android:text="Time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/textViewTime"
@@ -57,7 +57,7 @@
             android:layout_marginTop="34dp" android:layout_below="@+id/textViewDate"
             android:layout_alignParentStart="true"/>
     <TextView
-            android:text="Data"
+            android:text="Date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/textViewDate"
@@ -66,18 +66,18 @@
             android:layout_below="@+id/textViewLocation" android:layout_alignParentStart="true"
             />
     <Button
-            android:text="Ustaw"
+            android:text="Set"
             android:onClick="setDateOnClick"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/buttonSetDate" android:layout_alignBaseline="@+id/textViewDate"
             android:layout_alignParentEnd="true"/>
     <Button
-            android:text="Ustaw"
+            android:text="Set"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/buttonSetTime"
-            android:onClick="setTimeOnClick" android:layout_alignBaseline="@+id/textViewTime"
+            android:onClick="setTimeOnClick"
             android:layout_below="@+id/buttonSetDate" android:layout_alignParentEnd="true"/>
     <TextView
             android:layout_width="wrap_content"

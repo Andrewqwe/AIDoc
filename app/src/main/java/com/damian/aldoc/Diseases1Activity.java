@@ -1,194 +1,216 @@
 package com.damian.aldoc;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
+import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.support.v7.app.AlertDialog;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.MultiAutoCompleteTextView;
-import android.widget.Spinner;
-import android.widget.TextView;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
+import android.widget.TimePicker;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 public class Diseases1Activity extends AppCompatActivity {
 
     public static Diseases1Activity activity;
-    //Zmienne pomocnicze do inicjowania pól z XML'a
-    private TextView tv;
-    private EditText et;
-    private Spinner sp;
-    private MultiAutoCompleteTextView mactv;
-    //Zmienne pomocnicze do wykrywania czy tworzymy nową notatkę czy edytujemy już istniejącą
+    private Button button;
+    private EditText var;
     private int action;
+    private String uid;
+    private final int ADD = 0;
     private final int EDIT = 1;
-    //Adaptery, lista i listener do posługiwania się chorobami i lekami
-    private ArrayAdapter<Disease> adapter1;
-    private ArrayAdapter<String> adapter2;
-    private List<Disease> diseasesList = new ArrayList<>();
-    private ChildEventListener dChildEventListener;
-    //Zmienne pomocnicze
-    private String nid;
-    private String dcategory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_diseases1);
 
-        //Ustawiamy obecną datę i godzinę
-        Calendar c = Calendar.getInstance();
-        String date = new SimpleDateFormat("dd-MM-yyyy").format(c.getTime());
-        String time = new SimpleDateFormat("hh:mm").format(c.getTime());
-
-        tv = (TextView)findViewById(R.id.textViewDateTime);
-        tv.setText(date+" "+time);
-
-        //Pobieramy zmienną wskazującą czy dodajemy czy edytujemy notatkę
         action = getIntent().getIntExtra("action", -1);
-        //Inicjumemy zmienną pomocniczą nieznaczącą wartością
-        dcategory = "Brak";
+        if (action == ADD)
+        {
+            Calendar c = Calendar.getInstance();
 
-        //Jeśli edytujemy pobieramy dane z poprzedniej aktywności i inicjujemy nimi pola obecnej aktywności
-        if(action == EDIT) {
+            String date = new SimpleDateFormat("dd-MM-yyyy").format(c.getTime());
+            String time = new SimpleDateFormat("hh:mm").format(c.getTime());
+
+            button = (Button)findViewById(R.id.button2);
+            button.setText(date);
+
+            button = (Button)findViewById(R.id.button3);
+            button.setText(time);
+        }
+        else if(action == EDIT) {
             String[] note_table = getIntent().getStringArrayExtra("note");
 
-            nid = note_table[0];
+            uid = note_table[0];
 
-            et = (EditText) findViewById(R.id.editTextMood);
-            et.setText(note_table[2]);
+            button = (Button) findViewById(R.id.button2);
+            button.setText(note_table[1]);
 
-            et = (EditText) findViewById(R.id.editTextSymptoms);
-            et.setText(note_table[3]);
+            button = (Button) findViewById(R.id.button3);
+            button.setText(note_table[2]);
 
-            mactv = (MultiAutoCompleteTextView) findViewById(R.id.mactvMedicines);
-            mactv.setText(note_table[4]);
+            var = (EditText) findViewById(R.id.editText3);
+            var.setText(note_table[3]);
 
-            et = (EditText) findViewById(R.id.editTextReaction);
-            et.setText(note_table[5]);
+            var = (EditText) findViewById(R.id.editText4);
+            var.setText(note_table[4]);
 
-            //Dodajemy na początek listy chorobę, której dotyczy notatka aby ją wyświetlać na starcie
-            dcategory = note_table[6];
-            Disease disease = new Disease(dcategory);
-            diseasesList.add(disease);
+            var = (EditText) findViewById(R.id.editText5);
+            var.setText(note_table[5]);
+
+            var = (EditText) findViewById(R.id.editText2);
+            var.setText(note_table[6]);
         }
-        else {
-            //Jeśli dodajemy inicjujemy pierwsze element listy wartością braku wyboru
-            Disease disease = new Disease("--wybierz--");
-            diseasesList.add(disease);
-        }
-        /*Jeśli dodana na wstępie choroba jest różna od "Inne", dodajemy takiego stringa do listy,
-          ponieważ nie przechowujemy tego go w bazie*/
-        if(!dcategory.equals("Inne")) {
-            Disease disease = new Disease("Inne");
-            diseasesList.add(disease);
-        }
-
-        //Inicjujemy bazę danych i tworzymy listenera dodającego choroby do listy
-        Database.Initialize(true);
-        dChildEventListener = new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s)
-            {
-                Disease disease = dataSnapshot.getValue(Disease.class);
-                disease.setDid(dataSnapshot.getKey());
-                //Jeśli różna od dodanej na wstępie choroby
-                if(!dcategory.equals(disease.name))diseasesList.add(disease);
-                adapter1.notifyDataSetChanged();
-            }
-
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
-            public void onChildRemoved(DataSnapshot dataSnapshot) {}
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-            public void onCancelled(DatabaseError databaseError) {}
-        };
-        //Przechodzimy do chorób w bazie i ustawiamy utworzonego wcześniej listenera
-        Database.SetLocation("diseases").addChildEventListener(dChildEventListener);
-        //Wypełniamy adapter i przypisujemy go do spinnera żeby wyswietlac choroby
-        adapter1 = new ArrayAdapter<Disease>(this, android.R.layout.simple_spinner_item, diseasesList);
-        sp = (Spinner) findViewById(R.id.spinnerDisease);
-        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        sp.setAdapter(adapter1);
-
-        //Tworzymy tablicę stringów i przypisujemy jej listę leków z pliku drugs.xml
-        String[] medicinesList = getResources().getStringArray(R.array.drugs_array);
-        //Wypełniamy adapter i przypisujemy go do pola do wpisywania przyjętych leków aby domyślał się o jakie leki nam chodzi
-        adapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, medicinesList);
-        mactv = (MultiAutoCompleteTextView) findViewById(R.id.mactvMedicines);
-        mactv.setAdapter(adapter2);
-        //Separujemy leki przecinkiem i spacją
-        mactv.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
         activity = this;
     }
 
-    //Funkcja dodająca/modyfikująca notatkę po kliknięciu na przycisk "Dodaj"
     public void onClick(View v) {
         Intent intent = new Intent(getApplicationContext(), Diseases0Activity.class);
-        //Tworzymy tablicę, do której pobierzemy wartości z pól aktywności
         String[] note_table = new String[7];
-
-        //Jeśli dobrze się nie przesłała zmienna wyłączam aktywność
         if(action == -1)
         {
             setResult(AppCompatActivity.RESULT_CANCELED, intent);
             finish();
         }
-        note_table[0] = nid;
 
-        tv = (TextView)findViewById(R.id.textViewDateTime);
-        note_table[1] = tv.getText().toString();
+        note_table[0] = uid;
 
-        et = (EditText)findViewById(R.id.editTextMood);
-        note_table[2] = et.getText().toString();
+        button = (Button)findViewById(R.id.button2);
+        note_table[1] = button.getText().toString();
 
-        et = (EditText)findViewById(R.id.editTextSymptoms);
-        note_table[3] = et.getText().toString();
+        button = (Button)findViewById(R.id.button3);
+        note_table[2] = button.getText().toString();
 
-        mactv = (MultiAutoCompleteTextView)findViewById(R.id.mactvMedicines);
-        note_table[4] = mactv.getText().toString();
+        var = (EditText)findViewById(R.id.editText3);
+        note_table[3] = var.getText().toString();
 
-        et = (EditText)findViewById(R.id.editTextReaction);
-        note_table[5] = et.getText().toString();
+        var = (EditText)findViewById(R.id.editText4);
+        note_table[4] = var.getText().toString();
 
-        sp = (Spinner) findViewById(R.id.spinnerDisease);
-        note_table[6] = sp.getSelectedItem().toString();
+        var = (EditText)findViewById(R.id.editText5);
+        note_table[5] = var.getText().toString();
 
-        //Jeśli choroba jakiej dotyczy notatka nie została wybrana wyświetlamy odpowiednie okno dialogowe i nic nie wykonujemy
-        if(note_table[6].equals("--wybierz--")){
-            showDialog(0);
+        var = (EditText)findViewById(R.id.editText2);
+        note_table[6] = var.getText().toString();
+
+        Note note = new Note(note_table[1], note_table[2], note_table[3], note_table[4], note_table[5], note_table[6]);
+
+        if(action == 0) Database.SendObjectNotesToDatabase(note);
+        else if(action == 1) Database.UpdateNoteInDatabase(note, note_table[0]);
+
+        startActivity(intent);
+    }
+
+    public static class TimePickerFragment extends DialogFragment
+            implements TimePickerDialog.OnTimeSetListener {
+
+        private Diseases1Activity diseases1_activity;
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the current time as the default values for the picker
+            final Calendar c = Calendar.getInstance();
+            int hour = c.get(Calendar.HOUR_OF_DAY);
+            int minute = c.get(Calendar.MINUTE);
+
+            // Create a new instance of TimePickerDialog and return it
+            return new TimePickerDialog(getActivity(), this, hour, minute,
+                    DateFormat.is24HourFormat(getActivity()));
         }
-        //W przeciwnym razie tworzymy uwtworzoną notatkę i wysyłamy ją do bazy
-        else {
-            Note note = new Note(note_table[1], note_table[2], note_table[3], note_table[4], note_table[5], note_table[6], -System.currentTimeMillis()/1000);
 
-            if (action == 0) Database.SendObjectNotesToDatabase(note);
-            else if (action == 1) Database.UpdateNoteInDatabase(note, note_table[0]);
+        public void setActivity(Diseases1Activity activity)
+        {
+            diseases1_activity = activity;
+        }
 
-            startActivity(intent);
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute)
+        {
+            diseases1_activity.setTime(hourOfDay, minute);
         }
     }
 
-    //Okno dialogowe informujące i potrzebie wybrania choroby jakiej dotyczy notatka
-    protected Dialog onCreateDialog(int id) {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        //dialogBuilder.setTitle("Usuwanie notatki");
-        dialogBuilder.setMessage("Wybierz chorobę jakiej dotyczy notatka!");
-        //dialogBuilder.setCancelable(false);
-        dialogBuilder.setNegativeButton("Rozumiem", new Dialog.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int whichButton) {
-            }
-        });
-        return dialogBuilder.create();
+    public static class DatePickerFragment extends DialogFragment
+            implements DatePickerDialog.OnDateSetListener {
+
+        private Diseases1Activity diseases1_activity;
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the current date as the default date in the picker
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            // Create a new instance of DatePickerDialog and return it
+            return new DatePickerDialog(getActivity(), this, year, month, day);
+        }
+
+        public void setActivity(Diseases1Activity activity)
+        {
+            diseases1_activity = activity;
+        }
+
+        public void onDateSet(DatePicker view, int year, int month, int day)
+        {
+            diseases1_activity.setDate(year, month, day);
+        }
+    }
+
+    private String toString(int val)
+    {
+        Integer i = Integer.valueOf(val);
+
+        if(val < 10)
+            return "0" + i.toString();
+        else
+            return i.toString();
+    }
+
+    public void setTime(int hour, int minute)
+    {
+        button = (Button)findViewById(R.id.button3);
+        Integer h = Integer.valueOf(hour);
+        Integer m = Integer.valueOf(minute);
+
+        String t = toString(h) + ":" + toString(m);
+
+        button.setText(t);
+    }
+
+    public void setDate(int year, int month, int day)
+    {
+        button = (Button)findViewById(R.id.button2);
+        Integer y = Integer.valueOf(year);
+        Integer m = Integer.valueOf(month + 1);
+        Integer d = Integer.valueOf(day);
+
+        String t = toString(y) + "-" + toString(m) + "-" + toString(d);
+
+        button.setText(t);
+    }
+
+    /*Dwie funkcje do ustawienia czasu i daty, wolane przez fragmenty
+    * TimePickerFragment i DatePickerFragment, w ktorych wybiera sie czas i date*/
+    public void setTimeOnClick(View v)
+    {
+        DialogFragment time_pick_fragment = new TimePickerFragment();
+        ((TimePickerFragment)time_pick_fragment).setActivity(this);
+        time_pick_fragment.show(getSupportFragmentManager(), "timePicker");
+    }
+
+    public void setDateOnClick(View v)
+    {
+        DialogFragment date_pick_fragment = new DatePickerFragment();
+        ((DatePickerFragment)date_pick_fragment).setActivity(this);
+        date_pick_fragment.show(getSupportFragmentManager(), "timePicker");
     }
 
 }

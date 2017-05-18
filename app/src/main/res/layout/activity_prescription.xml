@@ -10,35 +10,35 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         android:paddingBottom="@dimen/activity_vertical_margin"
         tools:context="com.damian.aldoc.PrescriptionActivity">
+
     <TextView
             android:layout_width="wrap_content" android:textSize="@dimen/edit_visit_fontsize"
             android:layout_height="wrap_content" android:layout_alignParentTop="true"
             android:layout_alignParentStart="true" android:id="@+id/prescription_Name"/>
     <ImageView
-            android:onClick="imageOnClick"
             android:layout_width="wrap_content" android:layout_marginTop="30dp"
             android:layout_centerInParent="true"
             android:layout_height="100dp" app:srcCompat="@drawable/ic_menu_gallery"
             android:layout_below="@+id/prescription_Name" android:layout_centerHorizontal="true"
             android:id="@+id/prescription_imageView"/>
     <Button
-            android:text="Z galerii" android:onClick="fromGalleryOnClick"
+            android:text="From gallery" android:onClick="fromGalleryOnClick"
             android:layout_width="wrap_content" android:layout_marginTop="10dp" android:layout_marginStart="30dp"
             android:layout_height="wrap_content" android:layout_below="@+id/prescription_imageView"
             android:layout_alignParentStart="true" android:id="@+id/prescription_buttonFromGallery"/>
     <Button
-            android:text="Zrób zdjęcie" android:onClick="takePhotoOnClick"
+            android:text="Take Photo" android:onClick="takePhotoOnClick"
             android:layout_width="wrap_content" android:layout_marginTop="10dp" android:layout_marginEnd="30dp"
             android:layout_height="wrap_content" android:layout_below="@+id/prescription_imageView"
             android:layout_alignParentEnd="true" android:id="@+id/prescription_buttonTakePhoto"/>
     <TextView
             android:id="@+id/prescription_textViewEntries" android:textSize="@dimen/edit_visit_fontsize"
-            android:text="Wpisy" android:layout_marginTop="31dp"
+            android:text="Entries" android:layout_marginTop="31dp"
             android:layout_width="wrap_content" android:layout_height="wrap_content"
             android:layout_below="@+id/prescription_buttonFromGallery"
             android:layout_alignStart="@+id/prescription_buttonFromGallery"/>
     <Button
-            android:text="Dodaj wpis"
+            android:text="Add Entry"
             android:onClick="addEntryOnClick"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

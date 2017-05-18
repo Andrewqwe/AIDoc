@@ -1,25 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/activity_calendar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        tools:context="com.damian.aldoc.CalendarActivity">
 
-    <LinearLayout
+    <CalendarView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-        <LinearLayout
-                android:id="@+id/calendar1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-        </LinearLayout>
-
+            android:layout_height="match_parent"
+            android:id="@+id/calendarView"
+            android:showWeekNumber="false"
+            android:layout_weight="0.5"
+            android:firstDayOfWeek="2"
+            android:isScrollContainer="true"
+            style="@android:style/Widget.Holo.Light.CalendarView"/>
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" android:layout_weight="0.5">
         <TextView
-                android:id="@+id/textview"
+                android:text="TextView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
+                android:layout_height="match_parent"
+                android:id="@+id/dateTxt"
+                android:textColor="@android:color/white"
+                android:textSize="24sp"
+                android:textAlignment="center"
+                android:background="@android:color/black"
+                android:layout_weight="0.8"
+                android:textAllCaps="false"/>
+        <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.1">
+            <LinearLayout android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:orientation="vertical"
+                          android:id="@+id/visits_linear_layout"/>
+        </ScrollView>
     </LinearLayout>
-</ScrollView>
+</LinearLayout>
