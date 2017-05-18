@@ -4,7 +4,7 @@
     <modules>
       <module fileurl="file://C:\Users\tryk\Documents\aldoc\AIDoc.iml" filepath="C:\Users\tryk\Documents\aldoc\AIDoc.iml" />
       <module fileurl="file://D:\Programy\AlDoc\AIDoc.iml" filepath="D:\Programy\AlDoc\AIDoc.iml" />
-      <module fileurl="file://$PROJECT_DIR$/AlDoc.iml" filepath="$PROJECT_DIR$/AlDoc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/aldoc.iml" filepath="$PROJECT_DIR$/aldoc.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
