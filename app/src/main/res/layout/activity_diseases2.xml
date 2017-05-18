@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.damian.aldoc.Diseases2Activity">
+
+    <TextView
+        android:id="@+id/textViewDateL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Data"
+        android:textSize="18sp"
+        android:layout_alignBaseline="@+id/textViewDateV"
+        android:layout_marginLeft="9dp"
+        android:layout_alignParentStart="true"
+        />
+
+    <TextView
+        android:id="@+id/textViewDateV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Brak"
+        android:textSize="18sp"
+        android:layout_marginTop="7dp"
+        android:layout_marginRight="9dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        />
+
+    <TextView
+        android:id="@+id/textViewMoodL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Samopoczucie"
+        android:textSize="18sp"
+        android:layout_alignStart="@+id/textViewDateL"
+        android:layout_alignBaseline="@+id/textViewMoodV"
+        />
+
+    <TextView
+        android:id="@+id/textViewMoodV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Brak"
+        android:textSize="18sp"
+        android:layout_alignStart="@+id/textViewDateV"
+        android:layout_below="@+id/textViewDateV"
+        android:layout_alignEnd="@id/textViewDateV"
+        android:layout_marginTop="10dp"
+        />
+
+    <TextView
+        android:id="@+id/textViewSymptomsL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Objawy"
+        android:textSize="18sp"
+        android:layout_alignStart="@+id/textViewDateL"
+        android:layout_alignBaseline="@+id/textViewSymptomsV"
+        />
+
+    <TextView
+        android:id="@+id/textViewSymptomsV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Brak"
+        android:textSize="18sp"
+        android:layout_alignStart="@+id/textViewDateV"
+        android:layout_below="@+id/textViewMoodV"
+        android:layout_alignEnd="@id/textViewDateV"
+        android:layout_marginTop="10dp"
+        />
+
+    <TextView
+        android:id="@+id/textViewMedicinesL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Przyjęte leki"
+        android:textSize="18sp"
+        android:layout_alignStart="@+id/textViewDateL"
+        android:layout_alignBaseline="@+id/textViewMedicinesV"
+        />
+
+    <TextView
+        android:id="@+id/textViewMedicinesV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Brak"
+        android:textSize="18sp"
+        android:layout_alignStart="@+id/textViewDateV"
+        android:layout_below="@+id/textViewSymptomsV"
+        android:layout_alignEnd="@id/textViewDateV"
+        android:layout_marginTop="10dp"
+        />
+
+    <TextView
+        android:id="@+id/textReactionL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reakcja"
+        android:textSize="18sp"
+        android:layout_alignStart="@+id/textViewDateL"
+        android:layout_alignBaseline="@+id/textViewReactionV"
+        />
+
+    <TextView
+        android:id="@+id/textViewReactionV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Brak"
+        android:textSize="18sp"
+        android:layout_alignStart="@+id/textViewDateV"
+        android:layout_below="@+id/textViewMedicinesV"
+        android:layout_alignEnd="@id/textViewDateV"
+        android:layout_marginTop="10dp"
+        />
+
+    <TextView
+        android:id="@+id/textDiseaseL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Choroba"
+        android:textSize="18sp"
+        android:layout_alignStart="@+id/textViewDateL"
+        android:layout_alignBaseline="@+id/textViewDiseaseV"
+        />
+
+    <TextView
+        android:id="@+id/textViewDiseaseV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Brak"
+        android:textSize="18sp"
+        android:layout_alignStart="@+id/textViewDateV"
+        android:layout_below="@+id/textViewReactionV"
+        android:layout_alignEnd="@id/textViewDateV"
+        android:layout_marginTop="10dp"
+        />
+
+    <Button
+        android:id="@+id/buttonEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edytuj notatkę"
+        android:onClick="editOnClick"
+        android:layout_above="@+id/buttonRemove"
+        android:layout_marginEnd="7dp"
+        android:layout_alignParentEnd="true"
+        />
+
+    <Button
+        android:id="@+id/buttonRemove"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="removeOnClick"
+        android:text="Usuń notatkę"
+        android:layout_alignStart="@+id/buttonEdit"
+        android:layout_alignEnd="@+id/buttonEdit"
+        android:layout_marginBottom="7dp"
+        android:layout_alignParentBottom="true"
+        />
+
+
+</RelativeLayout>
