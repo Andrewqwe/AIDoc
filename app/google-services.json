@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "12221817508",
+    "firebase_url": "https://aidoc-14c21.firebaseio.com",
+    "project_id": "aidoc-14c21",
+    "storage_bucket": "aidoc-14c21.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:12221817508:android:2e6c0c381d06be76",
+        "android_client_info": {
+          "package_name": "com.damian.aldoc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "12221817508-ii104978il12v3tp602kg3gbrnl35svv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.damian.aldoc",
+            "certificate_hash": "91ad35f3d82225dc1bfa9bfa6cf9a9ae1783df77"
+          }
+        },
+        {
+          "client_id": "12221817508-f9q5chkir06c9g3ndhl6s3h1v4j44lpb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPselGTuYffJ4-bm1Z5kY3Dfv0sonc4FE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "12221817508-f9q5chkir06c9g3ndhl6s3h1v4j44lpb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

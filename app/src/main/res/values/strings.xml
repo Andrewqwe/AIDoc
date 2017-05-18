@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">AlDoc</string>
+    <string name="title_activity_login">Zaloguj się</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="action_sign_out">Sign Out</string>
+    <string name="title_activity_user_profile_view">UserProfileView</string>
+
+    <!-- Stringi do panelu uzytkownika -->
+    <string name="profile_full_name">Imie i nazwisko</string>
+
+    <!-- SLOWNIK DO PANELU UZYTKOWNIKA-->
+    <string-array name="user_data_key_array">
+        <!-- id_z_bazy_danych//podpis ktory ma pokazac sie na ekranie
+         w przyszlosci moze zastapie to jakas mapą w xml ale w tym pliku nie da się tego zrobić
+        NIE WSTAWIAC SPACJI PO LEWO OD "//" ! -->
+        <item>born//Data urodzenia//Date</item>
+        <item>pesel//Pesel//String</item>
+        <item>city//Miasto//String</item>
+        <item>address//Adres//String</item>
+        <item>phonenumber//Numer telefonu//String</item>
+        <item>email//E-mail//String</item>
+        <item>bloodGroup//Grupa Krwi//String</item>
+    </string-array>
+    <string name="title_activity_user_profile_edit">UserProfileEditActivity</string>
+
+
+</resources>
