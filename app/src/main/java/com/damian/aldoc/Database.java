@@ -190,10 +190,24 @@ public class Database {
      */
     static public void SendUserInfoToDatabase() {
         Initialize(true);
-        SetLocation("users");
-        String[] details = GetUserInfo();
-        User user = new User(details[0],details[1]);
-        mDatabaseReference.child(GetUserUID()).setValue(user);
+        DatabaseReference users = SetLocation("users");
+        users.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.child(GetUserUID()).exists()) {
+                    // run some code
+                }else{
+                    String[] details = GetUserInfo();
+                    User user = new User(details[0],details[1]);
+                    mDatabaseReference.child(GetUserUID()).setValue(user);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
        // mDatabaseReference.child(GetUserUID()).child("pesel").setValue(pesel); - podmienianie tylko gałęzi pesel (można warunek if zrobić i sprawdzać czy pesel != null i dopiero wtedy podmieniać) to już zależy od metody zrobienia panelu do wprowadzania danych
     }
 
