@@ -85,7 +85,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.damian.aldoc.UserProfileView" />
         </activity>
-
     </application>
 
 </manifest>
