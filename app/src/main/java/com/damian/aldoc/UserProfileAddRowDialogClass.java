@@ -67,7 +67,7 @@ public class UserProfileAddRowDialogClass extends Dialog implements
                 String a[] = Database.GetUserInfo();
                 Database.Initialize(true);
                 DatabaseReference ref;
-                ref = Database.SetLocation("users/" + "fyxHAvhfwxcI04FQoazepQbyeKp2");
+                ref = Database.SetLocation("users/" + a[2]);
                 HashMap<String,Object> temp = new HashMap<>();
                 temp.put(database_key,imput.getText().toString());
                 ref.updateChildren(temp);

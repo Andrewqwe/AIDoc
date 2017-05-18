@@ -47,7 +47,7 @@ public class UserProfileEditActivity extends AppCompatActivity {
         if(a!=null)
         {
             Database.Initialize(true);
-            DatabaseReference ref = Database.SetLocation("users/" + "fyxHAvhfwxcI04FQoazepQbyeKp2");
+            DatabaseReference ref = Database.SetLocation("users/" + a[2]);
             ValueEventListener postListener = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {

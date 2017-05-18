@@ -61,7 +61,7 @@ public class UserProfileView extends AppCompatActivity {
         if (a != null) {
             //nie kazdy profil jest jakos sensownie uzupelniony dlatego zostawiam
             //w komentarzu kod w ktorym jest "sztywno" wpisane uid uzupelnionego profilu
-            ref = Database.SetLocation("users/" + "fyxHAvhfwxcI04FQoazepQbyeKp2");
+            ref = Database.SetLocation("users/" + a[2]);
             ValueEventListener postListener = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {

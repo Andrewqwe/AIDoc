@@ -32,9 +32,9 @@ public class PrescriptionEntry
         return m_medicine_name + "\n" + m_dose_rate;
     }
 
-    private String m_uid; // uid wpisu w bazie
-    private String m_prescription_uid; // uid recepty (w bazie), ktorej dotyczy dany wpis
-    private String m_medicine_name; // nazwa leku z wpisu
-    private String m_dose_rate; // dawkowanie leku
+    private String m_uid;
+    private String m_prescription_uid;
+    private String m_medicine_name;
+    private String m_dose_rate;
 }
 
