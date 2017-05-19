@@ -9,6 +9,24 @@
 
         tools:context="com.damian.aldoc.VisitsActivity">
 
+    <TextView
+            android:textSize="@dimen/edit_visit_fontsize"
+            android:text="Sortuj wg." android:id="@+id/acticityVisits_sortujTextView"
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/activityVisits_filterSpinner" android:layout_alignParentStart="true"/>
+    <Spinner
+            android:id="@+id/activityVisits_filterSpinner"
+            android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_alignParentTop="true" android:layout_toEndOf="@+id/acticityVisits_sortujTextView"/>
+    <ListView
+            android:id="@+id/visits_listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/acticityVisits_sortujTextView"
+            android:layout_marginTop="15dp">
+    </ListView>
+
     <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
             android:onClick="fabAddOnClick"
@@ -19,12 +37,4 @@
             android:layout_alignParentEnd="true"
             android:layout_marginBottom="20dp"
             android:layout_marginRight="20dp"/>
-    <ListView
-            android:id="@+id/visits_listView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true">
-    </ListView>
-
 </RelativeLayout>
