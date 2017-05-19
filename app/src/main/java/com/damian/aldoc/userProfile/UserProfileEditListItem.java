@@ -1,6 +1,4 @@
-package com.damian.aldoc;
-
-import java.util.Comparator;
+package com.damian.aldoc.userProfile;
 
 /**
  * Created by Andrzej on 2017-05-16.

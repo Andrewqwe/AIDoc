@@ -1,4 +1,4 @@
-package com.damian.aldoc;
+package com.damian.aldoc.userProfile;
 
 import android.widget.TextView;
 

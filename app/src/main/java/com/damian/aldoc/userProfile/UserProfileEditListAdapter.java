@@ -1,19 +1,18 @@
-package com.damian.aldoc;
+package com.damian.aldoc.userProfile;
 
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.damian.aldoc.R;
+
 import java.util.ArrayList;
-import java.util.Comparator;
 
 /**
  * Created by Andrzej on 2017-05-16.
