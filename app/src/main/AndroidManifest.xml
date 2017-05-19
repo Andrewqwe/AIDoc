@@ -76,6 +76,10 @@
         <activity android:name=".PrescriptionActivity" android:label="Prescription">
         </activity>
         <activity
+                android:name="com.damian.aldoc.FullScreenImageActivity"
+                android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+        </activity>
+        <activity
             android:name=".UserProfileEditActivity"
             android:label="@string/title_activity_user_profile_edit"
             android:parentActivityName=".UserProfileView"

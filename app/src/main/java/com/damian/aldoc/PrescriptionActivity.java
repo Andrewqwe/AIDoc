@@ -1,10 +1,8 @@
 package com.damian.aldoc;
 
-import android.app.ActionBar;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -17,8 +15,6 @@ import android.os.Bundle;
 import android.view.*;
 import android.widget.*;
 
-import com.bumptech.glide.Glide;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.database.*;
 
 import java.io.File;
@@ -359,6 +355,11 @@ public class PrescriptionActivity extends AppCompatActivity
 
     public void imageOnClick(View v)
     {
-
+        if(photo_database_uri != null)
+        {
+            Intent fullScreenImageIntent = new Intent(this, FullScreenImageActivity.class);
+            fullScreenImageIntent.putExtra("uri", photo_database_uri);
+            startActivity(fullScreenImageIntent);
+        }
     }
 }

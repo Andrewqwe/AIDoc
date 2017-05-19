@@ -90,6 +90,31 @@ public class UserProfileEditListAdapter extends BaseAdapter {
                 button2.setColorFilter(Color.RED);
                 button1.setBackgroundColor(Color.TRANSPARENT);
                 button2.setBackgroundColor(Color.TRANSPARENT);
+                button1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        UserProfileAddRowDialogClass addDialog = new UserProfileAddRowDialogClass(activity);
+                        UserProfileEditListItem item = list.get(position);
+                        addDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        addDialog.show();
+                        addDialog.setDatabase_key(item.getDatabase_key());
+                        addDialog.setTranslation(item.getTranslation());
+                        addDialog.getImput().setText(item.getValue());
+                        addDialog.getButton1().setText("Ok");
+                    }
+                });
+
+                button2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        UserProfileDeleteRowDialogClass deleteDialog = new UserProfileDeleteRowDialogClass(activity);
+                        UserProfileEditListItem item = list.get(position);
+                         deleteDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                         deleteDialog.show();
+                         deleteDialog.setDatabase_key(item.getDatabase_key());
+                         deleteDialog.setTranslation(item.getTranslation());
+                    }
+                });
                 //TODO: listenery guzikow
             }
 

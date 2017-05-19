@@ -226,6 +226,7 @@ public class EditVisitActivity extends AppCompatActivity
     {
         TextView date_text_view = (TextView)findViewById(R.id.textDate);
 
+        month += 1;
         String t = timeToString(day) + "-" + timeToString(month) + "-" + timeToString(year);
 
         date_text_view.setText(t);
