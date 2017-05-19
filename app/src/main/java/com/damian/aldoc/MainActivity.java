@@ -79,7 +79,8 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null){
                     //signed in
-                    Toast.makeText(MainActivity.this, "You're now signed in. Welcome to AIDoc system.", Toast.LENGTH_SHORT).show();
+                    Database.SendUserInfoToDatabase();
+                    Toast.makeText(MainActivity.this, "A co to właściwie robisz? - Bezimienny", Toast.LENGTH_SHORT).show();
                 }
                 else{
                     //signed out
@@ -155,8 +156,6 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
         int id = item.getItemId();
 
         if (id == R.id.user_profile) {
-            Database.SendUserInfoToDatabase();
-            //todo zawsze wrzuca imie i maila podanego przy rejestracji jakiś warunek sprawdzający czy juz zostal utworzony profil
             Intent intent_user_profile = new Intent(this, UserProfileView.class);
             startActivity(intent_user_profile);
         } else if (id == R.id.user_calendar) {
