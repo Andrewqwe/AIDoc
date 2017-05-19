@@ -79,6 +79,11 @@ public class CalendarActivity extends AppCompatActivity {
                 caldroidFragment.setBackgroundDrawableForDate(ResourcesCompat.getDrawable(getResources(), R.drawable.event, null), data);
                 caldroidFragment.refreshView();
                 visitsHashMap.put(getDateAsString(data), visit);
+
+
+                Calendar cal = Calendar.getInstance();
+                Date date = cal.getTime();
+                checkVisitForDate(date);
             }
 
             public void onChildChanged(DataSnapshot dataSnapshot, String s)
@@ -96,6 +101,10 @@ public class CalendarActivity extends AppCompatActivity {
                         caldroidFragment.setBackgroundDrawableForDate(ResourcesCompat.getDrawable(getResources(), R.drawable.event, null), data);
                         caldroidFragment.refreshView();
                         visitsHashMap.put(getDateAsString(data), visit);
+
+                        Calendar cal = Calendar.getInstance();
+                        Date date = cal.getTime();
+                        checkVisitForDate(date);
                         break;
                     }
                 }
@@ -109,6 +118,10 @@ public class CalendarActivity extends AppCompatActivity {
                         caldroidFragment.clearBackgroundDrawableForDate(data);
                         caldroidFragment.refreshView();
                         visitsHashMap.remove(getDateAsString(data));
+
+                        Calendar cal = Calendar.getInstance();
+                        Date date = cal.getTime();
+                        checkVisitForDate(date);
                         break;
                     }
                 }
@@ -187,5 +200,13 @@ public class CalendarActivity extends AppCompatActivity {
         intent.putExtra("visit", visit_data);
 
         startActivity(intent);
+    }
+
+    private void checkVisitForDate(Date date) {
+        if (visitsHashMap.containsKey(getDateAsString(date))) {
+            visits.clear();
+            visits.add(visitsHashMap.get(getDateAsString(date)));
+            adapter.notifyDataSetChanged();
+        }
     }
 }
