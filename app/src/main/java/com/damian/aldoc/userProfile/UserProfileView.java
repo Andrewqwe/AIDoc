@@ -1,4 +1,4 @@
-package com.damian.aldoc;
+package com.damian.aldoc.userProfile;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.damian.aldoc.Database;
+import com.damian.aldoc.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

@@ -65,7 +65,7 @@
                 android:theme="@style/AppTheme.NoActionBar"
                 android:label="Dziennik chorób"/>
         <activity
-                android:name=".UserProfileView"
+                android:name=".userProfile.UserProfileView"
                 android:label="@string/title_activity_user_profile_view"
                 android:parentActivityName=".MainActivity"
                 android:theme="@style/AppTheme.NoActionBar">
@@ -80,13 +80,13 @@
                 android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         </activity>
         <activity
-            android:name=".UserProfileEditActivity"
+            android:name=".userProfile.UserProfileEditActivity"
             android:label="@string/title_activity_user_profile_edit"
-            android:parentActivityName=".UserProfileView"
+            android:parentActivityName=".userProfile.UserProfileView"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.damian.aldoc.UserProfileView" />
+                android:value="com.damian.aldoc.userProfile.UserProfileView" />
         </activity>
     </application>
 

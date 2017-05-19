@@ -1,4 +1,4 @@
-package com.damian.aldoc;
+package com.damian.aldoc.userProfile;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -6,9 +6,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
+import com.damian.aldoc.Database;
+import com.damian.aldoc.R;
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.HashMap;
