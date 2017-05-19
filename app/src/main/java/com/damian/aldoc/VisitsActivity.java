@@ -19,14 +19,21 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
 public class VisitsActivity extends AppCompatActivity {
 
+    /*lista wizyt*/
     private ListView list_view;
-    private ArrayAdapter<Visit> adapter;
-    private List<Visit> visits = new ArrayList<>();
+    private ArrayAdapter<Visit> m_visits_adapter;
+    private List<Visit> m_visits = new ArrayList<>();
+
+    /*spinner z opcjami filtrowania*/
+    private final String[] m_filters = new String[]{"Daty","Lekarza", "Miejsca"};
+    private Spinner spinner;
+    private ArrayAdapter<String> m_filter_adapter;
 
     private final int ACTION_ADD = 0;
     private final int REQUEST_ADD = 0;
@@ -50,8 +57,8 @@ public class VisitsActivity extends AppCompatActivity {
                 Visit visit = dataSnapshot.getValue(Visit.class);
                 visit.setUid(dataSnapshot.getKey());
 
-                visits.add(visit);
-                adapter.notifyDataSetChanged();
+                m_visits.add(visit);
+                m_visits_adapter.notifyDataSetChanged();
             }
 
             public void onChildChanged(DataSnapshot dataSnapshot, String s)
@@ -60,12 +67,12 @@ public class VisitsActivity extends AppCompatActivity {
                 String uid = dataSnapshot.getKey();
                 visit.setUid(uid);
 
-                for(int v = 0; v < visits.size(); v++)
+                for(int v = 0; v < m_visits.size(); v++)
                 {
-                    if(visits.get(v).getUid().equals(uid))
+                    if(m_visits.get(v).getUid().equals(uid))
                     {
-                        visits.set(v, visit);
-                        adapter.notifyDataSetChanged();
+                        m_visits.set(v, visit);
+                        m_visits_adapter.notifyDataSetChanged();
                         break;
                     }
                 }
@@ -73,12 +80,12 @@ public class VisitsActivity extends AppCompatActivity {
             public void onChildRemoved(DataSnapshot dataSnapshot)
             {
                 String uid = dataSnapshot.getKey();
-                for(int v = 0; v < visits.size(); v++)
+                for(int v = 0; v < m_visits.size(); v++)
                 {
-                    if(visits.get(v).getUid().equals(uid))
+                    if(m_visits.get(v).getUid().equals(uid))
                     {
-                        visits.remove(v);
-                        adapter.notifyDataSetChanged();
+                        m_visits.remove(v);
+                        m_visits_adapter.notifyDataSetChanged();
                         break;
                     }
                 }
@@ -88,21 +95,61 @@ public class VisitsActivity extends AppCompatActivity {
         };
         Database.SetLocation("visits").addChildEventListener(mChildEventListener);
 
-        //tworzymy adapter i przypisujemy go do listview zeby wyswietlac wizyty
-        adapter = new ArrayAdapter<Visit>(this, android.R.layout.simple_list_item_1, visits);
+        //tworzymy m_visits_adapter i przypisujemy go do listview zeby wyswietlac wizyty
+        m_visits_adapter = new ArrayAdapter<Visit>(this, android.R.layout.simple_list_item_1, m_visits);
 
         list_view = (ListView)findViewById(R.id.visits_listView);
-        list_view.setAdapter(adapter);
+        list_view.setAdapter(m_visits_adapter);
         registerForContextMenu(list_view);
 
         list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id)
             {
-                visitOnClick(visits.get(position));
+                visitOnClick(m_visits.get(position));
             }
         });
+
+        //tworzymy adapter do filtra
+        m_filter_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, m_filters);
+
+        spinner = (Spinner)findViewById(R.id.activityVisits_filterSpinner);
+        m_filter_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(m_filter_adapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+                sortVisits(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
   }
+
+    private void sortVisits(int filter)
+    {
+        if(filter >= 0 && filter < m_filters.length)
+        {
+            switch (filter) {
+                case 0:
+                    Collections.sort(m_visits, new Visit.DateComparator());
+                    break;
+                case 1:
+                    Collections.sort(m_visits, new Visit.DoctorComparator());
+                    break;
+                case 2:
+                    Collections.sort(m_visits, new Visit.LocationComparator());
+                    break;
+                default:
+                    break;
+            }
+
+            m_visits_adapter.notifyDataSetChanged();
+        }
+    }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
@@ -116,7 +163,7 @@ public class VisitsActivity extends AppCompatActivity {
     public boolean onContextItemSelected(MenuItem item)
     {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        final Visit visit = visits.get(info.position);
+        final Visit visit = m_visits.get(info.position);
 
         switch (item.getItemId())
         {
