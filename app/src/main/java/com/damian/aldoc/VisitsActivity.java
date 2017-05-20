@@ -59,6 +59,7 @@ public class VisitsActivity extends AppCompatActivity {
 
                 m_visits.add(visit);
                 m_visits_adapter.notifyDataSetChanged();
+                sortVisits(spinner.getSelectedItemPosition());
             }
 
             public void onChildChanged(DataSnapshot dataSnapshot, String s)
@@ -76,6 +77,8 @@ public class VisitsActivity extends AppCompatActivity {
                         break;
                     }
                 }
+
+                sortVisits(spinner.getSelectedItemPosition());
             }
             public void onChildRemoved(DataSnapshot dataSnapshot)
             {
@@ -89,10 +92,13 @@ public class VisitsActivity extends AppCompatActivity {
                         break;
                     }
                 }
+
+                sortVisits(spinner.getSelectedItemPosition());
             }
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
             public void onCancelled(DatabaseError databaseError) {}
         };
+
         Database.SetLocation("visits").addChildEventListener(mChildEventListener);
 
         //tworzymy m_visits_adapter i przypisujemy go do listview zeby wyswietlac wizyty
