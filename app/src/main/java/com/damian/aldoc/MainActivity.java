@@ -76,13 +76,14 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
 
-                if (isAlreadyLoggedIn == false) {
+
                     FirebaseUser user = firebaseAuth.getCurrentUser();
                     if (user != null) {
                         //signed in
-                        Database.SendUserInfoToDatabase();
-                        Database.setCurrentUid(Database.GetUserUID());
-                        isAlreadyLoggedIn = true;
+                        if (isAlreadyLoggedIn == false) {
+                            Database.setCurrentUid(Database.GetUserUID());
+                            isAlreadyLoggedIn = true;
+                        }
                     } else {
                         //signed out
                         List<AuthUI.IdpConfig> providers = Arrays.asList(
@@ -101,7 +102,7 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
                                         .build(),
                                 RC_SIGN_IN);
                     }
-                }
+
             }
 
         };
@@ -116,6 +117,7 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
             if(requestCode == RC_SIGN_IN)
             {
                 Database.setCurrentUid(Database.GetUserUID());
+                Database.SendUserInfoToDatabase();
                 isAlreadyLoggedIn = true;
             }
         }
@@ -155,9 +157,9 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
                // Database.GetVisitByValueFromDatabase("time","time");
                // Database.UploadImageToDatabaseStorageUsingPath("/storage/emulated/0/DCIM/Camera/IMG_20170412_140913.jpg");
              //   Database.UploadImageToDatabaseStorageUsingUriAndUpdatePrescription(Uri.parse("file:///storage/emulated/0/DCIM/Camera/IMG_20170510_135615.jpg"),"-KkMu0rK7Wpngd2Z0H51");
-                System.out.println(Database.GetUserUID());
-                System.out.println(String.valueOf(Database.aaa));
-                Toast.makeText(getApplicationContext(), String.valueOf(Database.aaa), Toast.LENGTH_SHORT).show();
+                //System.out.println(Database.GetUserUID());
+                //System.out.println(String.valueOf(Database.aaa));
+                //Toast.makeText(getApplicationContext(), String.valueOf(Database.aaa), Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
