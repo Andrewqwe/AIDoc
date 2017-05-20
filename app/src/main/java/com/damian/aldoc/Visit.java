@@ -1,11 +1,39 @@
 package com.damian.aldoc;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-
+import java.util.Calendar;
+import java.util.Comparator;
 
 public class Visit {
 
+    /*Komparator do sortowania wizyt po nazwisku lekarza*/
+    public static class DoctorComparator implements Comparator<Visit>
+    {
+        @Override
+        public int compare(Visit o1, Visit o2) {
+            return o1.getDoctor().compareTo(o2.getDoctor());
+        }
+    }
 
+    /*Komparator do sortowania wizyt po dacie*/
+    public static class DateComparator implements Comparator<Visit>
+    {
+        @Override
+        public int compare(Visit o1, Visit o2) {
+            return  o1.getCalendar().before(o2.getCalendar()) ? 1 : -1;
+        }
+    }
+
+    /*Komparator do sortowania wizyt po nazwie miejsca wizyty*/
+    public static class LocationComparator implements Comparator<Visit>
+    {
+        @Override
+        public int compare(Visit o1, Visit o2) {
+            return o1.getLocation().compareTo(o2.getLocation());
+        }
+    }
 
     public Visit(){}
 
@@ -23,7 +51,7 @@ public class Visit {
     }
 
     /*
-    * @param time - format hh::mm
+    * @param time - format hh:mm
     * */
     public void setTime(String time) {
         m_time = time;
@@ -60,6 +88,29 @@ public class Visit {
 
     public String getUid() { return m_uid; }
 
+    public Calendar getCalendar()
+    {
+        String date = m_date;
+        String[] split_date = date.split("-");
+
+        /*Daty sa zapisane do bazy z miesiacem powiekszonym o 1
+        * wiec teraz trzeba wprowadzic poprawke*/
+
+        Integer month = Integer.valueOf(split_date[1]);
+        month -= 1;
+
+        date = split_date[0] + "-" + month.toString() + "-" + split_date[2];
+
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyyhh:mm");
+
+        Calendar c = Calendar.getInstance();
+        try {
+            c.setTime(format.parse(date + m_time));
+        }catch (ParseException e){e.printStackTrace();}
+
+        return c;
+    }
+
     @Override
     public String toString()
     {
@@ -71,5 +122,4 @@ public class Visit {
     private String m_date;
     private String m_location;
     private String m_doctor;
-    private ArrayList<Prescription> m_prescriptions = new ArrayList<>();
 }
