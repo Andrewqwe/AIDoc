@@ -60,7 +60,7 @@ public class PrescriptionActivity extends AppCompatActivity
         image_view = (ImageView)findViewById(R.id.prescription_imageView);
 
         Database.Initialize(true);
-        DatabaseReference ref = Database.SetLocation("prescription_entries");
+        DatabaseReference ref = Database.SetLocation(Database.getPrescriptionEntriesPath());
         Query q = ref.orderByChild("prescriptionUid").equalTo(prescription_uid);
         q.addChildEventListener(new ChildEventListener() {
             @Override

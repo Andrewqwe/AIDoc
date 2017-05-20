@@ -101,7 +101,7 @@ public class VisitsActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {}
         };
 
-        Database.SetLocation("users/" + Database.getCurrentUid() + "/visits").addChildEventListener(mChildEventListener);
+        Database.SetLocation(Database.getVisitsPath()).addChildEventListener(mChildEventListener);
 
         //tworzymy m_visits_adapter i przypisujemy go do listview zeby wyswietlac wizyty
         m_visits_adapter = new ArrayAdapter<Visit>(this, android.R.layout.simple_list_item_1, m_visits);

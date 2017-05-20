@@ -50,7 +50,7 @@ public class VisitActivity extends AppCompatActivity {
         //tworzymy listenera, ktory dodaje do listview wszystkie recepty
         //dotyczace danej wizyty
         Database.Initialize(true);
-        DatabaseReference ref = Database.SetLocation("prescriptions");
+        DatabaseReference ref = Database.SetLocation(Database.getPrescriptionsPath());
         Query q = ref.orderByChild("visitUid").equalTo(visit_uid);
         q.addChildEventListener(new ChildEventListener() {
             @Override
