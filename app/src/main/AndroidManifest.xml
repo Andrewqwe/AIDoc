@@ -30,7 +30,7 @@
         <activity
                 android:name=".MainActivity"
                 android:label="@string/app_name"
-                android:theme="@style/AppTheme.NoActionBar">
+                android:theme="@style/GreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -67,8 +67,7 @@
         <activity
                 android:name=".userProfile.UserProfileView"
                 android:label="@string/title_activity_user_profile_view"
-                android:parentActivityName=".MainActivity"
-                android:theme="@style/AppTheme.NoActionBar">
+                android:parentActivityName=".MainActivity">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="com.damian.aldoc.MainActivity"/>
@@ -82,8 +81,7 @@
         <activity
             android:name=".userProfile.UserProfileEditActivity"
             android:label="@string/title_activity_user_profile_edit"
-            android:parentActivityName=".userProfile.UserProfileView"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:parentActivityName=".userProfile.UserProfileView">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.damian.aldoc.userProfile.UserProfileView" />

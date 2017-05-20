@@ -28,6 +28,8 @@
         <item name="android:textColor">@color/material_gray_900</item>
         <item name="android:textColorPrimary">@color/material_deep_purple_50</item>
         <item name="colorButtonNormal">@color/material_green_500</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
 </resources>
