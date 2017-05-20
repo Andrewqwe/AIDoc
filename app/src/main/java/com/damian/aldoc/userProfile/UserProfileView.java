@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.damian.aldoc.Database;
 import com.damian.aldoc.R;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -95,14 +96,7 @@ public class UserProfileView extends AppCompatActivity {
                 }
             };
             ref.addListenerForSingleValueEvent(postListener);
-            final StorageReference mStorage = FirebaseStorage.getInstance().getReference();
-            mStorage.child("images/testImage.jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
-                    Picasso.with(getApplicationContext()).load(uri).centerCrop().resize(image_view.getMeasuredWidth(), image_view.getMeasuredHeight()).into(image_view);
-                }
-            });
-
+            Glide.with(this).load(Database.GetUserImage()).into(image_view);
         }
 
         this.myFab = (FloatingActionButton) findViewById(R.id.myFloatingActionButton);
