@@ -2,6 +2,7 @@ package com.damian.aldoc;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -37,8 +38,7 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
 
-
-
+    private boolean isAlreadyLoggedIn = false;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,8 +47,6 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
         Database.Initialize(true);
         //Initialize Firebase components
         mFirebaseAuth = FirebaseAuth.getInstance();
-
-
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -77,34 +75,50 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null){
-                    //signed in
-                    Database.SendUserInfoToDatabase();
-                    Toast.makeText(MainActivity.this, "A co to właściwie robisz? - Bezimienny", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    //signed out
-                    List<AuthUI.IdpConfig> providers = Arrays.asList(
-                            new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
-                           // new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build(),
-                            new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()
-                    );
 
-                    startActivityForResult(
-                            AuthUI.getInstance()
-                                    .createSignInIntentBuilder()
-                                    .setIsSmartLockEnabled(false)
-                                    .setTheme(R.style.GreenTheme)
-                                    .setLogo(R.drawable.logo)
-                                    .setProviders(providers)
-                                    .build(),
-                            RC_SIGN_IN);
+                if (isAlreadyLoggedIn == false) {
+                    FirebaseUser user = firebaseAuth.getCurrentUser();
+                    if (user != null) {
+                        //signed in
+                        Database.SendUserInfoToDatabase();
+                        Database.setCurrentUid(Database.GetUserUID());
+                        isAlreadyLoggedIn = true;
+                    } else {
+                        //signed out
+                        List<AuthUI.IdpConfig> providers = Arrays.asList(
+                                new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                                // new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build(),
+                                new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()
+                        );
+
+                        startActivityForResult(
+                                AuthUI.getInstance()
+                                        .createSignInIntentBuilder()
+                                        .setIsSmartLockEnabled(false)
+                                        .setTheme(R.style.GreenTheme)
+                                        .setLogo(R.drawable.logo)
+                                        .setProviders(providers)
+                                        .build(),
+                                RC_SIGN_IN);
+                    }
                 }
             }
 
         };
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        if(resultCode == AppCompatActivity.RESULT_OK)
+        {
+            if(requestCode == RC_SIGN_IN)
+            {
+                Database.setCurrentUid(Database.GetUserUID());
+                isAlreadyLoggedIn = true;
+            }
+        }
     }
 
     @Override

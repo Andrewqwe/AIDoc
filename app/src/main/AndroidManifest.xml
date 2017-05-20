@@ -17,7 +17,7 @@
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
             android:supportsRtl="true"
-            android:theme="@style/GreenTheme">
+            android:theme="@style/AppTheme">
         <provider
                 android:name="android.support.v4.content.FileProvider"
                 android:authorities="com.damian.aldoc.fileprovider"
@@ -30,7 +30,7 @@
         <activity
                 android:name=".MainActivity"
                 android:label="@string/app_name"
-                android:theme="@style/GreenTheme">
+                android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -62,7 +62,6 @@
         <activity
                 android:name=".Diseases0Activity"
                 android:windowSoftInputMode="stateHidden|adjustPan"
-                android:theme="@style/AppTheme.NoActionBar"
                 android:label="Dziennik chorób"/>
         <activity
                 android:name=".userProfile.UserProfileView"
@@ -85,7 +84,7 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.damian.aldoc.userProfile.UserProfileView" />
-        </activity>
-    </application>
+</activity>
+        </application>
 
 </manifest>

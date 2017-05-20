@@ -60,6 +60,18 @@ public class Database {
     static private DatabaseReference mDatabaseReference;
     static private ChildEventListener mChildEventListener;
 
+    static private String mCurrentUid;
+
+    public static void setCurrentUid(String uid)
+    {
+        mCurrentUid = uid;
+    }
+
+    public static String getCurrentUid()
+    {
+        return mCurrentUid;
+    }
+
     public static void Initialize(boolean persistence) {
         if (mDatabase == null){
             mDatabase = FirebaseDatabase.getInstance();
@@ -92,7 +104,7 @@ public class Database {
      */
     static public void SendObjectVisitToDatabase(Object object) {
         Initialize(true);
-        SetLocation("visits");
+        SetLocation("users/" + mCurrentUid + "/visits");
         mDatabaseReference.push().setValue(object);
     }
 
@@ -281,7 +293,7 @@ public class Database {
      */
     static public void DeleteVisitFromDatabase(String uid){
         Initialize(true);
-        DatabaseReference ref = SetLocation("visits");
+        DatabaseReference ref = SetLocation("users/" + mCurrentUid + "/visits");
         ref.child(uid).removeValue();
     }
 
@@ -357,7 +369,7 @@ public class Database {
 
     static public void UpdateVisitInDatabase(Visit visit, String uid) {
         Initialize(true);
-        SetLocation("visits");
+        SetLocation("users/" + mCurrentUid + "/visits");
         mDatabaseReference.child(uid).setValue(visit);
     }
 
