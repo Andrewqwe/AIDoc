@@ -14,9 +14,11 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.MultiAutoCompleteTextView;
+
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,9 +35,10 @@ public class Diseases0Tab2 extends Fragment {
 
     //Zmienne pomocnicze do inicjowania pól z XML'a
     private ListView list;
-    private EditText search;
+    private AutoCompleteTextView actv;
     //Adapter, lista i listener do posługiwania się chorobami
-    private ArrayAdapter<Disease> adapter;
+    private ArrayAdapter<Disease> adapter1;
+    private ArrayAdapter<String> adapter2;
     private List<Disease> diseasesList = new ArrayList<>();
     private ChildEventListener dChildEventListener;
     //Zmienne pomocnicze
@@ -127,8 +130,8 @@ public class Diseases0Tab2 extends Fragment {
             @Override
             public void onClick(View v)
             {
-                search = (EditText) getActivity().findViewById(R.id.editTextDisease);
-                disease = search.getText().toString();
+                actv = (AutoCompleteTextView) getActivity().findViewById(R.id.actvDisease);
+                disease = actv.getText().toString();
                 //Jeśli editText był pusty informujemy o tym i nic nie wysyłamy do bazy
                 if (disease.length() == 0){
                     MyDialogFragment3 dialog3 = MyDialogFragment3.newInstance();
@@ -138,7 +141,7 @@ public class Diseases0Tab2 extends Fragment {
                     Disease d = new Disease(disease);
                     Database.SendObjectToDatabase("diseases", d);
                     //Czyścimy editText
-                    search.setText("");
+                    actv.setText("");
                 }
                 //Chowamy klawiaturę po kliknięciu przycisku
                 InputMethodManager inputManager = (InputMethodManager)
@@ -163,7 +166,7 @@ public class Diseases0Tab2 extends Fragment {
                 Disease disease = dataSnapshot.getValue(Disease.class);
                 disease.setDid(dataSnapshot.getKey());
                 diseasesList.add(disease);
-                adapter.notifyDataSetChanged();
+                adapter1.notifyDataSetChanged();
             }
 
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
@@ -175,7 +178,7 @@ public class Diseases0Tab2 extends Fragment {
                     if(diseasesList.get(i).getDid().equals(did))
                     {
                         diseasesList.remove(i);
-                        adapter.notifyDataSetChanged();
+                        adapter1.notifyDataSetChanged();
                        break;
                     }
                 }
@@ -186,9 +189,16 @@ public class Diseases0Tab2 extends Fragment {
         //Przechodzimy do chorób w bazie i ustawiamy utworzonego wcześniej listenera
         Database.SetLocation("diseases").addChildEventListener(dChildEventListener);
         //Tworzymy adapter i przypisujemy go do listview żeby wyswietlac choroby
-        adapter = new ArrayAdapter<Disease>(getActivity(), android.R.layout.simple_list_item_1, diseasesList);
+        adapter1 = new ArrayAdapter<Disease>(getActivity(), android.R.layout.simple_list_item_1, diseasesList);
         list = (ListView)getActivity().findViewById(R.id.listDiseases);
-        list.setAdapter(adapter);
+        list.setAdapter(adapter1);
+
+        //Tworzymy tablicę stringów i przypisujemy jej listę chorób z pliku medicines.xml
+        String[] dList = getResources().getStringArray(R.array.diseases_array);
+        //Wypełniamy adapter i przypisujemy go do pola do wpisywania przyjętych leków aby domyślał się o jakie leki nam chodzi
+        adapter2 = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_dropdown_item_1line, dList);
+        actv = (AutoCompleteTextView) getActivity().findViewById(R.id.actvDisease);
+        actv.setAdapter(adapter2);
 
         //Ustawiamy listenera wykrywającego naciśnięcie jednego z elementów listy i wywołującego odpowiednią metodę
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
