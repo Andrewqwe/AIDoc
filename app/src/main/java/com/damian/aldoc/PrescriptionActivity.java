@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -197,6 +199,8 @@ public class PrescriptionActivity extends AppCompatActivity
                 });
 
                 Dialog edit_dialog = alert_edit.create();
+
+                edit_dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 edit_dialog.show();
                 break;
         }
@@ -239,6 +243,7 @@ public class PrescriptionActivity extends AppCompatActivity
         });
 
         Dialog dialog = alertBuilder.create();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#1A000000")));
         dialog.show();
     }
 
