@@ -75,7 +75,6 @@ public class UserProfileDeleteRowDialogClass extends Dialog implements
                 HashMap<String,Object> temp = new HashMap<>();
                 temp.put(database_key,null);
                 ref.updateChildren(temp);
-                UserProfileEditActivity.notifyAdapter();
             }
                 break;
             case R.id.User_profile_delete_row_button2:

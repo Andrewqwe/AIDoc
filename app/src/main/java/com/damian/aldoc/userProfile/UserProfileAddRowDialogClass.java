@@ -82,7 +82,6 @@ public class UserProfileAddRowDialogClass extends Dialog implements
                 HashMap<String,Object> temp = new HashMap<>();
                 temp.put(database_key,imput.getText().toString());
                 ref.updateChildren(temp);
-                UserProfileEditActivity.notifyAdapter();
             }
                 break;
             case R.id.User_profile_add_button2:

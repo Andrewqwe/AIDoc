@@ -1,5 +1,6 @@
 package com.damian.aldoc.userProfile;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -28,8 +29,8 @@ import java.util.Map;
 public class UserProfileEditActivity extends AppCompatActivity {
     private ListView listView;
     private ImageView image_view;
-    private ArrayList<UserProfileEditListItem> items;
-    private static UserProfileEditListAdapter adapter;
+    private  ArrayList<UserProfileEditListItem> items;
+    private UserProfileEditListAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +59,7 @@ public class UserProfileEditActivity extends AppCompatActivity {
             Database.Initialize(true);
             DatabaseReference ref = Database.SetLocation("users/" + a[2]);
             setName(a[0]);
-            ValueEventListener postListener = new ValueEventListener() {
+            /*ValueEventListener postListener = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     Map<String, Object> objectMap = (HashMap<String, Object>) dataSnapshot.getValue();
@@ -77,6 +78,30 @@ public class UserProfileEditActivity extends AppCompatActivity {
                 }
             };
             ref.addListenerForSingleValueEvent(postListener);
+            */
+
+            ref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    //TODO: Rozwiazanie bardzo tymczasowe, nie znalazlem lepszego sposobu na odswierzanie
+                    if(!items.isEmpty()){refresh();}
+                    else {
+                        Map<String, Object> objectMap = (HashMap<String, Object>) dataSnapshot.getValue();
+                        if (objectMap != null) {
+                            for (String str : arr) {
+                                String temp[] = str.split("//");
+                                String value = String.valueOf(objectMap.get(temp[0]));
+                                addValue(temp[1], value, temp[0], temp[2]); // tlumaczenie, wartosc, pytany klucz
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
 
             final StorageReference mStorage = FirebaseStorage.getInstance().getReference();
             mStorage.child("images/testImage.jpg").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -101,15 +126,16 @@ public class UserProfileEditActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 
-    public static void notifyAdapter() {
-        if (adapter != null) {
-            adapter.notifyDataSetChanged();
-        }
-    }
-
     private void setName(String name)
     {
         TextView textView = (TextView) findViewById(R.id.edit_profile_full_name);
         textView.setText(name);
+    }
+
+    public void refresh()  //metoda tymczasowa do odswierzania profilu uzytkownika po zmianie danego pola
+    {
+        Intent refresh = new Intent(this, UserProfileEditActivity.class);
+        startActivity(refresh);
+        this.finish(); //
     }
 }
