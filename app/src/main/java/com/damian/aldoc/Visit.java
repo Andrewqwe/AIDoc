@@ -2,7 +2,6 @@ package com.damian.aldoc;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 
@@ -22,7 +21,7 @@ public class Visit {
     {
         @Override
         public int compare(Visit o1, Visit o2) {
-            return  o1.getCalendar().before(o2.getCalendar()) ? 1 : -1;
+            return  o1.createCalendar().before(o2.createCalendar()) ? 1 : -1;
         }
     }
 
@@ -88,7 +87,7 @@ public class Visit {
 
     public String getUid() { return m_uid; }
 
-    public Calendar getCalendar()
+    public Calendar createCalendar()
     {
         String date = m_date;
         String[] split_date = date.split("-");
