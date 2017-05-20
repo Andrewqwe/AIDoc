@@ -3,6 +3,8 @@ package com.damian.aldoc;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.provider.ContactsContract;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -48,7 +50,7 @@ public class VisitActivity extends AppCompatActivity {
         //tworzymy listenera, ktory dodaje do listview wszystkie recepty
         //dotyczace danej wizyty
         Database.Initialize(true);
-        DatabaseReference ref = Database.SetLocation("prescriptions");
+        DatabaseReference ref = Database.SetLocation(Database.getPrescriptionsPath());
         Query q = ref.orderByChild("visitUid").equalTo(visit_uid);
         q.addChildEventListener(new ChildEventListener() {
             @Override
@@ -170,7 +172,6 @@ public class VisitActivity extends AppCompatActivity {
 
                 final EditText et_prescription = (EditText)view.findViewById(R.id.textPrescriptionName);
                 et_prescription.setText(p.getName());
-                //TODO:dodac zaznaczenie tekstu i wlaczenie pola tekstowego?
 
                 alertBuilder.setCancelable(true).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
@@ -188,6 +189,7 @@ public class VisitActivity extends AppCompatActivity {
                 });
 
                 Dialog dialog = alertBuilder.create();
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 dialog.show();
                 break;
         }
@@ -221,6 +223,7 @@ public class VisitActivity extends AppCompatActivity {
         });
 
         Dialog dialog = alertBuilder.create();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
     }
 }

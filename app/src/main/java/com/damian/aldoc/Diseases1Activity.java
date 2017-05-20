@@ -34,11 +34,13 @@ public class Diseases1Activity extends AppCompatActivity {
     //Adaptery, lista i listener do posługiwania się chorobami i lekami
     private ArrayAdapter<Disease> adapter1;
     private ArrayAdapter<String> adapter2;
+    private ArrayAdapter<String> adapter3;
     private List<Disease> diseasesList = new ArrayList<>();
     private ChildEventListener dChildEventListener;
     //Zmienne pomocnicze
     private String nid;
-    private String dcategory;
+    private String dcategory, mString;
+    private int mSpinn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,15 +59,15 @@ public class Diseases1Activity extends AppCompatActivity {
         action = getIntent().getIntExtra("action", -1);
         //Inicjumemy zmienną pomocniczą nieznaczącą wartością
         dcategory = "Brak";
-
+        mSpinn = 0;
         //Jeśli edytujemy pobieramy dane z poprzedniej aktywności i inicjujemy nimi pola obecnej aktywności
         if(action == EDIT) {
             String[] note_table = getIntent().getStringArrayExtra("note");
 
             nid = note_table[0];
 
-            et = (EditText) findViewById(R.id.editTextMood);
-            et.setText(note_table[2]);
+            mString = note_table[2];
+            mSpinn = 1;
 
             et = (EditText) findViewById(R.id.editTextSymptoms);
             et.setText(note_table[3]);
@@ -85,6 +87,7 @@ public class Diseases1Activity extends AppCompatActivity {
             //Jeśli dodajemy inicjujemy pierwsze element listy wartością braku wyboru
             Disease disease = new Disease("--wybierz--");
             diseasesList.add(disease);
+            mSpinn = 0;
         }
         /*Jeśli dodana na wstępie choroba jest różna od "Inne", dodajemy takiego stringa do listy,
           ponieważ nie przechowujemy tego go w bazie*/
@@ -127,6 +130,25 @@ public class Diseases1Activity extends AppCompatActivity {
         mactv.setAdapter(adapter2);
         //Separujemy leki przecinkiem i spacją
         mactv.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
+
+        //Tworzymy tablicę stringów, wypełniamy nią adapter i przypisujemy go do spinnera żeby podpowiadać samopoczucie
+        String[] moodList = new String[]{"--wybierz--", "Bardzo dobre", "Dobre", "Neutralne", "Złe"};
+        //Jeśli edytujemy usuwamy z tablicy samopoczucie z danej notatki i wsrawiamy je na przód zastępując "--wybierz--"
+        if(mSpinn == 1) {
+            int i = 0;
+            while (!mString.equals(moodList[i])) i++;
+            moodList[0] = mString;
+            while (i < 4) {
+                moodList[i] = moodList[i + 1];
+                i++;
+            }
+            String[] mList = new String[]{moodList[0], moodList[1], moodList[2], moodList[3]};
+            adapter3 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, mList);
+        }
+        else adapter3 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, moodList);
+        sp = (Spinner) findViewById(R.id.spinnerMood);
+        adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        sp.setAdapter(adapter3);
         activity = this;
     }
 
@@ -147,8 +169,8 @@ public class Diseases1Activity extends AppCompatActivity {
         tv = (TextView)findViewById(R.id.textViewDateTime);
         note_table[1] = tv.getText().toString();
 
-        et = (EditText)findViewById(R.id.editTextMood);
-        note_table[2] = et.getText().toString();
+        sp = (Spinner) findViewById(R.id.spinnerMood);
+        note_table[2] = sp.getSelectedItem().toString();
 
         et = (EditText)findViewById(R.id.editTextSymptoms);
         note_table[3] = et.getText().toString();
@@ -163,7 +185,7 @@ public class Diseases1Activity extends AppCompatActivity {
         note_table[6] = sp.getSelectedItem().toString();
 
         //Jeśli choroba jakiej dotyczy notatka nie została wybrana wyświetlamy odpowiednie okno dialogowe i nic nie wykonujemy
-        if(note_table[6].equals("--wybierz--")){
+        if(note_table[6].equals("--wybierz--") || note_table[2].equals("--wybierz--") || note_table[2].equals("")){
             showDialog(0);
         }
         //W przeciwnym razie tworzymy uwtworzoną notatkę i wysyłamy ją do bazy
@@ -181,7 +203,7 @@ public class Diseases1Activity extends AppCompatActivity {
     protected Dialog onCreateDialog(int id) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         //dialogBuilder.setTitle("Usuwanie notatki");
-        dialogBuilder.setMessage("Wybierz chorobę jakiej dotyczy notatka!");
+        dialogBuilder.setMessage("Zarówno samopoczucie jak i choroba jakiej dotyczy notatka muszą być wybrane!");
         //dialogBuilder.setCancelable(false);
         dialogBuilder.setNegativeButton("Rozumiem", new Dialog.OnClickListener() {
             @Override

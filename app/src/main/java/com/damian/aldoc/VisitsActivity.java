@@ -3,6 +3,8 @@ package com.damian.aldoc;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -99,7 +101,7 @@ public class VisitsActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {}
         };
 
-        Database.SetLocation("visits").addChildEventListener(mChildEventListener);
+        Database.SetLocation(Database.getVisitsPath()).addChildEventListener(mChildEventListener);
 
         //tworzymy m_visits_adapter i przypisujemy go do listview zeby wyswietlac wizyty
         m_visits_adapter = new ArrayAdapter<Visit>(this, android.R.layout.simple_list_item_1, m_visits);

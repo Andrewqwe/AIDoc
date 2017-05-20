@@ -60,6 +60,41 @@ public class Database {
     static private DatabaseReference mDatabaseReference;
     static private ChildEventListener mChildEventListener;
 
+    static private String mCurrentUid;
+
+    /*nazwy folderow z danymi w bazie*/
+    static final private String visits_dir = "visits";
+    static final private String prescriptions_dir = "prescriptions";
+    static final private String prescriptionEntries_dir = "prescription_entries";
+    static final private String notes_dir = "notes";
+    static final private String diseases_dir = "diseases";
+    static final private String users_dir = "users";
+
+    /*funkcje do zwracania nazw katalogow w bazie danych*/
+    public static String getVisitsDirName() { return visits_dir; }
+    public static String getPrescriptionsDirName() { return prescriptions_dir; }
+    public static String getPrescriptionEntriesDirName() { return prescriptionEntries_dir; }
+    public static String getNotesDirName() { return notes_dir; }
+    public static String getDiseasesDirName() { return diseases_dir; }
+    public static String getUsersDirName() { return users_dir; }
+
+    /*funkcje do zwracania sciezek do katalogow uzytkownikow w bazie danych*/
+    public static String getVisitsPath() { return users_dir + "/" + mCurrentUid + "/" + visits_dir; }
+    public static String getPrescriptionsPath() { return users_dir + "/" + mCurrentUid + "/" + prescriptions_dir; }
+    public static String getPrescriptionEntriesPath() { return users_dir + "/" + mCurrentUid + "/" + prescriptionEntries_dir; }
+    public static String getNotesPath() { return users_dir + "/" + mCurrentUid + "/" + notes_dir; }
+    public static String getDiseasesPath() { return users_dir + "/" + mCurrentUid + "/" + diseases_dir; }
+
+    public static void setCurrentUid(String uid)
+    {
+        mCurrentUid = uid;
+    }
+
+    public static String getCurrentUid()
+    {
+        return mCurrentUid;
+    }
+
     public static void Initialize(boolean persistence) {
         if (mDatabase == null){
             mDatabase = FirebaseDatabase.getInstance();
@@ -92,7 +127,7 @@ public class Database {
      */
     static public void SendObjectVisitToDatabase(Object object) {
         Initialize(true);
-        SetLocation("visits");
+        SetLocation(getVisitsPath());
         mDatabaseReference.push().setValue(object);
     }
 
@@ -102,7 +137,7 @@ public class Database {
      */
     static public void SendObjectPrescriptionToDatabase(Object object) {
         Initialize(true);
-        SetLocation("prescriptions");
+        SetLocation(getPrescriptionsPath());
         mDatabaseReference.push().setValue(object);
     }
 
@@ -112,7 +147,7 @@ public class Database {
      */
     static public void SendObjectPrescriptionEntryToDatabase(Object object) {
         Initialize(true);
-        SetLocation("prescription_entries");
+        SetLocation(getPrescriptionEntriesPath());
         mDatabaseReference.push().setValue(object);
     }
 
@@ -122,7 +157,7 @@ public class Database {
      */
     static public void SendObjectNotesToDatabase(Object object) {
         Initialize(true);
-        SetLocation("notes");
+        SetLocation(getNotesPath());
         mDatabaseReference.push().setValue(object);
     }
 
@@ -190,7 +225,7 @@ public class Database {
      */
     static public void SendUserInfoToDatabase() {
         Initialize(true);
-       DatabaseReference users = SetLocation("users");
+       DatabaseReference users = SetLocation(users_dir);
         users.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -218,7 +253,7 @@ public class Database {
 
     static public void SendUserPeselToDatabase(String pesel){
         Initialize(true);
-        SetLocation("users");
+        SetLocation(users_dir);
         if(pesel != null)
         mDatabaseReference.child(GetUserUID()).child("Pesel").setValue(pesel);
     }
@@ -229,7 +264,7 @@ public class Database {
      */
     static public void SendUserPhoneNumberToDatabase(String phone){
         Initialize(true);
-        SetLocation("users");
+        SetLocation(users_dir);
         if(phone != null)
         mDatabaseReference.child(GetUserUID()).child("phone").setValue(phone);
     }
@@ -252,7 +287,7 @@ public class Database {
                 Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
             }
         };
-        SetLocation("visits").addChildEventListener(mChildEventListener);
+        SetLocation(getVisitsPath()).addChildEventListener(mChildEventListener);
     }
 
     static private void ReadProfileDetails(){
@@ -281,7 +316,7 @@ public class Database {
      */
     static public void DeleteVisitFromDatabase(String uid){
         Initialize(true);
-        DatabaseReference ref = SetLocation("visits");
+        DatabaseReference ref = SetLocation(getVisitsPath());
         ref.child(uid).removeValue();
     }
 
@@ -291,14 +326,14 @@ public class Database {
      */
     static public void DeletePrescriptionFromDatabase(String uid){
         Initialize(true);
-        DatabaseReference ref = SetLocation("prescriptions");
+        DatabaseReference ref = SetLocation(getPrescriptionsPath());
         ref.child(uid).removeValue();
     }
 
 
     static public void DeletePrescriptionEntryFromDatabase(String uid){
         Initialize(true);
-        DatabaseReference ref = SetLocation("prescription_entries");
+        DatabaseReference ref = SetLocation(getPrescriptionEntriesPath());
         ref.child(uid).removeValue();
     }
 
@@ -309,13 +344,13 @@ public class Database {
 
     static public void DeleteNoteFromDatabase(String uid){
         Initialize(true);
-        DatabaseReference ref = SetLocation("notes");
+        DatabaseReference ref = SetLocation(getNotesPath());
         ref.child(uid).removeValue();
     }
 
     static public void DeleteDiseaseFromDatabase(String uid){
         Initialize(true);
-        DatabaseReference ref = SetLocation("diseases");
+        DatabaseReference ref = SetLocation(getDiseasesPath());
         ref.child(uid).removeValue();
     }
     /**
@@ -328,7 +363,7 @@ public class Database {
      */
     static public void GetVisitByValueFromDatabase(String parametrName, String value){
         Initialize(true);
-        DatabaseReference ref = SetLocation("visits");
+        DatabaseReference ref = SetLocation(getVisitsPath());
         Query aa= ref.orderByChild(parametrName).equalTo(value);
         aa.addChildEventListener(new ChildEventListener() {
             @Override
@@ -357,25 +392,25 @@ public class Database {
 
     static public void UpdateVisitInDatabase(Visit visit, String uid) {
         Initialize(true);
-        SetLocation("visits");
+        SetLocation(getVisitsPath());
         mDatabaseReference.child(uid).setValue(visit);
     }
 
     static public void UpdatePrescriptionInDatabase(Prescription prescription, String uid) {
         Initialize(true);
-        SetLocation("prescriptions");
+        SetLocation(getPrescriptionsPath());
         mDatabaseReference.child(uid).setValue(prescription);
     }
 
     static public void UpdatePrescriptionEntryInDatabase(PrescriptionEntry prescription_entry, String uid) {
         Initialize(true);
-        SetLocation("prescription_entries");
+        SetLocation(getPrescriptionEntriesPath());
         mDatabaseReference.child(uid).setValue(prescription_entry);
     }
 
     static public void UpdateNoteInDatabase(Note note, String uid) {
         Initialize(true);
-        SetLocation("notes");
+        SetLocation(getNotesPath());
         mDatabaseReference.child(uid).setValue(note);
     }
     /**
@@ -398,7 +433,7 @@ public class Database {
         System.out.println(value);
         System.out.println("--------------------------------------------------");
         Initialize(true);
-        SetLocation("prescriptions");
+        SetLocation(getPrescriptionsPath());
         mDatabaseReference.child(uid).child("photo").setValue(value.toString());
     }
 

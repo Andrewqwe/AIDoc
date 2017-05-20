@@ -32,7 +32,7 @@ public class CalendarActivity extends AppCompatActivity {
     private ListView list_view;
     private ArrayAdapter<Visit> adapter;
     private List<Visit> visits = new ArrayList<>();
-    private HashMap<String, Visit> visitsHashMap = new HashMap<>();
+    private HashMap<String, ArrayList<Visit>> visitsHashMap = new HashMap<>();
 
     // Firebase instance variables
     private ChildEventListener mChildEventListener;
@@ -59,6 +59,7 @@ public class CalendarActivity extends AppCompatActivity {
             args.putBoolean(CaldroidFragment.ENABLE_SWIPE, true);
             args.putBoolean(CaldroidFragment.SIX_WEEKS_IN_CALENDAR, true);
             args.putInt(CaldroidFragment.START_DAY_OF_WEEK, CaldroidFragment.MONDAY);
+            args.putInt(CaldroidFragment.THEME_RESOURCE, com.caldroid.R.style.CaldroidDefaultDark);
             caldroidFragment.setArguments(args);
         }
 
@@ -78,8 +79,15 @@ public class CalendarActivity extends AppCompatActivity {
                 Date data = getDateFromVisit(visit);
                 caldroidFragment.setBackgroundDrawableForDate(ResourcesCompat.getDrawable(getResources(), R.drawable.event, null), data);
                 caldroidFragment.refreshView();
-                visitsHashMap.put(getDateAsString(data), visit);
-
+                if (visitsHashMap.containsKey(getDateAsString(data))) {
+                    ArrayList<Visit> visitArrayListHelp = visitsHashMap.get(getDateAsString(data));
+                    visitArrayListHelp.add(visit);
+                }
+                else {
+                    ArrayList<Visit> visitArrayListHelp = new ArrayList<>();
+                    visitArrayListHelp.add(visit);
+                    visitsHashMap.put(getDateAsString(data), visitArrayListHelp);
+                }
 
                 Calendar cal = Calendar.getInstance();
                 Date date = cal.getTime();
@@ -100,7 +108,15 @@ public class CalendarActivity extends AppCompatActivity {
                         data = getDateFromVisit(visit);
                         caldroidFragment.setBackgroundDrawableForDate(ResourcesCompat.getDrawable(getResources(), R.drawable.event, null), data);
                         caldroidFragment.refreshView();
-                        visitsHashMap.put(getDateAsString(data), visit);
+                        if (visitsHashMap.containsKey(getDateAsString(data))) {
+                            ArrayList<Visit> visitArrayListHelp = visitsHashMap.get(getDateAsString(data));
+                            visitArrayListHelp.add(visit);
+                        }
+                        else {
+                            ArrayList<Visit> visitArrayListHelp = new ArrayList<>();
+                            visitArrayListHelp.add(visit);
+                            visitsHashMap.put(getDateAsString(data), visitArrayListHelp);
+                        }
 
                         Calendar cal = Calendar.getInstance();
                         Date date = cal.getTime();
@@ -136,7 +152,7 @@ public class CalendarActivity extends AppCompatActivity {
             public void onSelectDate(Date date, View view) {
                 visits.clear();
                 if (visitsHashMap.containsKey(getDateAsString(date))) {
-                    visits.add(visitsHashMap.get(getDateAsString(date)));
+                    visits.addAll(visitsHashMap.get(getDateAsString(date)));
                 }
                 adapter.notifyDataSetChanged();
             }
@@ -203,10 +219,10 @@ public class CalendarActivity extends AppCompatActivity {
     }
 
     private void checkVisitForDate(Date date) {
+        visits.clear();
         if (visitsHashMap.containsKey(getDateAsString(date))) {
-            visits.clear();
-            visits.add(visitsHashMap.get(getDateAsString(date)));
-            adapter.notifyDataSetChanged();
+            visits.addAll(visitsHashMap.get(getDateAsString(date)));
         }
+        adapter.notifyDataSetChanged();
     }
 }
