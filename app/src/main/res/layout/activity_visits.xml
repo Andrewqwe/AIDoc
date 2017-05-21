@@ -6,7 +6,7 @@
         android:id="@+id/activity_visits"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.damian.aldoc.VisitsActivity">
+        tools:context="com.damian.aldoc.visits.VisitsActivity">
 
     <TextView
             android:textSize="@dimen/edit_visit_fontsize"

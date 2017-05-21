@@ -1,16 +1,17 @@
-package com.damian.aldoc;
+package com.damian.aldoc.visits;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.provider.ContactsContract;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.*;
 import android.widget.*;
+import com.damian.aldoc.*;
+import com.damian.aldoc.R;
 import com.google.firebase.database.*;
 
 import java.util.ArrayList;
@@ -21,31 +22,41 @@ public class VisitActivity extends AppCompatActivity {
     private ListView list_view;
     private ArrayAdapter<Prescription> adapter;
     private List<Prescription> prescriptions = new ArrayList<>();
-    private String visit_uid;
+
+    private Visit m_visit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_visit);
+        setContentView(com.damian.aldoc.R.layout.activity_visit);
 
-        String[] visit_data = getIntent().getStringArrayExtra("visit");
+        final String visit_uid = getIntent().getStringExtra("visit");
 
-        //czytamy dane wizyty i wstawiamy je do pol z tekstem z opisem wizyty
+        /*czytamy wizyte z bazy (uid wizyty przekazane z poprzedniego activity)*/
+        Database.SetLocation(Database.getVisitsPath() + "/" + visit_uid).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot)
+            {
+                m_visit = (Visit)snapshot.getValue(Visit.class);
+                m_visit.setUid(visit_uid);
 
-        TextView tv = (TextView)findViewById(R.id.textViewDoctor);
-        tv.setText("Lekarz: " + visit_data[0]);
+                /*Wpisujemy do pol tekstowych dane wizyty*/
+                TextView tv = (TextView)findViewById(R.id.textViewDoctor);
+                tv.setText("Lekarz: " + m_visit.getDoctor());
 
-        tv = (TextView)findViewById(R.id.textViewLocation);
-        tv.setText("Miejsce wizyty: " + visit_data[1]);
+                tv = (TextView)findViewById(R.id.textViewLocation);
+                tv.setText("Miejsce wizyty: " + m_visit.getLocation());
 
-        tv = (TextView)findViewById(R.id.textViewDate);
-        tv.setText("Data: " + visit_data[2]);
+                tv = (TextView)findViewById(R.id.textViewDate);
+                tv.setText("Data: " + m_visit.getDate());
 
-        tv = (TextView)findViewById(R.id.textViewTime);
-        tv.setText("Godzina: " + visit_data[3]);
-
-        //czytamy uid wizyty zeby odczytac z bazy recepty dotyczace tej wizyty
-        visit_uid = visit_data[4];
+                tv = (TextView)findViewById(R.id.textViewTime);
+                tv.setText("Godzina: " + m_visit.getTime());
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
 
         //tworzymy listenera, ktory dodaje do listview wszystkie recepty
         //dotyczace danej wizyty
@@ -211,7 +222,7 @@ public class VisitActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
-                Prescription p = new Prescription(visit_uid, et_prescription.getText().toString(), null);
+                Prescription p = new Prescription(m_visit.getUid(), et_prescription.getText().toString(), null);
                 Database.SendObjectPrescriptionToDatabase(p);
             }
         });

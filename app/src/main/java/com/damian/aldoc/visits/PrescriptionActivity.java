@@ -1,4 +1,4 @@
-package com.damian.aldoc;
+package com.damian.aldoc.visits;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -17,6 +17,8 @@ import android.os.Bundle;
 import android.view.*;
 import android.widget.*;
 
+import com.damian.aldoc.*;
+import com.damian.aldoc.R;
 import com.google.firebase.database.*;
 
 import java.io.File;
@@ -31,23 +33,23 @@ import java.util.List;
 public class PrescriptionActivity extends AppCompatActivity
 {
     //sciezka do pliku ze zrobionym zdjeciem recepty
-    String m_photo_file_absolute_path;
+    private static String m_photo_file_absolute_path;
 
-    private ImageView image_view;
-    private ListView list_view;
-    private ArrayAdapter<PrescriptionEntry> adapter;
-    private List<PrescriptionEntry> prescription_entries = new ArrayList<>();
-    private String prescription_uid;
-    private String photo_database_uri;
-    private String[] med_list;
+    private static ImageView image_view;
+    private static ListView list_view;
+    private static ArrayAdapter<PrescriptionEntry> adapter;
+    private static List<PrescriptionEntry> prescription_entries = new ArrayList<>();
+    private static String prescription_uid;
+    private static String photo_database_uri;
+    private static String[] med_list;
 
-    private final int REQUEST_GALLERY = 0;
-    private final int REQUEST_CAMERA = 1;
+    private final static int REQUEST_GALLERY = 0;
+    private final static int REQUEST_CAMERA = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_prescription);
+        setContentView(com.damian.aldoc.R.layout.activity_prescription);
 
         String[] prescription_data = getIntent().getStringArrayExtra("prescription");
 
@@ -324,8 +326,8 @@ public class PrescriptionActivity extends AppCompatActivity
             else if (requestCode == REQUEST_CAMERA)
             {
                 // Ustawiamy domyslne wymiary obrazu
-                int targetW = findViewById(R.id.activity_prescription).getWidth();
-                int targetH = image_view.getHeight();
+                int targetW = 100;
+                int targetH = 100;
 
                 // Pobieramy wymiary obrazu
                 BitmapFactory.Options bmOptions = new BitmapFactory.Options();
@@ -343,7 +345,8 @@ public class PrescriptionActivity extends AppCompatActivity
 
                 prescription_bitmap = BitmapFactory.decodeFile(m_photo_file_absolute_path, bmOptions);
 
-                picture_uri = Uri.fromFile(new File(m_photo_file_absolute_path));
+               //picture_uri = Uri.fromFile(new File(m_photo_file_absolute_path));
+                picture_uri = FileProvider.getUriForFile(this, "com.damian.aldoc.fileprovider", new File(m_photo_file_absolute_path));
             }
 
             /*Jezeli bitmapa zawiera obraz to wstawiamy go do image view
