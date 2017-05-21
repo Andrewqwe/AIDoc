@@ -8,12 +8,16 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
+    <ListView
+            android:id="@+id/visits_listView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" android:paddingTop="56dp">
+    </ListView>
     <include
         layout="@layout/app_bar_main"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:visibility="visible" />
-
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="@dimen/navigation_drawer_width"

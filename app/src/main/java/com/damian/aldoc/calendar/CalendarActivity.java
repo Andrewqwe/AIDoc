@@ -220,9 +220,7 @@ public class CalendarActivity extends AppCompatActivity {
     private void visitOnClick(Visit visit)
     {
         Intent intent = new Intent(this, VisitActivity.class);
-
         intent.putExtra("visit", visit.getUid());
-
         startActivity(intent);
     }
 
