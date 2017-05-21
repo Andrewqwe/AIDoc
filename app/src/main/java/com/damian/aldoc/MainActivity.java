@@ -1,5 +1,6 @@
 package com.damian.aldoc;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,30 +13,42 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.*;
 
 
 import com.bumptech.glide.Glide;
 import com.damian.aldoc.calendar.CalendarActivity;
 import com.damian.aldoc.userProfile.UserProfileView;
+import com.damian.aldoc.visits.Visit;
+import com.damian.aldoc.visits.VisitActivity;
 import com.damian.aldoc.visits.VisitsActivity;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 
 
-import java.util.Arrays;
-import java.util.List;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
+@SuppressLint("SimpleDateFormat")
 public class MainActivity extends AppCompatActivity //34.AuthStateListener
         implements NavigationView.OnNavigationItemSelectedListener {
 
     public static final int RC_SIGN_IN = 1;
 
     //Firebase instance variables
+    private ChildEventListener mChildEventListener;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
+
+    //nadchodzące wizyty
+    private ListView listView;
+    private ArrayAdapter<Visit> visitArrayAdapter;
+    private List<Visit> visits = new ArrayList<>();
 
     private boolean isAlreadyLoggedIn = false;
 
@@ -106,6 +119,72 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
 
         };
 
+        //nadchodzące wizyty
+        mChildEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s)
+            {
+                Visit visit = dataSnapshot.getValue(Visit.class);
+                visit.setUid(dataSnapshot.getKey());
+
+                if (checkVisit(visit)) {
+                    visits.add(visit);
+                    visitArrayAdapter.notifyDataSetChanged();
+                }
+            }
+
+            public void onChildChanged(DataSnapshot dataSnapshot, String s)
+            {
+                Visit visit = dataSnapshot.getValue(Visit.class);
+                String uid = dataSnapshot.getKey();
+                visit.setUid(uid);
+
+                for(int v = 0; v < visits.size(); v++)
+                {
+                    if(visits.get(v).getUid().equals(uid))
+                    {
+                        visits.remove(v);
+                        if (checkVisit(visit)) {
+                            visits.add(visit);
+                        }
+                        visitArrayAdapter.notifyDataSetChanged();
+                        break;
+                    }
+                }
+            }
+            public void onChildRemoved(DataSnapshot dataSnapshot)
+            {
+                String uid = dataSnapshot.getKey();
+                for(int v = 0; v < visits.size(); v++)
+                {
+                    if(visits.get(v).getUid().equals(uid))
+                    {
+                        visits.remove(v);
+                        visitArrayAdapter.notifyDataSetChanged();
+                        break;
+                    }
+                }
+            }
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
+            public void onCancelled(DatabaseError databaseError) {}
+        };
+
+        Database.SetLocation(Database.getVisitsPath()).addChildEventListener(mChildEventListener);
+
+        //tworzymy visitArrayAdapter i przypisujemy go do listView zeby wyswietlac wizyty
+        visitArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, visits);
+
+        listView = (ListView)findViewById(R.id.visits_listView);
+        listView.setAdapter(visitArrayAdapter);
+        registerForContextMenu(listView);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+            {
+                visitOnClick(visits.get(position));
+            }
+        });
     }
 
     @Override
@@ -216,6 +295,41 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
         mFirebaseAuth.addAuthStateListener(mAuthStateListener);
     }
 
+    private void visitOnClick(Visit visit)
+    {
+        Intent intent = new Intent(this, VisitActivity.class);
+        intent.putExtra("visit", visit.getUid());
+        startActivity(intent);
+    }
+
+    private Date getDateFromVisit(Visit visit) {
+        String date[] = visit.getDate().split("-");
+        Calendar cal = Calendar.getInstance();
+
+        cal.set(Integer.parseInt(date[2]), Integer.parseInt(date[1]) - 1, Integer.parseInt(date[0]));
+        return cal.getTime();
+    }
+
+    private boolean checkVisit(Visit visit) {
+        ArrayList<String> dates = new ArrayList<>();
+        Calendar cal = Calendar.getInstance();
+        for (int i = 0; i < 8; i++) {
+            cal.add(Calendar.DATE, i);
+            dates.add(getDateAsString(cal.getTime()));
+        }
+
+        for (String date : dates) {
+            if (date.equals(getDateAsString(getDateFromVisit(visit)))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private String getDateAsString(Date date) {
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        return dateFormat.format(date);
+    }
 }
 
 
