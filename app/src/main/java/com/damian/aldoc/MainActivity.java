@@ -74,12 +74,12 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
         View hView = navigationView.getHeaderView(0);
         String[] details = Database.GetUserInfo();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null ){
+        if (user != null) {
             TextView nav_mail = (TextView) hView.findViewById(R.id.emailView);
             nav_mail.setText(details[1]);
             TextView nav_user = (TextView) hView.findViewById(R.id.nameView);
             nav_user.setText(details[0]);                                       // Zrobić tak żeby po rejestracji lub bezpośrednio po zalogowaniu czytalo. Nie po ponowym uruchomieniu.
-            ImageView nav_image = (ImageView)hView.findViewById(R.id.imageView);
+            ImageView nav_image = (ImageView) hView.findViewById(R.id.imageView);
             Glide.with(this).load(Database.GetUserImage()).into(nav_image);
         }
         navigationView.setNavigationItemSelectedListener(this);
@@ -89,32 +89,32 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
 
 
-                    FirebaseUser user = firebaseAuth.getCurrentUser();
-                    if (user != null) {
-                        //signed in
-                        if (isAlreadyLoggedIn == false) {
-                            Database.setCurrentUid(Database.GetUserUID());
-                            isAlreadyLoggedIn = true;
-                        }
-                    } else {
-                        //signed out
-                        List<AuthUI.IdpConfig> providers = Arrays.asList(
-                                new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
-                                // new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build(),
-                                new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()
-                        );
-
-                        startActivityForResult(
-                                AuthUI.getInstance()
-                                        .createSignInIntentBuilder()
-                                        .setIsSmartLockEnabled(false)
-                                        .setTheme(R.style.GreenTheme)
-                                        .setLogo(R.drawable.logo)
-                                        .setProviders(providers)
-                                        .build(),
-                                RC_SIGN_IN);
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    //signed in
+                    if (!isAlreadyLoggedIn) {
+                        Database.setCurrentUid(Database.GetUserUID());
+                        isAlreadyLoggedIn = true;
+                        Database.SetLocation(Database.getVisitsPath()).addChildEventListener(mChildEventListener);
                     }
+                } else {
+                    //signed out
+                    List<AuthUI.IdpConfig> providers = Arrays.asList(
+                            new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                            // new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build(),
+                            new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()
+                    );
 
+                    startActivityForResult(
+                            AuthUI.getInstance()
+                                    .createSignInIntentBuilder()
+                                    .setIsSmartLockEnabled(false)
+                                    .setTheme(R.style.GreenTheme)
+                                    .setLogo(R.drawable.logo)
+                                    .setProviders(providers)
+                                    .build(),
+                            RC_SIGN_IN);
+                }
             }
 
         };
@@ -122,8 +122,7 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
         //nadchodzące wizyty
         mChildEventListener = new ChildEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s)
-            {
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Visit visit = dataSnapshot.getValue(Visit.class);
                 visit.setUid(dataSnapshot.getKey());
 
@@ -133,16 +132,13 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
                 }
             }
 
-            public void onChildChanged(DataSnapshot dataSnapshot, String s)
-            {
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 Visit visit = dataSnapshot.getValue(Visit.class);
                 String uid = dataSnapshot.getKey();
                 visit.setUid(uid);
 
-                for(int v = 0; v < visits.size(); v++)
-                {
-                    if(visits.get(v).getUid().equals(uid))
-                    {
+                for (int v = 0; v < visits.size(); v++) {
+                    if (visits.get(v).getUid().equals(uid)) {
                         visits.remove(v);
                         if (checkVisit(visit)) {
                             visits.add(visit);
@@ -152,48 +148,44 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
                     }
                 }
             }
-            public void onChildRemoved(DataSnapshot dataSnapshot)
-            {
+
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
                 String uid = dataSnapshot.getKey();
-                for(int v = 0; v < visits.size(); v++)
-                {
-                    if(visits.get(v).getUid().equals(uid))
-                    {
+                for (int v = 0; v < visits.size(); v++) {
+                    if (visits.get(v).getUid().equals(uid)) {
                         visits.remove(v);
                         visitArrayAdapter.notifyDataSetChanged();
                         break;
                     }
                 }
             }
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
-            public void onCancelled(DatabaseError databaseError) {}
-        };
 
-        Database.SetLocation(Database.getVisitsPath()).addChildEventListener(mChildEventListener);
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        };
 
         //tworzymy visitArrayAdapter i przypisujemy go do listView zeby wyswietlac wizyty
         visitArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, visits);
 
-        listView = (ListView)findViewById(R.id.visits_listView);
+        listView = (ListView) findViewById(R.id.visits_listView);
         listView.setAdapter(visitArrayAdapter);
         registerForContextMenu(listView);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-            {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 visitOnClick(visits.get(position));
             }
         });
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        if(resultCode == AppCompatActivity.RESULT_OK)
-        {
-            if(requestCode == RC_SIGN_IN)
-            {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == AppCompatActivity.RESULT_OK) {
+            if (requestCode == RC_SIGN_IN) {
                 Database.setCurrentUid(Database.GetUserUID());
                 Database.SendUserInfoToDatabase();
                 isAlreadyLoggedIn = true;
@@ -232,9 +224,9 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
                 //Database.ModifyValueInDatabase("-KivIPsb0iuUBuOns6Bv","location","Breslav");
                 //Database.SendUserPeselToDatabase("1111");
                 //Database.DeleteVisitFromDatabase("-Kiv9bXMgN0W3SyqUksW");
-               // Database.GetVisitByValueFromDatabase("time","time");
-               // Database.UploadImageToDatabaseStorageUsingPath("/storage/emulated/0/DCIM/Camera/IMG_20170412_140913.jpg");
-             //   Database.UploadImageToDatabaseStorageUsingUriAndUpdatePrescription(Uri.parse("file:///storage/emulated/0/DCIM/Camera/IMG_20170510_135615.jpg"),"-KkMu0rK7Wpngd2Z0H51");
+                // Database.GetVisitByValueFromDatabase("time","time");
+                // Database.UploadImageToDatabaseStorageUsingPath("/storage/emulated/0/DCIM/Camera/IMG_20170412_140913.jpg");
+                //   Database.UploadImageToDatabaseStorageUsingUriAndUpdatePrescription(Uri.parse("file:///storage/emulated/0/DCIM/Camera/IMG_20170510_135615.jpg"),"-KkMu0rK7Wpngd2Z0H51");
                 //System.out.println(Database.GetUserUID());
                 //System.out.println(String.valueOf(Database.aaa));
                 //Toast.makeText(getApplicationContext(), String.valueOf(Database.aaa), Toast.LENGTH_SHORT).show();
@@ -268,11 +260,11 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
             //ale na razie wyjebane, byle tylko przechodzilo do okienka
             startActivity(intent_visits);
 
-        } else if (id == R.id.user_alerts){
+        } else if (id == R.id.user_alerts) {
             Intent intent_diseases = new Intent(this, Diseases0Activity.class);
             startActivity(intent_diseases);
 
-        } else if (id == R.id.user_settings){
+        } else if (id == R.id.user_settings) {
 
         }  //wszystkie ktore dodalem zaczynaja sie na user_ zeby bylo latwo odroznic
 
@@ -282,7 +274,7 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
     }
 
     @Override
-    protected void onPause(){
+    protected void onPause() {
         super.onPause();
         if (mAuthStateListener != null) {
             mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
@@ -290,13 +282,12 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
     }
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
         mFirebaseAuth.addAuthStateListener(mAuthStateListener);
     }
 
-    private void visitOnClick(Visit visit)
-    {
+    private void visitOnClick(Visit visit) {
         Intent intent = new Intent(this, VisitActivity.class);
         intent.putExtra("visit", visit.getUid());
         startActivity(intent);
@@ -331,7 +322,6 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
         return dateFormat.format(date);
     }
 }
-
 
 
 //TODO  2. Dodać opcję przerwania podczas rejsracji  6.Dostęp do materiałów po przynależności do grupy --- http://stackoverflow.com/questions/38246751/how-to-retrieve-data-that-matches-a-firebase-userid 7. Pomysl na baze danych (Q_Q)
