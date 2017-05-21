@@ -48,6 +48,7 @@
         <activity
                 android:name=".visits.VisitActivity"
                 android:label="Visit"
+                android:launchMode="singleTop"
                 android:parentActivityName=".visits.VisitsActivity"/>
         <activity
                 android:name=".calendar.CalendarActivity"
@@ -73,7 +74,9 @@
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="com.damian.aldoc.MainActivity"/>
         </activity>
-        <activity android:name=".visits.PrescriptionActivity" android:label="Prescription">
+        <activity
+                android:parentActivityName=".visits.VisitActivity"
+                android:name=".visits.PrescriptionActivity" android:label="Prescription">
         </activity>
         <activity
                 android:name="com.damian.aldoc.FullScreenImageActivity"

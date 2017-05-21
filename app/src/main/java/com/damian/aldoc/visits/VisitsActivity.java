@@ -3,6 +3,8 @@ package com.damian.aldoc.visits;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -122,6 +124,7 @@ public class VisitsActivity extends AppCompatActivity {
         m_filter_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, m_filters);
 
         spinner = (Spinner)findViewById(R.id.activityVisits_filterSpinner);
+
         m_filter_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(m_filter_adapter);
 

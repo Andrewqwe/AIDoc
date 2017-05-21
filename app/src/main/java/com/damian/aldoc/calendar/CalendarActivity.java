@@ -221,9 +221,7 @@ public class CalendarActivity extends AppCompatActivity {
     {
         Intent intent = new Intent(this, VisitActivity.class);
 
-        String[] visit_data = {visit.getDoctor(), visit.getLocation(), visit.getDate(), visit.getTime(), visit.getUid()};
-
-        intent.putExtra("visit", visit_data);
+        intent.putExtra("visit", visit.getUid());
 
         startActivity(intent);
     }
