@@ -3,10 +3,10 @@
 
     <item
             android:id="@+id/prescriptionMenu_changeName"
-            android:title="Change Name"
+            android:title="Zmień nazwę"
     />
     <item
             android:id="@+id/prescriptionMenu_delete"
-            android:title="Delete"
+            android:title="Usuń"
     />
 </menu>

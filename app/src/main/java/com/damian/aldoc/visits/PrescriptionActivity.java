@@ -245,7 +245,6 @@ public class PrescriptionActivity extends AppCompatActivity
         });
 
         Dialog dialog = alertBuilder.create();
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#1A000000")));
         dialog.show();
     }
 
