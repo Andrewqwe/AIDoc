@@ -4,14 +4,14 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/material_green_500</item>
         <item name="colorPrimaryDark">@color/material_green_700</item>
-        <item name="colorAccent">@color/material_purple_a700</item>
+        <item name="colorAccent">@color/aidocGreen</item>
         <item name="colorControlNormal">@color/material_green_500</item>
         <item name="colorControlActivated">@color/material_lime_a700</item>
         <item name="colorControlHighlight">@color/material_green_a200</item>
         <item name="android:windowBackground">@drawable/background</item>
         <item name="android:textColor">@color/text_aidoc</item>
         <item name="android:textColorPrimary">@color/text_aidoc</item>
-        <item name="colorButtonNormal">@color/material_green_500</item>
+        <item name="colorButtonNormal">@color/aidocButtonColor</item>
         <!--Style dla widgetow-->
         <item name="alertDialogTheme">@style/aidocAlertDialogStyle</item>
     </style>
@@ -27,17 +27,17 @@
 
     <!--Nowe domyslne style dla roznych widgetow/elementow gui-->
     <style name="alertDialogEditTextStyle" parent="@android:style/Widget.EditText">
-        <item name="android:textColor">@color/alertDialog_editTextColor</item>
+        <item name="android:textColor">@color/alertDialog_textColor</item>
     </style>
     <style name="alertDialogAutoCompleteTextViewStyle" parent="@android:style/Widget.AutoCompleteTextView">
-        <item name="android:textColor">@color/alertDialog_editTextColor</item>
+        <item name="android:textColor">@color/alertDialog_textColor</item>
     </style>
     <style name="alertDialogTextViewStyle" parent="@android:style/Widget.TextView">
-        <item name="android:textColor">@color/alertDialog_viewTextColor</item>
+        <item name="android:textColor">@color/alertDialog_textColor</item>
     </style>
 
     <style name="aidocAlertDialogStyle" parent="@android:style/Theme.Dialog">
-        <item name="android:textColor">@color/material_lime_a700</item>
+        <item name="android:textColor">@color/alertDialog_textColor</item>
         <item name="android:background">@color/alertDialog_backgroundColor</item>
         <item name="android:windowBackground">@color/alertDialog_backgroundColor</item>
         <item name="editTextStyle">@style/alertDialogEditTextStyle</item>

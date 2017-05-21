@@ -5,12 +5,13 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/User_profile_delete_row_titleText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+            style="@style/alertDialogTextViewStyle"
+            android:id="@+id/User_profile_delete_row_titleText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,6 +21,7 @@
         android:weightSum="2">
 
         <Button
+                android:background="@color/aidocButtonColor"
             android:id="@+id/User_profile_delete_row_button1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -27,6 +29,8 @@
             android:text="Usuń" />
 
         <Button
+                android:background="@color/aidocButtonColor"
+                android:layout_marginStart="10dp"
             android:id="@+id/User_profile_delete_row_button2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

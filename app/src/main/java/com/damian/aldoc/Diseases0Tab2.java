@@ -55,7 +55,7 @@ public class Diseases0Tab2 extends Fragment {
         @Override
         public Dialog onCreateDialog(final Bundle savedInstanceState) {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-            dialogBuilder.setMessage("Co zrobić?");
+            dialogBuilder.setTitle("Co zrobić?");
             dialogBuilder.setPositiveButton("Cofnij", new Dialog.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int whichButton) {
@@ -82,7 +82,7 @@ public class Diseases0Tab2 extends Fragment {
         @Override
         public Dialog onCreateDialog(final Bundle savedInstanceState) {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-            dialogBuilder.setMessage("Czy na pewno chcesz usunąć chorobę?");
+            dialogBuilder.setTitle("Czy na pewno chcesz usunąć chorobę?");
             dialogBuilder.setPositiveButton("Anuluj", new Dialog.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int whichButton) {
@@ -108,7 +108,7 @@ public class Diseases0Tab2 extends Fragment {
         @Override
         public Dialog onCreateDialog(final Bundle savedInstanceState) {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-            dialogBuilder.setMessage("Należy podać nazwę choroby!");
+            dialogBuilder.setTitle("Należy podać nazwę choroby!");
             dialogBuilder.setPositiveButton("Rozumiem", new Dialog.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int whichButton) {
