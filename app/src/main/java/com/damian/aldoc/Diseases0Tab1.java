@@ -110,7 +110,7 @@ public class Diseases0Tab1 extends Fragment {
         };
         /*Przechodzimy do notatek w bazie, segregujemy je po odpowiednio zmodyfikowanych timestampach aby pojawiały się
         na liście od najnowszych do najstarszych i ustawiamy utworzonego wcześniej listenera*/
-        Database.SetLocation("notes").orderByChild("timestamp").addChildEventListener(nChildEventListener);
+        Database.SetLocation(Database.getNotesPath()).orderByChild("timestamp").addChildEventListener(nChildEventListener);
         //Tworzymy adapter i przypisujemy go do listview żeby wyswietlac notatki
         adapter1 = new ArrayAdapter<Note>(getActivity(), android.R.layout.simple_list_item_1, notesList2);
         list = (ListView)getActivity().findViewById(R.id.listNotes);
@@ -147,7 +147,7 @@ public class Diseases0Tab1 extends Fragment {
             public void onCancelled(DatabaseError databaseError) {}
         };
         //Przechodzimy do chorób w bazie i ustawiamy utworzonego wcześniej listenera
-        Database.SetLocation("diseases").addChildEventListener(dChildEventListener);
+        Database.SetLocation(Database.getDiseasesPath()).addChildEventListener(dChildEventListener);
         //Tworzymy adapter i przypisujemy go do spinnera żeby wyswietlac choroby
         adapter2 = new ArrayAdapter<Disease>(getActivity(), android.R.layout.simple_spinner_item, diseasesList);
         Spinner spinner = (Spinner) getActivity().findViewById(R.id.spinnerDiseases);
