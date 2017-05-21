@@ -139,7 +139,7 @@ public class Diseases0Tab2 extends Fragment {
                 }
                 else {
                     Disease d = new Disease(disease);
-                    Database.SendObjectToDatabase("diseases", d);
+                    Database.SendObjectDiseasesToDatabase(d);
                     //Czyścimy editText
                     actv.setText("");
                 }
@@ -187,7 +187,7 @@ public class Diseases0Tab2 extends Fragment {
             public void onCancelled(DatabaseError databaseError) {}
         };
         //Przechodzimy do chorób w bazie i ustawiamy utworzonego wcześniej listenera
-        Database.SetLocation("diseases").addChildEventListener(dChildEventListener);
+        Database.SetLocation(Database.getDiseasesPath()).addChildEventListener(dChildEventListener);
         //Tworzymy adapter i przypisujemy go do listview żeby wyswietlac choroby
         adapter1 = new ArrayAdapter<Disease>(getActivity(), android.R.layout.simple_list_item_1, diseasesList);
         list = (ListView)getActivity().findViewById(R.id.listDiseases);

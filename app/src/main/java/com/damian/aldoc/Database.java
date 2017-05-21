@@ -157,6 +157,12 @@ public class Database {
         mDatabaseReference.push().setValue(object);
     }
 
+    static public void SendObjectDiseasesToDatabase(Object object) {
+        Initialize(true);
+        SetLocation(getDiseasesPath());
+        mDatabaseReference.push().setValue(object);
+    }
+
     /**
      * Metoda prywatna pobierająca z bazy danych dane o zalogowanym użytkowniku
      * @return Zwraca tabele stringów gdzie kolejno jest nazwa użytkownika,e-mail,UID lub pustą tabelę gdy użytkownik nie jest zalogowany

@@ -115,7 +115,7 @@ public class Diseases1Activity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {}
         };
         //Przechodzimy do chorób w bazie i ustawiamy utworzonego wcześniej listenera
-        Database.SetLocation("diseases").addChildEventListener(dChildEventListener);
+        Database.SetLocation(Database.getDiseasesPath()).addChildEventListener(dChildEventListener);
         //Wypełniamy adapter i przypisujemy go do spinnera żeby wyswietlac choroby
         adapter1 = new ArrayAdapter<Disease>(this, android.R.layout.simple_spinner_item, diseasesList);
         sp = (Spinner) findViewById(R.id.spinnerDisease);
