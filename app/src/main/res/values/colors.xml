@@ -4,14 +4,11 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
-    <!--Widgety-->
-    <color name="editText_textColor">@color/material_red_a200</color>
-    <color name="textView_textColor">@color/material_red_a200</color>
-
     <!--Dialogi-->
-    <color name="dialog_text_color">@color/material_lime_a700</color>
-    <color name="dialog_input_background">@android:color/transparent</color>
-    <color name="dialog_message_background">#e6000000</color>
+    <color name="alertDialog_textColor">@color/material_deep_purple_a200</color>
+    <color name="alertDialog_backgroundColor">@android:color/transparent</color>
+    <color name="alertDialog_editTextColor">@color/material_lime_a700</color>
+    <color name="alertDialog_viewTextColor">@color/material_purple_a700</color>
 
     <!-- Kalendarz -->
     <color name="green">#8FCC85</color>
@@ -20,6 +17,8 @@
     <color name="event_color">#ddff00</color>
 
     <!-- Text -->
+    <color name="text_aidoc">#333333</color>
+
     <color name="text_default_material_dark_primary">#ffffffff</color>
     <color name="text_default_material_light_primary">#de000000</color>
     <color name="text_default_material_dark_secondary">#b3ffffff</color>

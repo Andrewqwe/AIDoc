@@ -200,7 +200,6 @@ public class VisitActivity extends AppCompatActivity {
                 });
 
                 Dialog dialog = alertBuilder.create();
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 dialog.show();
                 break;
         }
@@ -234,7 +233,6 @@ public class VisitActivity extends AppCompatActivity {
         });
 
         Dialog dialog = alertBuilder.create();
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
     }
 }

@@ -165,9 +165,7 @@ public class VisitsActivity extends AppCompatActivity {
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
     {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_visit, menu);
+        getMenuInflater().inflate(R.menu.menu_visit, menu);
     }
 
     @Override
