@@ -203,7 +203,7 @@ public class Diseases1Activity extends AppCompatActivity {
     protected Dialog onCreateDialog(int id) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         //dialogBuilder.setTitle("Usuwanie notatki");
-        dialogBuilder.setMessage("Zarówno samopoczucie jak i choroba jakiej dotyczy notatka muszą być wybrane!");
+        dialogBuilder.setTitle("Zarówno samopoczucie jak i choroba jakiej dotyczy notatka muszą być wybrane!");
         //dialogBuilder.setCancelable(false);
         dialogBuilder.setNegativeButton("Rozumiem", new Dialog.OnClickListener() {
             @Override

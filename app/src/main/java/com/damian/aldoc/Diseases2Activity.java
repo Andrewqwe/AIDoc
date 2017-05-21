@@ -61,7 +61,7 @@ public class Diseases2Activity extends AppCompatActivity {
     //Funkcja tworzy okno dialogowe sprawdzające czy użytkownik chce usunąć notatkę. Jeśli tak - usuwa ją i opuszcza aktywność
     protected Dialog onCreateDialog(int id) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        dialogBuilder.setMessage("Czy na pewno chcesz usunąć notatkę?");
+        dialogBuilder.setTitle("Czy na pewno chcesz usunąć notatkę?");
         dialogBuilder.setPositiveButton("Anuluj", new Dialog.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int whichButton) {
