@@ -38,17 +38,17 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".VisitsActivity"
+                android:name=".visits.VisitsActivity"
                 android:label="Visits"
                 android:parentActivityName=".MainActivity"/>
         <activity
-                android:name=".EditVisitActivity"
+                android:name=".visits.EditVisitActivity"
                 android:label="Edit Visit"
                 android:parentActivityName=".MainActivity"/>
         <activity
-                android:name=".VisitActivity"
+                android:name=".visits.VisitActivity"
                 android:label="Visit"
-                android:parentActivityName=".VisitsActivity"/>
+                android:parentActivityName=".visits.VisitsActivity"/>
         <activity
                 android:name=".calendar.CalendarActivity"
                 android:label="Calendar"
@@ -73,7 +73,7 @@
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="com.damian.aldoc.MainActivity"/>
         </activity>
-        <activity android:name=".PrescriptionActivity" android:label="Prescription">
+        <activity android:name=".visits.PrescriptionActivity" android:label="Prescription">
         </activity>
         <activity
                 android:name="com.damian.aldoc.FullScreenImageActivity"

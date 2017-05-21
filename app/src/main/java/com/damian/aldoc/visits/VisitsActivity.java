@@ -1,10 +1,8 @@
-package com.damian.aldoc;
+package com.damian.aldoc.visits;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +14,8 @@ import android.widget.*;
 
 
 //Firebase
+import com.damian.aldoc.Database;
+import com.damian.aldoc.R;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -207,6 +207,7 @@ public class VisitsActivity extends AppCompatActivity {
     private void editVisit(Visit visit)
     {
         Intent intent = new Intent(this, EditVisitActivity.class);
+
         intent.putExtra("action", ACTION_EDIT);
 
         String[] visit_data = {visit.getDoctor(), visit.getLocation(), visit.getDate(), visit.getTime(), visit.getUid()};
@@ -255,9 +256,7 @@ public class VisitsActivity extends AppCompatActivity {
     {
         Intent intent = new Intent(this, VisitActivity.class);
 
-        String[] visit_data = {visit.getDoctor(), visit.getLocation(), visit.getDate(), visit.getTime(), visit.getUid()};
-
-        intent.putExtra("visit", visit_data);
+        intent.putExtra("visit", visit.getUid());
 
         startActivity(intent);
     }

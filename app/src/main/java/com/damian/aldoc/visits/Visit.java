@@ -1,4 +1,4 @@
-package com.damian.aldoc;
+package com.damian.aldoc.visits;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

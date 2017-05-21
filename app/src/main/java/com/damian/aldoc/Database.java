@@ -1,7 +1,10 @@
 package com.damian.aldoc;
 
 import com.bumptech.glide.Glide;
-import com.firebase.ui.auth.AuthUI;
+import com.damian.aldoc.visits.Prescription;
+import com.damian.aldoc.visits.PrescriptionEntry;
+import com.damian.aldoc.visits.Visit;
+import com.damian.aldoc.visits.VisitsActivity;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -22,16 +25,9 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
