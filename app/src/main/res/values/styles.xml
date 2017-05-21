@@ -16,6 +16,8 @@
         <item name="android:textColor">@color/material_gray_900</item>
         <item name="android:textColorPrimary">@color/material_deep_purple_50</item>
         <item name="colorButtonNormal">@color/material_green_500</item>
+        <!--Style dla widgetow-->
+        <item name="editTextStyle">@style/aidocEditTextStyle</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -26,6 +28,14 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <!--Nowe domyslne style dla roznych widgetow/elementow gui-->
+    <style name="aidocEditTextStyle" parent="@android:style/Widget.EditText">
+        <item name="android:textColor">@color/editText_textColor</item>
+    </style>
+    <style name="aidocTextViewStyle" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/textView_textColor</item>
+    </style>
 
     <style name="GreenTheme" parent="FirebaseUI">
         <item name="colorPrimary">@color/material_green_500</item>
