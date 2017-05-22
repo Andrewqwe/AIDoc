@@ -38,7 +38,7 @@ public class PrescriptionActivity extends AppCompatActivity
     private static ImageView image_view;
     private static ListView list_view;
     private static ArrayAdapter<PrescriptionEntry> adapter;
-    private static List<PrescriptionEntry> prescription_entries = new ArrayList<>();
+    private List<PrescriptionEntry> prescription_entries = new ArrayList<>();
     private static String prescription_uid;
     private static String photo_database_uri;
     private static String[] med_list;
@@ -51,6 +51,7 @@ public class PrescriptionActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(com.damian.aldoc.R.layout.activity_prescription);
 
+        prescription_entries.clear();
         String[] prescription_data = getIntent().getStringArrayExtra("prescription");
 
         prescription_uid = prescription_data[1];
