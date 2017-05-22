@@ -605,4 +605,5 @@ static Uri aaa;
     }
 }
 // TODO  Metoda odczytująca z bazy danych. Metody wysyłające dane do większej ilości funkcjionalności. Podpięcie tworzenia grup i dodawania członków rodziny do nich.
+//TODO:Zrobic statyczna tablice stringow z nazwami lekow i pobrac je z bazy tylko raz, zeby potem inne aktywnosci nie musialy za kazdym razem pobierac
 

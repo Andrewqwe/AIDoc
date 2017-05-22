@@ -128,6 +128,7 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
 
                 if (checkVisit(visit)) {
                     visits.add(visit);
+                    Collections.sort(visits, new Visit.DateComparatorRev());
                     visitArrayAdapter.notifyDataSetChanged();
                 }
             }
@@ -305,8 +306,8 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
         ArrayList<String> dates = new ArrayList<>();
         Calendar cal = Calendar.getInstance();
         for (int i = 0; i < 8; i++) {
-            cal.add(Calendar.DATE, i);
             dates.add(getDateAsString(cal.getTime()));
+            cal.add(Calendar.DATE, 1);
         }
 
         for (String date : dates) {
