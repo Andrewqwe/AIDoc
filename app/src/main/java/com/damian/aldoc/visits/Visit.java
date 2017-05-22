@@ -16,6 +16,15 @@ public class Visit {
         }
     }
 
+    /*Komparator do sortowania wizyt po dacie odwrócony*/
+    public static class DateComparatorRev implements Comparator<Visit>
+    {
+        @Override
+        public int compare(Visit o1, Visit o2) {
+            return  o2.createCalendar().before(o1.createCalendar()) ? 1 : -1;
+        }
+    }
+
     /*Komparator do sortowania wizyt po dacie*/
     public static class DateComparator implements Comparator<Visit>
     {

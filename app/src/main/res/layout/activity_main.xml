@@ -8,10 +8,19 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
+    <TextView
+            android:text="Nadchodzące"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/textView" android:paddingTop="56dp" android:textAlignment="center"
+            android:textSize="18sp"/>
+
+
     <ListView
-            android:id="@+id/visits_listView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" android:paddingTop="56dp">
+        android:id="@+id/visits_listView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:paddingTop="76dp">
     </ListView>
     <include
         layout="@layout/app_bar_main"
