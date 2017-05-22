@@ -129,8 +129,8 @@ public class UserProfileEditActivity extends AppCompatActivity {
 
     public void refresh()  //metoda tymczasowa do odswierzania profilu uzytkownika po zmianie danego pola
     {
-        Intent refresh = new Intent(this, UserProfileEditActivity.class);
-        startActivity(refresh);
-        this.finish(); //
+        //Intent refresh = new Intent(this, UserProfileEditActivity.class);
+        //startActivity(refresh);
+        //this.finish(); //
     }
 }
