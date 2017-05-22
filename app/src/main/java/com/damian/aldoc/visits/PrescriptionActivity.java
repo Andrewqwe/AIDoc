@@ -51,6 +51,7 @@ public class PrescriptionActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(com.damian.aldoc.R.layout.activity_prescription);
 
+        prescription_entries.clear();
         String[] prescription_data = getIntent().getStringArrayExtra("prescription");
 
         prescription_uid = prescription_data[1];
