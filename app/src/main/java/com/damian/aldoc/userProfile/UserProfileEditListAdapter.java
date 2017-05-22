@@ -52,7 +52,6 @@ public class UserProfileEditListAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        UserProfileEditViewHolder viewHolder = null;
         UserProfileEditListItem listItem = list.get(position);
         int listViewItemType = list.get(position).getRowType();
         LayoutInflater inflater = activity.getLayoutInflater();
