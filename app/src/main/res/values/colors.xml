@@ -4,6 +4,16 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
+    <color name="aidocPurple">#AA77FF</color>
+    <color name="aidocGreen">#14c456</color>
+
+    <!--Widgety-->
+    <color name="aidocButtonColor">@color/material_green_500</color>
+
+    <!--Dialogi-->
+    <color name="alertDialog_backgroundColor">@android:color/transparent</color>
+    <color name="alertDialog_textColor">@color/aidocGreen</color>
+
     <!-- Kalendarz -->
     <color name="green">#8FCC85</color>
     <color name="blue">#ff33b5e5</color>
@@ -11,6 +21,8 @@
     <color name="event_color">#ddff00</color>
 
     <!-- Text -->
+    <color name="text_aidoc">#333333</color>
+
     <color name="text_default_material_dark_primary">#ffffffff</color>
     <color name="text_default_material_light_primary">#de000000</color>
     <color name="text_default_material_dark_secondary">#b3ffffff</color>

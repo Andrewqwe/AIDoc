@@ -17,7 +17,7 @@
             android:title="Kalendarz" />
         <item
             android:id="@id/user_upcoming_events"
-            android:icon="@drawable/ic_menu_upcoming_events"
+            android:icon="@drawable/ic_menu_send"
             android:title="Wizyty" />
         <item
             android:id="@id/user_alerts"

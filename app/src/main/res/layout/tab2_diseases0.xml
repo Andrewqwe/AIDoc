@@ -3,12 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/editTextDisease"
+    <AutoCompleteTextView
+        android:id="@+id/actvDisease"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
+        android:ems="13"
         android:hint="Nazwa choroby"
+        android:inputType="textPersonName"
         android:layout_marginStart="12dp"
         android:layout_marginTop="12dp"
         android:layout_alignParentTop="true"
@@ -19,8 +20,8 @@
         android:id="@+id/buttonAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/editTextDisease"
-        android:layout_alignTop="@+id/editTextDisease"
+        android:layout_alignBottom="@+id/actvDisease"
+        android:layout_alignTop="@+id/actvDisease"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="12dp"
         android:onClick="onClick"

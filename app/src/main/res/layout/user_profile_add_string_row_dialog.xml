@@ -6,20 +6,20 @@
     android:orientation="vertical">
 
     <TextView
+            android:theme="@style/alertDialogTextViewStyle"
         android:id="@+id/User_profile_addRow_titleText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
-        android:textColor="@color/material_red_a200"
         android:textSize="20sp"
         android:textStyle="bold" />
 
     <EditText
+            style="@style/alertDialogEditTextStyle"
         android:paddingTop="10dp"
         app:paddingEnd="10dp"
         android:id="@+id/User_profile_addRow_editText1"
         android:textSize="15sp"
-        android:textColor="@color/material_red_a200"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -35,6 +35,7 @@
         android:weightSum="2">
 
         <Button
+                android:background="@color/aidocButtonColor"
             android:id="@+id/User_profile_add_button1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -42,6 +43,8 @@
             android:text="Dodaj" />
 
         <Button
+                android:background="@color/aidocButtonColor"
+                android:layout_marginStart="10dp"
             android:id="@+id/User_profile_add_button2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

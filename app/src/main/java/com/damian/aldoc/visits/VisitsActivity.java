@@ -1,4 +1,4 @@
-package com.damian.aldoc;
+package com.damian.aldoc.visits;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -16,6 +16,8 @@ import android.widget.*;
 
 
 //Firebase
+import com.damian.aldoc.Database;
+import com.damian.aldoc.R;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -122,6 +124,7 @@ public class VisitsActivity extends AppCompatActivity {
         m_filter_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, m_filters);
 
         spinner = (Spinner)findViewById(R.id.activityVisits_filterSpinner);
+
         m_filter_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(m_filter_adapter);
 
@@ -162,9 +165,7 @@ public class VisitsActivity extends AppCompatActivity {
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
     {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_visit, menu);
+        getMenuInflater().inflate(R.menu.menu_visit, menu);
     }
 
     @Override
@@ -207,6 +208,7 @@ public class VisitsActivity extends AppCompatActivity {
     private void editVisit(Visit visit)
     {
         Intent intent = new Intent(this, EditVisitActivity.class);
+
         intent.putExtra("action", ACTION_EDIT);
 
         String[] visit_data = {visit.getDoctor(), visit.getLocation(), visit.getDate(), visit.getTime(), visit.getUid()};
@@ -255,9 +257,7 @@ public class VisitsActivity extends AppCompatActivity {
     {
         Intent intent = new Intent(this, VisitActivity.class);
 
-        String[] visit_data = {visit.getDoctor(), visit.getLocation(), visit.getDate(), visit.getTime(), visit.getUid()};
-
-        intent.putExtra("visit", visit_data);
+        intent.putExtra("visit", visit.getUid());
 
         startActivity(intent);
     }

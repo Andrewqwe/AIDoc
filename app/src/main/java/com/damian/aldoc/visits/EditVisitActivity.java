@@ -1,4 +1,4 @@
-package com.damian.aldoc;
+package com.damian.aldoc.visits;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -13,8 +13,9 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import org.w3c.dom.Text;
+import com.damian.aldoc.R;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -22,6 +23,8 @@ import java.util.Calendar;
 
 public class EditVisitActivity extends AppCompatActivity
 {
+    static TextView date_textView;
+    static TextView time_textView;
 
     /*Time picker fragment
     * Fragment do wybierania godziny wizyty*/
@@ -33,12 +36,23 @@ public class EditVisitActivity extends AppCompatActivity
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Use the current time as the default values for the picker
-            final Calendar c = Calendar.getInstance();
-            int hour = c.get(Calendar.HOUR_OF_DAY);
-            int minute = c.get(Calendar.MINUTE);
 
-            // Create a new instance of TimePickerDialog and return it
+            int hour, minute;
+            Calendar c = Calendar.getInstance();
+            SimpleDateFormat format = new SimpleDateFormat("hh:mm");
+
+            /*Ustawiamy czas jako ten wczesniej wybrany przez uzytkownika
+             *chyba ze jeszcze nic nie wybral, albo format danych jest niepoprawny,
+             *wtedy uzywamy aktualnego czasu jako podstawowego wyboru*/
+            String time = time_textView.getText().toString();
+
+            try {
+                c.setTime(format.parse(time));
+            }catch (ParseException e) {}
+
+            hour = c.get(Calendar.HOUR_OF_DAY);
+            minute = c.get(Calendar.MINUTE);
+
             return new TimePickerDialog(getActivity(), this, hour, minute,
                     DateFormat.is24HourFormat(getActivity()));
         }
@@ -63,13 +77,24 @@ public class EditVisitActivity extends AppCompatActivity
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Use the current date as the default date in the picker
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
 
-            // Create a new instance of DatePickerDialog and return it
+            int year, month, day;
+            Calendar c = Calendar.getInstance();
+            SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+
+            /*Ustawiamy date jako te wczesniej wybrana przez uzytkownika
+             *chyba ze jeszcze nic nie wybral, albo format danych jest niepoprawny,
+             *wtedy uzywamy aktualnej daty jako podstawowego wyboru*/
+            String time = date_textView.getText().toString();
+
+            try {
+                c.setTime(format.parse(time));
+            }catch (ParseException e) {}
+
+            year = c.get(Calendar.YEAR);
+            month = c.get(Calendar.MONTH);
+            day = c.get(Calendar.DAY_OF_MONTH);
+
             return new DatePickerDialog(getActivity(), this, year, month, day);
         }
 
@@ -112,11 +137,11 @@ public class EditVisitActivity extends AppCompatActivity
             et = (EditText)findViewById(R.id.textLocation);
             et.setText(visit_data[1]);
 
-            tv = (TextView)findViewById(R.id.textDate);
-            tv.setText(visit_data[2]);
+            date_textView = (TextView)findViewById(R.id.textDate);
+            date_textView.setText(visit_data[2]);
 
-            tv = (TextView)findViewById(R.id.textTime);
-            tv.setText(visit_data[3]);
+            time_textView = (TextView)findViewById(R.id.textTime);
+            time_textView .setText(visit_data[3]);
 
         }
         else if (action == ACTION_ADD)
@@ -127,13 +152,11 @@ public class EditVisitActivity extends AppCompatActivity
             String date = new SimpleDateFormat("dd-MM-yyyy").format(c.getTime());
             String time = new SimpleDateFormat("hh:mm").format(c.getTime());
 
-            TextView tv;
+            date_textView = (TextView)findViewById(R.id.textDate);
+            date_textView.setText(date);
 
-            tv = (TextView)findViewById(R.id.textDate);
-            tv.setText(date);
-
-            tv = (TextView)findViewById(R.id.textTime);
-            tv.setText(time);
+            time_textView = (TextView)findViewById(R.id.textTime);
+            time_textView.setText(time);
         }
     }
 

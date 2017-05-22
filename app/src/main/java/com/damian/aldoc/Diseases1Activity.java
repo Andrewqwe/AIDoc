@@ -115,7 +115,7 @@ public class Diseases1Activity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {}
         };
         //Przechodzimy do chorób w bazie i ustawiamy utworzonego wcześniej listenera
-        Database.SetLocation("diseases").addChildEventListener(dChildEventListener);
+        Database.SetLocation(Database.getDiseasesPath()).addChildEventListener(dChildEventListener);
         //Wypełniamy adapter i przypisujemy go do spinnera żeby wyswietlac choroby
         adapter1 = new ArrayAdapter<Disease>(this, android.R.layout.simple_spinner_item, diseasesList);
         sp = (Spinner) findViewById(R.id.spinnerDisease);
@@ -203,7 +203,7 @@ public class Diseases1Activity extends AppCompatActivity {
     protected Dialog onCreateDialog(int id) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         //dialogBuilder.setTitle("Usuwanie notatki");
-        dialogBuilder.setMessage("Zarówno samopoczucie jak i choroba jakiej dotyczy notatka muszą być wybrane!");
+        dialogBuilder.setTitle("Zarówno samopoczucie jak i choroba jakiej dotyczy notatka muszą być wybrane!");
         //dialogBuilder.setCancelable(false);
         dialogBuilder.setNegativeButton("Rozumiem", new Dialog.OnClickListener() {
             @Override

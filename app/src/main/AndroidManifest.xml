@@ -38,20 +38,21 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".VisitsActivity"
-                android:label="Visits"
+                android:name=".visits.VisitsActivity"
+                android:label="Wizyty"
                 android:parentActivityName=".MainActivity"/>
         <activity
-                android:name=".EditVisitActivity"
-                android:label="Edit Visit"
+                android:name=".visits.EditVisitActivity"
+                android:label="Edytuj Wizytę"
                 android:parentActivityName=".MainActivity"/>
         <activity
-                android:name=".VisitActivity"
-                android:label="Visit"
-                android:parentActivityName=".VisitsActivity"/>
+                android:name=".visits.VisitActivity"
+                android:label="Wizyta"
+                android:launchMode="singleTop"
+                android:parentActivityName=".visits.VisitsActivity"/>
         <activity
                 android:name=".calendar.CalendarActivity"
-                android:label="Calendar"
+                android:label="Kalendarz"
                 android:parentActivityName=".MainActivity"/>
         <activity
                 android:name=".Diseases1Activity"
@@ -66,14 +67,16 @@
                 android:theme="@style/AppTheme.NoActionBar"/>
         <activity
                 android:name=".userProfile.UserProfileView"
-                android:label="@string/title_activity_user_profile_view"
+                android:label="Profil"
                 android:parentActivityName=".MainActivity"
                 android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="com.damian.aldoc.MainActivity"/>
         </activity>
-        <activity android:name=".PrescriptionActivity" android:label="Prescription">
+        <activity
+                android:parentActivityName=".visits.VisitActivity"
+                android:name=".visits.PrescriptionActivity" android:label="Recepta">
         </activity>
         <activity
                 android:name="com.damian.aldoc.FullScreenImageActivity"
@@ -81,7 +84,7 @@
         </activity>
         <activity
             android:name=".userProfile.UserProfileEditActivity"
-            android:label="@string/title_activity_user_profile_edit"
+            android:label="Edytuj profil"
             android:parentActivityName=".userProfile.UserProfileView"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
