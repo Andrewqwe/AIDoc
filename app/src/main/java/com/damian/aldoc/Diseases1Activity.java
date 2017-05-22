@@ -195,7 +195,8 @@ public class Diseases1Activity extends AppCompatActivity {
             if (action == 0) Database.SendObjectNotesToDatabase(note);
             else if (action == 1) Database.UpdateNoteInDatabase(note, note_table[0]);
 
-            startActivity(intent);
+            setResult(AppCompatActivity.RESULT_OK, intent);
+            finish();
         }
     }
 
