@@ -10,7 +10,7 @@
         <item
             android:id="@id/user_family"
             android:icon="@drawable/ic_menu_family"
-            android:title="Rodzina" />
+            android:title="Grupy" />
         <item
             android:id="@id/user_calendar"
             android:icon="@drawable/ic_menu_calendar"

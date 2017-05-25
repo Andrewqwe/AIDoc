@@ -32,8 +32,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.twitter.sdk.android.core.TwitterCore.TAG;
@@ -65,6 +64,7 @@ public class Database {
     static final private String notes_dir = "notes";
     static final private String diseases_dir = "diseases";
     static final private String users_dir = "users";
+    static final private String groups_dir = "groups";
 
     /*funkcje do zwracania nazw katalogow w bazie danych*/
     public static String getVisitsDirName() { return visits_dir; }
@@ -73,6 +73,7 @@ public class Database {
     public static String getNotesDirName() { return notes_dir; }
     public static String getDiseasesDirName() { return diseases_dir; }
     public static String getUsersDirName() { return users_dir; }
+    public static String getGroupsDirName() { return groups_dir; }
 
     /*funkcje do zwracania sciezek do katalogow uzytkownikow w bazie danych*/
     public static String getVisitsPath() { return users_dir + "/" + mCurrentUid + "/" + visits_dir; }
@@ -89,6 +90,82 @@ public class Database {
     public static String getCurrentUid()
     {
         return mCurrentUid;
+    }
+
+    public static void createGroupInDatabase(String group_name, String group_owner_uid)
+    {
+        /*Tworzymy referencje do lokacji z grupami w bazie*/
+        DatabaseReference groups_ref = SetLocation(groups_dir);
+
+        /*Generujemy uid nowej grupy w bazie*/
+        String gid = groups_ref.push().getKey();
+
+        /*Tworzymy nowa grupe i ustawiamy jej nazwe w bazie*/
+        groups_ref.child(gid).child("name").setValue(group_name);
+
+        /*Dodajemy do grupy użytkownika który ją utworzył
+        * z poziomem uprawnień 0 - superadmin*/
+        groups_ref.child(gid).child("users").child(group_owner_uid).setValue(0);
+
+        /*Do obiektu uzytkownika w bazie dodajemy wpis o przynależności do nowej grupy*/
+        DatabaseReference user_groups_ref = SetLocation(users_dir).child(group_owner_uid).child("groups");
+        user_groups_ref.push().setValue(gid);
+    }
+
+    public static void deleteGroupFromDatabase(String group_uid)
+    {
+        //TODO:Zaimplementować usuwanie grup z bazy
+    }
+
+    public static void addUserToGroup(String user_id, final String group_id)
+    {
+        /*Czytamy z bazy listę grup danego użytkownika zeby sprawdzić czy już nie nalezy do tej grupy*/
+        final DatabaseReference ref = SetLocation(users_dir).child(user_id).child("group_ids");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Map<String, String> group_ids = (HashMap<String,String>)dataSnapshot.getValue();
+
+                if(group_ids != null) {
+                    if (group_ids.containsValue(group_id)) {
+                        return;
+                    }
+                }
+
+                ref.push().setValue(group_id);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
+    }
+
+    public static void removeUserFromGroup(String user_id, final String group_id)
+    {
+        /*Czytamy z bazy listę grup danego użytkownika zeby sprawdzić czy nalezy do tej grupy
+        * i jesli tak to pobrac z bazy id wpisu z danym id grupy*/
+        final DatabaseReference ref = SetLocation(users_dir).child(user_id).child("group_ids");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Map<String, String> group_ids = (HashMap<String,String>)dataSnapshot.getValue();
+
+                if(group_ids != null) {
+
+                    for (String key : group_ids.keySet()) {
+                        if (group_ids.get(key).equals(group_id))
+                        {
+                            ref.child(key).removeValue();
+                            return;
+                        }
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
     }
 
     public static void Initialize(boolean persistence) {
