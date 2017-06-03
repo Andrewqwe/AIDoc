@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
     private ArrayAdapter<Visit> visitArrayAdapter;
     private List<Visit> visits = new ArrayList<>();
 
-    private boolean isAlreadyLoggedIn = false;
+    private static boolean isAlreadyLoggedIn = false;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -250,6 +250,8 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
             Intent intent_calendar = new Intent(this, CalendarActivity.class);
             startActivity(intent_calendar);
         } else if (id == R.id.user_family) {
+            Intent intent_family = new Intent(this, GroupsActivity.class);
+            startActivity(intent_family);
 
         } else if (id == R.id.user_stats) {
 
@@ -257,8 +259,6 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
 
         } else if (id == R.id.user_upcoming_events) {
             Intent intent_visits = new Intent(this, VisitsActivity.class);
-            //tu moze bedzie trzeba zrobic startActivityForResult jakby mialo cos zwrocic
-            //ale na razie wyjebane, byle tylko przechodzilo do okienka
             startActivity(intent_visits);
 
         } else if (id == R.id.user_alerts) {
@@ -283,8 +283,8 @@ public class MainActivity extends AppCompatActivity //34.AuthStateListener
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
         mFirebaseAuth.addAuthStateListener(mAuthStateListener);
     }
 

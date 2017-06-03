@@ -35,8 +35,8 @@ public class PrescriptionActivity extends AppCompatActivity
     //sciezka do pliku ze zrobionym zdjeciem recepty
     private static String m_photo_file_absolute_path;
 
-    private static ImageView image_view;
-    private static ListView list_view;
+    private ImageView image_view;
+    private ListView list_view;
     private static ArrayAdapter<PrescriptionEntry> adapter;
     private List<PrescriptionEntry> prescription_entries = new ArrayList<>();
     private static String prescription_uid;
