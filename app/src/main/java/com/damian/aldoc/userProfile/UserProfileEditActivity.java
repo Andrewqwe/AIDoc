@@ -30,7 +30,7 @@ import java.util.Map;
 public class UserProfileEditActivity extends AppCompatActivity {
     private ListView listView;
     private ImageView image_view;
-    private  ArrayList<UserProfileEditListItem> items;
+    private ArrayList<UserProfileEditListItem> items;
     private UserProfileEditListAdapter adapter;
 
     @Override
@@ -85,17 +85,16 @@ public class UserProfileEditActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     //TODO: Rozwiazanie bardzo tymczasowe, nie znalazlem lepszego sposobu na odswierzanie
-                    if(!items.isEmpty()){refresh();}
-                    else {
-                        Map<String, Object> objectMap = (HashMap<String, Object>) dataSnapshot.getValue();
-                        if (objectMap != null) {
-                            for (String str : arr) {
-                                String temp[] = str.split("//");
-                                String value = String.valueOf(objectMap.get(temp[0]));
-                                addValue(temp[1], value, temp[0], temp[2]); // tlumaczenie, wartosc, pytany klucz
-                            }
+                    Map<String, Object> objectMap = (HashMap<String, Object>) dataSnapshot.getValue();
+                    if (objectMap != null) {
+                        items.clear();
+                        for (String str : arr) {
+                            String temp[] = str.split("//");
+                            String value = String.valueOf(objectMap.get(temp[0]));
+                            addValue(temp[1], value, temp[0], temp[2]); // tlumaczenie, wartosc, pytany klucz
                         }
                     }
+                    adapter.notifyDataSetChanged();
                 }
 
                 @Override
@@ -112,13 +111,11 @@ public class UserProfileEditActivity extends AppCompatActivity {
     {
         UserProfileEditListItem item;
         if(value==null || value.equals("null")){
-            item = new UserProfileEditListItem(translation,key,data_type);
-            items.add(item);
+            item = new UserProfileEditListItem(translation,key,data_type); // w przyszlosci mozna przeniesc ta logike do ListItemu
         }else {
             item = new UserProfileEditListItem(translation, value, key, data_type);
-            items.add(item);
         }
-        adapter.notifyDataSetChanged();
+        items.add(item);
     }
 
     private void setName(String name)

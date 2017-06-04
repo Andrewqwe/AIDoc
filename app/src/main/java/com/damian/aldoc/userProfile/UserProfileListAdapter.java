@@ -52,6 +52,9 @@ public class UserProfileListAdapter extends BaseAdapter {
             convertView=inflater.inflate(R.layout.simplerow,null);
             name=(TextView) convertView.findViewById(R.id.rowTextView);
             value=(TextView) convertView.findViewById(R.id.rowTextView2);
+        }else{
+            name=(TextView) convertView.findViewById(R.id.rowTextView);
+            value=(TextView) convertView.findViewById(R.id.rowTextView2);
         }
         HashMap<String,String> map = list.get(position);
         name.setText(map.get("name"));
