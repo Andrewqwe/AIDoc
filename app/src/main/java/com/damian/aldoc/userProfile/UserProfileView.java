@@ -78,6 +78,8 @@ public class UserProfileView extends AppCompatActivity {
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     Map<String, Object> objectMap = (HashMap<String, Object>) dataSnapshot.getValue();
                     if(objectMap!=null) {
+                        rekordy.clear();
+                        //lista.invalidateViews();
                         for (String str : arr) {
                             String temp[] = str.split("//");
                             String value = String.valueOf(objectMap.get(temp[0]));
@@ -87,6 +89,7 @@ public class UserProfileView extends AppCompatActivity {
                                 }
                             }
                         }
+                        adapter.notifyDataSetChanged();
                     }
                 }
 
@@ -95,7 +98,8 @@ public class UserProfileView extends AppCompatActivity {
 
                 }
             };
-            ref.addListenerForSingleValueEvent(postListener);
+            ref.addValueEventListener(postListener);
+            //ref.addListenerForSingleValueEvent(postListener);
             Glide.with(this).load(Database.GetUserImage()).into(image_view);
         }
 
@@ -122,6 +126,5 @@ public class UserProfileView extends AppCompatActivity {
         temp.put("name",name);
         temp.put("value",value);
         rekordy.add(temp);
-        adapter.notifyDataSetChanged();
     }
 }

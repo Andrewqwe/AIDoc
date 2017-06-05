@@ -55,68 +55,66 @@ public class UserProfileEditListAdapter extends BaseAdapter {
         UserProfileEditListItem listItem = list.get(position);
         int listViewItemType = list.get(position).getRowType();
         LayoutInflater inflater = activity.getLayoutInflater();
-        if(convertView == null){
 
-            if(listViewItemType == TYPE_EMPTY){
-                convertView = inflater.inflate(R.layout.useremptyrecord,null);
-                name = (TextView) convertView.findViewById(R.id.emptyRowTextView);
-                name.setText(list.get(position).getTranslation());
-                button1 = (ImageButton) convertView.findViewById(R.id.emptyRowAddButton);
-                button1.setColorFilter(Color.rgb(0,153,76));
-                button1.setBackgroundColor(Color.TRANSPARENT);
-                button1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        UserProfileAddRowDialogClass addDialog = new UserProfileAddRowDialogClass(activity);
-                        UserProfileEditListItem item = list.get(position);
-                        addDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                        addDialog.show();
-                        addDialog.setDatabase_key(item.getDatabase_key());
-                        addDialog.setTranslation(item.getTranslation());
-                    }
-                });
+        if (listViewItemType == TYPE_EMPTY) {
+            convertView = inflater.inflate(R.layout.useremptyrecord, null);
+            name = (TextView) convertView.findViewById(R.id.emptyRowTextView);
+            name.setText(list.get(position).getTranslation());
+            button1 = (ImageButton) convertView.findViewById(R.id.emptyRowAddButton);
+            button1.setColorFilter(Color.rgb(0, 153, 76));
+            button1.setBackgroundColor(Color.TRANSPARENT);
+            button1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    UserProfileAddRowDialogClass addDialog = new UserProfileAddRowDialogClass(activity);
+                    UserProfileEditListItem item = list.get(position);
+                    addDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    addDialog.show();
+                    addDialog.setDatabase_key(item.getDatabase_key());
+                    addDialog.setTranslation(item.getTranslation());
+                }
+            });
 
-            }else if(listViewItemType == TYPE_NOT_EMPTY){
-                convertView = inflater.inflate(R.layout.usernotemptyrecord,null);
-                name = (TextView) convertView.findViewById(R.id.notEmptyRowTextView);
-                value = (TextView) convertView.findViewById(R.id.notEmptyRowTextView2);
-                name.setText(list.get(position).getTranslation());
-                value.setText(list.get(position).getValue());
-                button1 = (ImageButton) convertView.findViewById(R.id.notEmptyRowEditButton);
-                button2 = (ImageButton) convertView.findViewById(R.id.notEmptyRowDeleteButton);
-                button1.setColorFilter(Color.BLUE);
-                button2.setColorFilter(Color.RED);
-                button1.setBackgroundColor(Color.TRANSPARENT);
-                button2.setBackgroundColor(Color.TRANSPARENT);
-                button1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        UserProfileAddRowDialogClass addDialog = new UserProfileAddRowDialogClass(activity);
-                        UserProfileEditListItem item = list.get(position);
-                        addDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                        addDialog.show();
-                        addDialog.setDatabase_key(item.getDatabase_key());
-                        addDialog.setTranslation(item.getTranslation());
-                        addDialog.getImput().setText(item.getValue());
-                        addDialog.getButton1().setText("Ok");
-                    }
-                });
+        } else if (listViewItemType == TYPE_NOT_EMPTY) {
+            convertView = inflater.inflate(R.layout.usernotemptyrecord, null);
+            name = (TextView) convertView.findViewById(R.id.notEmptyRowTextView);
+            value = (TextView) convertView.findViewById(R.id.notEmptyRowTextView2);
+            name.setText(list.get(position).getTranslation());
+            value.setText(list.get(position).getValue());
+            button1 = (ImageButton) convertView.findViewById(R.id.notEmptyRowEditButton);
+            button2 = (ImageButton) convertView.findViewById(R.id.notEmptyRowDeleteButton);
+            button1.setColorFilter(Color.BLUE);
+            button2.setColorFilter(Color.RED);
+            button1.setBackgroundColor(Color.TRANSPARENT);
+            button2.setBackgroundColor(Color.TRANSPARENT);
+            button1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    UserProfileAddRowDialogClass addDialog = new UserProfileAddRowDialogClass(activity);
+                    UserProfileEditListItem item = list.get(position);
+                    addDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    addDialog.show();
+                    addDialog.setDatabase_key(item.getDatabase_key());
+                    addDialog.setTranslation(item.getTranslation());
+                    addDialog.getImput().setText(item.getValue());
+                    addDialog.getButton1().setText("Ok");
+                }
+            });
 
-                button2.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        UserProfileDeleteRowDialogClass deleteDialog = new UserProfileDeleteRowDialogClass(activity);
-                        UserProfileEditListItem item = list.get(position);
-                         deleteDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                         deleteDialog.show();
-                         deleteDialog.setDatabase_key(item.getDatabase_key());
-                         deleteDialog.setTranslation(item.getTranslation());
-                    }
-                });
-                //TODO: listenery guzikow
-            }
-
+            button2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    UserProfileDeleteRowDialogClass deleteDialog = new UserProfileDeleteRowDialogClass(activity);
+                    UserProfileEditListItem item = list.get(position);
+                    deleteDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    deleteDialog.show();
+                    deleteDialog.setDatabase_key(item.getDatabase_key());
+                    deleteDialog.setTranslation(item.getTranslation());
+                }
+            });
+            //TODO: listenery guzikow
         }
+
 
         return convertView;
     }
