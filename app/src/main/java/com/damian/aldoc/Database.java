@@ -117,10 +117,10 @@ public class Database {
         //TODO:Zaimplementować usuwanie grup z bazy
     }
 
-    public static void addUserToGroup(String user_id, final String group_id)
+    public static void addUserToGroup(final String user_id, final String group_id, final Long permission_level)
     {
         /*Czytamy z bazy listę grup danego użytkownika zeby sprawdzić czy już nie nalezy do tej grupy*/
-        final DatabaseReference ref = SetLocation(users_dir).child(user_id).child("group_ids");
+        final DatabaseReference ref = SetLocation(users_dir).child(user_id).child("groups");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -132,7 +132,10 @@ public class Database {
                     }
                 }
 
+                /*jeżeli nie należy to dodajemy do obiektu uzytkownika id grupy*/
                 ref.push().setValue(group_id);
+                /*oraz do obiektu grupy id użytkownika*/
+                SetLocation(groups_dir).child(group_id).child("users").child(user_id).setValue(permission_level);
             }
 
             @Override
@@ -140,11 +143,11 @@ public class Database {
         });
     }
 
-    public static void removeUserFromGroup(String user_id, final String group_id)
+    public static void removeUserFromGroup(final String user_id, final String group_id)
     {
         /*Czytamy z bazy listę grup danego użytkownika zeby sprawdzić czy nalezy do tej grupy
         * i jesli tak to pobrac z bazy id wpisu z danym id grupy*/
-        final DatabaseReference ref = SetLocation(users_dir).child(user_id).child("group_ids");
+        final DatabaseReference ref = SetLocation(users_dir).child(user_id).child("groups");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -152,10 +155,32 @@ public class Database {
 
                 if(group_ids != null) {
 
-                    for (String key : group_ids.keySet()) {
+                    for (final String key : group_ids.keySet()) {
                         if (group_ids.get(key).equals(group_id))
                         {
-                            ref.child(key).removeValue();
+                            /*sprawdzamy czy użytkownik nie jest właścicielem grupy bo wtedy nie możemy go z niej usunąć*/
+                            final DatabaseReference group_ref = SetLocation(groups_dir).child(group_id).child("users").child(user_id);
+                            group_ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    Long permission_level = dataSnapshot.getValue(Long.class);
+
+                                    if(permission_level != 0) {
+                                        /*usuwamy wpis o grupie z obiektu użytkownika*/
+                                            ref.child(key).removeValue();
+                                        /*usuwamy z grupy wpis o użytkowniku*/
+                                            group_ref.removeValue();
+                                    }
+                                    else
+                                    {
+                                        Toast.makeText(getApplicationContext(), "Nie można usunąć właściciela grupy!", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {}
+                            });
+
                             return;
                         }
 
