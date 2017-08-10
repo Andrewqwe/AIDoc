@@ -21,7 +21,7 @@
             android:title="Wizyty" />
         <item
             android:id="@id/user_alerts"
-            android:icon="@drawable/ic_menu_alerts"
+            android:icon="@drawable/ic_menu_send"
             android:title="Dziennik chorób" />
     </group>
 
